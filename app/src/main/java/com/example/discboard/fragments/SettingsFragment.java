@@ -29,7 +29,9 @@ import android.widget.Toast;
 
 import com.example.discboard.JsonDataHelper;
 import com.example.discboard.R;
+import com.example.discboard.datatype.AnimTemp;
 import com.example.discboard.datatype.Dot;
+import com.example.discboard.datatype.InterDot;
 import com.google.android.material.slider.Slider;
 
 import org.json.JSONArray;
@@ -39,6 +41,7 @@ import org.json.JSONObject;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Hashtable;
 
 /**
@@ -179,28 +182,31 @@ public class SettingsFragment extends Fragment {
                             JSONArray js_whole = new JSONArray(json_s);
                             JSONObject jo_head = new JSONObject(String.valueOf(js_whole.get(0)));
                             // check the file's head part, if it's a "animation_templates" file
-                            if (mJsonDataHelper.checkFileType(jo_head)) {
+                            if (JsonDataHelper.checkFileType(jo_head)) {
                                 JSONArray ja_anim_temp_list = (JSONArray) new JSONObject(String.valueOf(js_whole.get(1))).get(IO_ANIM_TEMP_LIST);// get anim_temp_name_list
                                 JSONArray ja_anim_dots_list = (JSONArray) new JSONObject(String.valueOf(js_whole.get(2))).get(IO_ANIM_DOTS_LIST);// get anim_dots_list
 
-                                int i = 0;
-                                while (i < ja_anim_temp_list.length()) {
-                                    JSONObject jo_anim_dots_list = ja_anim_dots_list.getJSONObject(i);
+                                int temp_counter = 0;// record the current temp position
+                                while (temp_counter < ja_anim_temp_list.length()) {
+                                    JSONObject jo_anim_dots_list = ja_anim_dots_list.getJSONObject(temp_counter);
 
                                     String temp_name = jo_anim_dots_list.keys().next();
 
+                                    // dealing with JSONArray data
                                     JSONArray ja_anim_dots = (JSONArray) jo_anim_dots_list.get(temp_name);
                                     // turn json string to anim_dots_lists
-                                    ArrayList<Hashtable<String, Dot>> anim_dots_list = mJsonDataHelper.JSONArray2ArrayListHashtable(ja_anim_dots);
+                                    AnimTemp animTemp = mJsonDataHelper.JSONArray2ArrayListHashtableNew(ja_anim_dots);
+                                    ArrayList<Hashtable<String, Dot>> anim_dots_list = animTemp.getAnimDotsList();
+                                    ArrayList<Hashtable<String, InterDot>> inter_dots_list = animTemp.getInterDotsList();
 
                                     // add data to pref
                                     // check the possibility of name duplication
                                     if (mJsonDataHelper.checkNameDuplication(temp_name)) {
                                         temp_name = temp_name + FILE_DUPLICATION_SUFFIX;
                                     }
-                                    mJsonDataHelper.saveAniDotsToPref(temp_name, anim_dots_list);
+                                    mJsonDataHelper.saveAniDotsToPrefNew(temp_name, anim_dots_list, inter_dots_list);
                                     mJsonDataHelper.addAniTempToPref(temp_name);
-                                    i++;
+                                    temp_counter++;
                                 }
                             } else {
                                 Toast.makeText(getContext(), "文件无效！", Toast.LENGTH_LONG).show();
@@ -243,10 +249,17 @@ public class SettingsFragment extends Fragment {
 
             int i = 0;
             for (String tempName : mAniTempList) {
-                ArrayList<Hashtable<String, Dot>> anim_dots = new ArrayList<>(mJsonDataHelper.loadAnimDotsFromPref(tempName));
-                String json_s = mJsonDataHelper.transformData2Json(anim_dots);
+                AnimTemp animTemp = mJsonDataHelper.loadAnimDotsFromPrefNew(tempName);
+                ArrayList<Hashtable<String, Dot>> anim_dots = animTemp.getAnimDotsList();
+                ArrayList<Hashtable<String, InterDot>> inter_dots = animTemp.getInterDotsList();
+                String json_anim = mJsonDataHelper.transformData2Json(anim_dots);
+                String json_inter = mJsonDataHelper.transformData2Json(inter_dots);
 
-                JSONArray ja_dots = new JSONArray(json_s);
+                JSONArray ja_anim = new JSONArray(json_anim);
+                JSONArray ja_inter = new JSONArray(json_inter);
+
+                JSONArray ja_dots = JsonDataHelper.mergeAnimInterJsonArray(ja_anim, ja_inter);
+//                Log.d(TAG, "exportUserData: " + ja_dots);
                 JSONObject jo_dots = new JSONObject();
                 jo_dots.put(tempName, ja_dots);
                 ja_anim_dots_list.put(jo_dots);
@@ -263,9 +276,9 @@ public class SettingsFragment extends Fragment {
             jo_anim_temp_list.put(IO_ANIM_TEMP_LIST, ja_anim_temp_list);
             ja_whole.put(jo_anim_temp_list);
 
-            JSONObject jo_dots_list = new JSONObject();
-            jo_dots_list.put(IO_ANIM_DOTS_LIST, ja_anim_dots_list);
-            ja_whole.put(jo_dots_list);
+            JSONObject jo_anim_dots_list = new JSONObject();
+            jo_anim_dots_list.put(IO_ANIM_DOTS_LIST, ja_anim_dots_list);
+            ja_whole.put(jo_anim_dots_list);
 
             mJsonDataHelper.writeToExternalFile(ja_whole.toString(), file_name);
         } else {

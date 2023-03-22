@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -39,11 +40,13 @@ public class AnimatedBoardFragment extends Fragment {
     String TAG = "AnimatedBoardFragment";
     Boolean mLoadedMark;// true: if load/create btn has been pressed
     String mTempName;// store the name of already loaded template animation
-    Button mSaveOldTempBtn, mLoadTempBtn;
+    Button mSaveOldTempBtn, mLoadTempBtn, mDelFrameBtn, mInsertFrameBtn;
     JsonDataHelper mJsonDataHelper;
     static ArrayList<String> mAniTempList;
     Slider mFrameSlider;
     static AnimatedDiscBoard mAnimatedDiscBoard;
+    private boolean mDelPressFlag;
+
     public AnimatedBoardFragment() {
         // Required empty public constructor
     }
@@ -70,7 +73,7 @@ public class AnimatedBoardFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         mJsonDataHelper = new JsonDataHelper(getContext());
-
+        mDelPressFlag = false;
     }
 
     @Override
@@ -111,26 +114,34 @@ public class AnimatedBoardFragment extends Fragment {
             }
         });
 
-        v.findViewById(R.id.save_new_temp_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mSaveDialogFragment = new SaveDialogFragment();
-                mSaveDialogFragment.setSaveDialogListener(new SaveDialogFragment.SaveDialogListener() {
-                    @Override
-                    public void onSaveListener(String name) {
-                        setLoadedMarkAndTempName(true, name);
-                    }
-                });
-                mSaveDialogFragment.show(getChildFragmentManager(), "保存模板");
-            }
+        v.findViewById(R.id.save_new_temp_btn).setOnClickListener(view -> {
+            mSaveDialogFragment = new SaveDialogFragment();
+            mSaveDialogFragment.setSaveDialogListener(new SaveDialogFragment.SaveDialogListener() {
+                @Override
+                public void onSaveListener(String name) {
+                    setLoadedMarkAndTempName(true, name);
+                }
+            });
+            mSaveDialogFragment.show(getChildFragmentManager(), "保存模板");
         });
 
-        v.findViewById(R.id.insert_frame_btn).setOnClickListener(view -> {
+        mInsertFrameBtn = v.findViewById(R.id.insert_frame_btn);
+        mInsertFrameBtn.setOnClickListener(view -> {
             mAnimatedDiscBoard.insertFrame();
         });
 
-        v.findViewById(R.id.del_frame_btn).setOnClickListener(view -> {
-            mAnimatedDiscBoard.deleteFrame();
+        mDelFrameBtn = v.findViewById(R.id.del_frame_btn);
+        mDelFrameBtn.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if(!mDelPressFlag) {
+                    mDelFrameBtn.setText("删除帧");
+                    mDelPressFlag = true;
+                }
+                view.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.del_anim));
+                mAnimatedDiscBoard.deleteFrame();
+                return false;
+            }
         });
 
         v.findViewById(R.id.play_anim_btn).setOnClickListener(view -> {

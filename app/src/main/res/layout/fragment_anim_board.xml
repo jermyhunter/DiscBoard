@@ -93,7 +93,7 @@
                     android:layout_height="wrap_content"
                     android:minHeight="@dimen/btn_min_height"
                     android:backgroundTint="@color/IndianRed"
-                    android:text="删除帧"/>
+                    android:text="删除帧\n(长按)"/>
 
                 <Button
                     android:id="@+id/play_anim_btn"

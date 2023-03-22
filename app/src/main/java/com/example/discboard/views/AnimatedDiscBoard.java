@@ -36,6 +36,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -139,6 +140,8 @@ public class AnimatedDiscBoard extends View {
     float mDeltaY, mTextOffsetY;
     private Dot mTouchedDot, mEnabledDot, mEnabledDotPreF;
     private InterDot mEnabledInterDot, mTouchedInterDot;
+    float[] pos;
+    float[] tan;
     enum DotType{Dot, InterDot}
     private DotType mTouchedType;
     private boolean mAnimationAllowed;
@@ -198,6 +201,9 @@ public class AnimatedDiscBoard extends View {
     }
 
     void init(@Nullable AttributeSet set){
+        pos = new float[2];
+        tan = new float[2];
+
         initGson();
         initPaintColor();
 //        mDeltaXYHashtable = new Hashtable<>();
@@ -419,17 +425,21 @@ public class AnimatedDiscBoard extends View {
             if (mCurrentFrameNo == getFrameSum() - 1) {
                 setCurrentFrameNo(mCurrentFrameNo - 1);
                 mAnimDotsList.remove(getFrameSum() - 1);
-                onFrameSumChange();
             }
             // else, current frame is not the last frame, then delete current frame
             else {
                 mAnimDotsList.remove(mCurrentFrameNo);
-                onFrameSumChange();
             }
-        }
 
-        releaseTouchDots();
-        invalidate();
+            onFrameSumChange();
+            releaseTouchDots();
+            invalidate();
+
+            Toast.makeText(getContext(), R.string.DEL_FRAME_SUCCESS_HINT, Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(getContext(), R.string.NO_ANIM_HINT, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void loadFrame(int frameNo){
@@ -731,7 +741,7 @@ public class AnimatedDiscBoard extends View {
         }
         // getFrameSum() < 2
         else{
-            Toast.makeText(getContext(), "请先制作战术动画！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.NO_ANIM_HINT, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -754,8 +764,10 @@ public class AnimatedDiscBoard extends View {
             // commented lines are from plan A
             if(isAnimationPlaying()){
                 final Hashtable<String, Dot> cur_dots_list = mAnimDotsList.get(mAniCurrentFrameNo);
-                cur_dots_list.forEach((id, cur_dot) -> {
-                    // plan A
+                for (Map.Entry<String, Dot> entry : cur_dots_list.entrySet()) {
+                    String id = entry.getKey();
+                    Dot cur_dot = entry.getValue();
+// plan A
 //                    DeltaXY deltaXY = mDeltaXYHashtable.get(id);
 //                    assert deltaXY != null;
 //                    float pos_x = deltaXY.getPre_X() + deltaXY.getDelta_X();
@@ -767,9 +779,7 @@ public class AnimatedDiscBoard extends View {
                     // 将因导入造成的外溢点转移到内部
 //                    moveCircleInbounds(canvas, cur_dot, pos_x, pos_y);
 
-                    // TODO: pathMeasure
-                    float[] pos = new float[2];
-                    float[] tan = new float[2];
+                    releasePos();// reset pathMeasure, in case that getPosTan does nothing to pos
                     PathMeasure pathMeasure = mPathMeasureHashtable.get(id);
                     Dist dist = mDistHashtable.get(id);
                     float d = dist.getDist();
@@ -777,10 +787,10 @@ public class AnimatedDiscBoard extends View {
                     dist.goForward();
 
                     // if the dot hasn't moved, the pos will be 0.0
-                    if(pos[0] == 0f){
+                    if (pos[0] == 0f) {
                         pos[0] = cur_dot.getX();
                     }
-                    if(pos[1] == 0f){
+                    if (pos[1] == 0f) {
                         pos[1] = cur_dot.getY();
                     }
 //                    Log.d(TAG, "onDraw: " + pos[0] + pos[1]);
@@ -807,8 +817,7 @@ public class AnimatedDiscBoard extends View {
 //                        canvas.drawCircle(pos_x, pos_y, CIRCLE_RADIUS, mDiscPaint);
                         canvas.drawCircle(pos[0], pos[1], CIRCLE_RADIUS, mDiscPaint);
                     }
-
-                });
+                }
                 mStep += 1;// the Step count mark should be outside the forEach loop
                 if (mStep > STEP_NUM) {
                     mAniCurrentFrameNo += 1;
@@ -907,9 +916,15 @@ public class AnimatedDiscBoard extends View {
                 });
             }
         }
+
         invalidate();
     }
 
+
+    void releasePos(){
+        pos[0] = 0f;
+        pos[1] = 0f;
+    }
     /** set mCurrentFrameNo, and update the relative UI
      *
      * @param currentFrameNo
@@ -942,7 +957,7 @@ public class AnimatedDiscBoard extends View {
     public void saveAniDots(String temp_name){
         mJsonDataHelper.addAniTempToPref(temp_name);//add a new name to the temp list
 
-        mJsonDataHelper.saveAniDotsToPref(temp_name, mAnimDotsList, mInterDotsList);
+        mJsonDataHelper.saveAniDotsToPrefNew(temp_name, mAnimDotsList, mInterDotsList);
     }
 
 
