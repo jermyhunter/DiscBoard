@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="btn_margin_vert">2dp</dimen>
+    <dimen name="btn_margin_top">2dp</dimen>
+    <dimen name="btn_margin_between_gap">4dp</dimen>
+    <dimen name="btn_margin_single_gap">4dp</dimen>
+    <dimen name="slider_height">15dp</dimen>
+    <dimen name="btn_layout_margin_ho">4dp</dimen>
+    <dimen name="IO_text_size">16sp</dimen>
+
+    <dimen name="btn_min_width">60dp</dimen>
+    <dimen name="btn_min_height">45dp</dimen>
+    <dimen name="btn_margin_between_wide_gap">10dp</dimen>
+
+</resources>

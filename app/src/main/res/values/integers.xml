@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- define how many columns fill one line-->
+    <integer name="anim_temp_item_span">3</integer>
+    <integer name="anim_temp_del_item_span">4</integer>
+    <integer name="menu_hint_anim_delay">100000</integer>
+
+    <integer name="fade_in_duration">700</integer>
+</resources>

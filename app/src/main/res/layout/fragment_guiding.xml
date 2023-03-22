@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.GuidingFragment">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_weight="0">
+            <Button
+                android:id="@+id/template_sharing_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="@dimen/btn_min_width"
+                android:layout_marginHorizontal="@dimen/btn_margin_single_gap"
+                android:backgroundTint="@color/btn_highlight_color"
+                android:textSize="16dp"
+                android:text="模板共享" />
+            <Button
+                android:id="@+id/animation_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="@dimen/btn_min_width"
+                android:layout_marginHorizontal="@dimen/btn_margin_single_gap"
+                android:backgroundTint="@color/btn_highlight_color"
+                android:textSize="16dp"
+                android:text="战术动画" />
+            <Button
+                android:id="@+id/load_and_save_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="@dimen/btn_min_width"
+                android:layout_marginHorizontal="@dimen/btn_margin_single_gap"
+                android:backgroundTint="@color/btn_highlight_color"
+                android:textSize="16dp"
+                android:text="读取与修改" />
+            <Button
+                android:id="@+id/exporting_and_sharing_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="@dimen/btn_min_width"
+                android:layout_marginHorizontal="@dimen/btn_margin_single_gap"
+                android:backgroundTint="@color/DeepSkyBlue"
+                android:textSize="16dp"
+                android:text="导出与分享" />
+            <Button
+                android:id="@+id/importing_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="@dimen/btn_min_width"
+                android:layout_marginHorizontal="@dimen/btn_margin_single_gap"
+                android:backgroundTint="@color/DeepSkyBlue"
+                android:textSize="16dp"
+                android:text="导入数据" />
+
+        </LinearLayout>
+        <SurfaceView
+            android:id="@+id/surface_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"/>
+    </LinearLayout>
+</FrameLayout>

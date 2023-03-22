@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    tools:ignore="MissingDefaultResource">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        tools:ignore="MissingConstraints">
+
+        <LinearLayout
+            android:id="@+id/buttons"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:columnCount="1"
+            android:rowCount="6"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/add_dot_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="add dot" />
+
+            <ToggleButton
+                android:id="@+id/swap_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOff="offense"
+                android:textOn="defense" />
+
+            <View
+                android:id="@+id/splitter_endzone"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@color/teal"/>
+
+            <Button
+                android:id="@+id/save_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="save" />
+
+            <Button
+                android:id="@+id/clear_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="clear" />
+
+            <Button
+                android:id="@+id/three_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="三人" />
+
+            <Button
+                android:id="@+id/five_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="五人" />
+
+            <Button
+                android:id="@+id/seven_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="七人" />
+
+        </LinearLayout>
+
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="5dp"
+            android:layout_height="match_parent"
+            android:background="?android:attr/listDivider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <View
+                android:id="@+id/head_divider"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:background="?android:attr/listDivider" />
+
+            <com.example.discboard.views.DiscBoard
+                android:id="@+id/disc_board"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/end_zone"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

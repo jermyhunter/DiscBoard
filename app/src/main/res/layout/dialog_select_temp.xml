@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity"
+    tools:ignore="MissingDefaultResource">
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:columnCount="5"
+        android:rowCount="2">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_rowSpan="1"
+            android:layout_columnSpan="5"
+            android:gravity="center"
+            android:text="选择模板"
+            android:textSize="22dp" />
+
+        <Button
+            android:id="@+id/my_preset_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/btn_margin_single_gap"
+            android:layout_rowSpan="1"
+            android:layout_columnSpan="1"
+            android:text="我的模板" />
+
+        <Button
+            android:id="@+id/three_preset_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/btn_margin_single_gap"
+            android:layout_rowSpan="1"
+            android:layout_columnSpan="1"
+            android:text="三人" />
+
+        <Button
+            android:id="@+id/five_preset_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/btn_margin_single_gap"
+            android:layout_rowSpan="1"
+            android:layout_columnSpan="1"
+            android:text="五人" />
+
+        <Button
+            android:id="@+id/verstack_preset_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/btn_margin_single_gap"
+            android:layout_rowSpan="1"
+            android:layout_columnSpan="1"
+            android:text="竖排" />
+
+        <Button
+            android:id="@+id/hostack_preset_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/btn_margin_single_gap"
+            android:layout_marginEnd="@dimen/btn_margin_single_gap"
+            android:layout_rowSpan="1"
+            android:layout_columnSpan="1"
+            android:text="横排" />
+    </GridLayout>
+</LinearLayout>

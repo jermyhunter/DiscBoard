@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/animatedBoardFragment">
+
+    <fragment
+        android:id="@+id/animatedBoardFragment"
+        android:name="com.example.discboard.fragments.AnimatedBoardFragment"
+        android:label="fragment_anim_board"
+        tools:layout="@layout/fragment_anim_board_hori" />
+
+    <fragment
+        android:id="@+id/staticBoardFragment"
+        android:name="com.example.discboard.fragments.StaticBoardFragment"
+        android:label="fragment_static_board"
+        tools:layout="@layout/fragment_static_board" />
+
+    <fragment
+        android:id="@+id/delTemplatePadFragment"
+        android:name="com.example.discboard.fragments.DelTemplatePad"
+        android:label="fragment_del_template_pad"
+        tools:layout="@layout/fragment_del_template_pad"/>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.discboard.fragments.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
+
+    <fragment
+        android:id="@+id/guidingFragment"
+        android:name="com.example.discboard.fragments.GuidingFragment"
+        android:label="fragment_guiding"
+        tools:layout="@layout/fragment_guiding" />
+
+    <fragment
+        android:id="@+id/feedbackFragment"
+        android:name="com.example.discboard.fragments.FeedbackFragment"
+        android:label="fragment_feedback"
+        tools:layout="@layout/fragment_feedback" />
+
+
+</navigation>

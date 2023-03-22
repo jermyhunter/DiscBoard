@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <fraction name="startDeltaX">5%</fraction>
+    <fraction name="endDeltaX">40%</fraction>
+
+    <fraction name="startDeltaY">5%</fraction>
+    <fraction name="endDeltaY">40%</fraction>
+</resources>

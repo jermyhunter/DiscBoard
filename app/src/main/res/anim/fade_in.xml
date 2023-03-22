@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@android:anim/accelerate_interpolator">
+    <alpha
+        android:fromAlpha="0"
+        android:toAlpha="1"
+        android:duration="@integer/fade_in_duration"
+        android:interpolator="@android:anim/decelerate_interpolator"/>
+    <translate
+        android:startOffset="0"
+        android:fromXDelta="@fraction/startDeltaX"
+        android:toXDelta="@fraction/startDeltaX"
+        android:fromYDelta="@fraction/startDeltaY"
+        android:toYDelta="@fraction/startDeltaY"
+        android:duration="@integer/fade_in_duration"
+        android:interpolator="@android:anim/decelerate_interpolator" />
+</set>
