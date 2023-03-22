@@ -18,7 +18,9 @@ import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.discboard.datatype.AnimTemp;
 import com.example.discboard.datatype.Dot;
+import com.example.discboard.datatype.InterDot;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -77,10 +79,9 @@ public class JsonDataHelper {
      * */
     public Set<String> loadTempNamesSetFromPref(){
         SharedPreferences shared = getContext().getSharedPreferences(USER_DATA_PREF, getContext().MODE_PRIVATE);
-        Set<String> hashset = shared.getStringSet(USER_DATA_ANIM_TEMP_LIST, new HashSet<>());
-//        Log.d(TAG, "loadTempNamesFromPref: " + hashset);
+        //        Log.d(TAG, "loadTempNamesFromPref: " + hashset);
 //        Log.d(TAG, "loadTempNamesFromPref: " + hashset.size());
-        return hashset;
+        return shared.getStringSet(USER_DATA_ANIM_TEMP_LIST, new HashSet<>());
     }
 
     public Boolean checkNameDuplication(String temp_name){
@@ -103,7 +104,7 @@ public class JsonDataHelper {
     /**
      * loading templates from shared preferences
      * */
-    public ArrayList<Hashtable<String, Dot>> loadAniDotsFromPref(String name) {
+    public ArrayList<Hashtable<String, Dot>> loadAnimDotsFromPref(String name) {
         ArrayList<Hashtable<String, Dot>> anim_dots_list = new ArrayList<>();
         SharedPreferences shared = getContext().getSharedPreferences(name, MODE_PRIVATE);
         int currentFrameNo = 0;
@@ -124,9 +125,71 @@ public class JsonDataHelper {
     }
 
     /**
+     * loading templates from shared preferences
+     * */
+    public AnimTemp loadAnimDotsFromPrefNew(String name) {
+        ArrayList<Hashtable<String, Dot>> anim_dots_list = new ArrayList<>();
+        ArrayList<Hashtable<String, InterDot>> inter_dots_list = new ArrayList<>();
+        SharedPreferences shared = getContext().getSharedPreferences(name, MODE_PRIVATE);
+        int currentFrameNo = 0;
+        String json_s = shared.getString(String.valueOf(currentFrameNo), "");
+        if(!Objects.equals(json_s, "")){
+            while(!Objects.equals(json_s, "")) {
+                if(currentFrameNo % 2 == 0) {// 偶数为帧，奇数为中间帧
+                    ArrayList<Dot> arr = new ArrayList<>();
+                    Dot[] dots = mGson.fromJson(json_s, Dot[].class);
+                    Collections.addAll(arr, dots);
+
+                    Hashtable<String, Dot> hashtable = Array2Hashtable(arr);
+                    anim_dots_list.add(hashtable);
+                }
+                else {
+                    ArrayList<InterDot> inter_arr = new ArrayList<>();
+                    InterDot[] inter_dots = mGson.fromJson(json_s, InterDot[].class);
+                    Collections.addAll(inter_arr, inter_dots);
+
+                    Hashtable<String, InterDot> inter_hashtable = InterArray2Hashtable(inter_arr);
+                    inter_dots_list.add(inter_hashtable);
+                }
+                currentFrameNo += 1;
+                json_s = shared.getString(String.valueOf(currentFrameNo), "");
+            }
+        }
+        return  new AnimTemp(anim_dots_list, inter_dots_list);
+    }
+
+    /**
      * save arraylist type data to shared preferences
      * usually called with addAniTempToPref()
      */
+    public void saveAniDotsToPref(String tempName, ArrayList<Hashtable<String, Dot>> animDotsList, ArrayList<Hashtable<String, InterDot>> interDotsList){
+        SharedPreferences shared = getContext().getSharedPreferences(tempName, getContext().MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+
+        int currentFrameNo = 0;
+        int length = interDotsList.size();
+        ArrayList<Dot> arr;
+        while(currentFrameNo < length){
+            arr = new ArrayList<>(animDotsList.get(currentFrameNo).values());
+            String json_s = transformData2Json(arr);
+//            Log.d(TAG, "save:" + currentFrameNo + ": " + json_s);
+            editor.putString(String.valueOf(currentFrameNo * 2), json_s);
+
+            arr = new ArrayList<>(interDotsList.get(currentFrameNo).values());
+            json_s = transformData2Json(arr);
+//            Log.d(TAG, "save:" + currentFrameNo + ": " + json_s);
+            editor.putString(String.valueOf(currentFrameNo * 2 + 1), json_s);
+
+            currentFrameNo += 1;
+        }
+
+        arr = new ArrayList<>(animDotsList.get(currentFrameNo).values());
+        String json_s = transformData2Json(arr);
+        editor.putString(String.valueOf(currentFrameNo * 2), json_s);
+
+        editor.apply();
+    }
+
     public void saveAniDotsToPref(String name, ArrayList<Hashtable<String, Dot>> anim_dots_list){
         SharedPreferences shared = getContext().getSharedPreferences(name, getContext().MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
@@ -190,6 +253,12 @@ public class JsonDataHelper {
         return hashtable;
     }
 
+    public Hashtable<String, InterDot> InterArray2Hashtable(ArrayList<InterDot> inter_arr){
+        Hashtable<String, InterDot> hashtable = new Hashtable<>();
+        inter_arr.forEach(inter_dot -> hashtable.put(inter_dot.getDotID(), inter_dot));
+        return hashtable;
+    }
+
     /**
      * transform object type data to json string
      *
@@ -204,10 +273,7 @@ public class JsonDataHelper {
      * */
     private static boolean isExternalStorageReadOnly() {
         String extStorageState = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(extStorageState)) {
-            return true;
-        }
-        return false;
+        return Environment.MEDIA_MOUNTED_READ_ONLY.equals(extStorageState);
     }
 
     /**
@@ -279,7 +345,7 @@ public class JsonDataHelper {
      *
      * */
     public String readFromExternalFile(Uri uri) {
-        String json_s = null;
+        String json_s;
         try {
             // 以字节流形式读入json文件字符串
             InputStream is = getContext().getContentResolver().openInputStream(uri);

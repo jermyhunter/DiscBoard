@@ -25,12 +25,14 @@ import androidx.core.content.ContextCompat;
 
 import com.example.discboard.JsonDataHelper;
 import com.example.discboard.R;
+import com.example.discboard.datatype.AnimTemp;
 import com.example.discboard.datatype.Dot;
 import com.example.discboard.datatype.InterDot;
 import com.google.android.material.math.MathUtils;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -50,7 +52,7 @@ import java.util.Objects;
  * */
 public class AnimatedDiscBoard extends View {
     final static int STROKE_WIDTH = 8;
-    Gson gson;
+    Gson mGson;
     private static int STEP_NUM = 100;
 //    private static float AMOUNT;
 //    Hashtable<String, DeltaXY> mDeltaXYHashtable;// 用于动画偏移存储
@@ -251,7 +253,7 @@ public class AnimatedDiscBoard extends View {
 
     // initiate the gson member
     void initGson() {
-        gson = new Gson();
+        mGson = new Gson();
     }
 
     private void clearBoard() {
@@ -281,7 +283,7 @@ public class AnimatedDiscBoard extends View {
 
         assert s != null;//如果没有用过 SharedPreferences 的情况，即 s 中没有数据为null的情况
         if(!s.equals("")) {// 如果存放有数据
-            Dot[] dot_array = gson.fromJson(s, Dot[].class);
+            Dot[] dot_array = mGson.fromJson(s, Dot[].class);
             Hashtable<String, Dot> dots_hashtable = new Hashtable<>();
             for(Dot dot : dot_array) dots_hashtable.put(dot.getDotID(), dot);
             mAnimDotsList.add(mCurrentFrameNo, dots_hashtable);
@@ -301,7 +303,7 @@ public class AnimatedDiscBoard extends View {
 
         assert s != null;//如果没有用过 SharedPreferences 的情况，即 s 中没有数据为null的情况
         if(!s.equals("")) {// 如果存放有数据
-            Dot[] dot_array = gson.fromJson(s, Dot[].class);
+            Dot[] dot_array = mGson.fromJson(s, Dot[].class);
             Hashtable<String, Dot> dots_hashtable = new Hashtable<>();
             for(Dot dot : dot_array) dots_hashtable.put(dot.getDotID(), dot);
             mAnimDotsList.add(mCurrentFrameNo, dots_hashtable);
@@ -321,7 +323,7 @@ public class AnimatedDiscBoard extends View {
 
         assert s != null;//如果没有用过 SharedPreferences 的情况，即 s 中没有数据为null的情况
         if(!s.equals("")) {// 如果存放有数据
-            Dot[] dot_array = gson.fromJson(s, Dot[].class);
+            Dot[] dot_array = mGson.fromJson(s, Dot[].class);
             Hashtable<String, Dot> dots_hashtable = new Hashtable<>();
             for(Dot dot : dot_array) dots_hashtable.put(dot.getDotID(), dot);
             mAnimDotsList.add(mCurrentFrameNo, dots_hashtable);
@@ -338,7 +340,7 @@ public class AnimatedDiscBoard extends View {
 
         assert s != null;//如果没有用过 SharedPreferences 的情况，即 s 中没有数据为null的情况
         if(!s.equals("")) {// 如果存放有数据
-            Dot[] dot_array = gson.fromJson(s, Dot[].class);
+            Dot[] dot_array = mGson.fromJson(s, Dot[].class);
             Hashtable<String, Dot> dots_hashtable = new Hashtable<>();
             for(Dot dot : dot_array) dots_hashtable.put(dot.getDotID(), dot);
             mAnimDotsList.add(mCurrentFrameNo, dots_hashtable);
@@ -355,7 +357,7 @@ public class AnimatedDiscBoard extends View {
 
         assert s != null;//如果没有用过 SharedPreferences 的情况，即 s 中没有数据为null的情况
         if(!s.equals("")) {// 如果存放有数据
-            Dot[] dot_array = gson.fromJson(s, Dot[].class);
+            Dot[] dot_array = mGson.fromJson(s, Dot[].class);
             Hashtable<String, Dot> dots_hashtable = new Hashtable<>();
             for(Dot dot : dot_array) dots_hashtable.put(dot.getDotID(), dot);
             mAnimDotsList.add(mCurrentFrameNo, dots_hashtable);
@@ -940,7 +942,7 @@ public class AnimatedDiscBoard extends View {
     public void saveAniDots(String temp_name){
         mJsonDataHelper.addAniTempToPref(temp_name);//add a new name to the temp list
 
-        mJsonDataHelper.saveAniDotsToPref(temp_name, mAnimDotsList);
+        mJsonDataHelper.saveAniDotsToPref(temp_name, mAnimDotsList, mInterDotsList);
     }
 
 
@@ -949,8 +951,9 @@ public class AnimatedDiscBoard extends View {
      *
      * @param temp_name
      */
-    ArrayList<Hashtable<String, Dot>> loadAniDotsFromTemp(String temp_name) {
+    AnimTemp loadAnimDotsFromTemp(String temp_name) {
         ArrayList<Hashtable<String, Dot>> anim_dots_list = new ArrayList<>();
+        ArrayList<Hashtable<String, InterDot>> inter_dots_list = new ArrayList<>();
         SharedPreferences shared = getContext().getSharedPreferences(temp_name, MODE_PRIVATE);
         int currentFrameNo = 0;
         String json_s = shared.getString(String.valueOf(currentFrameNo), "");
@@ -958,12 +961,22 @@ public class AnimatedDiscBoard extends View {
             clearBoard();
 
             while(!Objects.equals(json_s, "")) {
-                ArrayList<Dot> arr = new ArrayList<>();
-                Dot[] dots = gson.fromJson(json_s, Dot[].class);
-                Collections.addAll(arr, dots);
-
-                Hashtable<String, Dot> hashtable = mJsonDataHelper.Array2Hashtable(arr);
-                anim_dots_list.add(hashtable);
+                if(currentFrameNo % 2 == 0) {// 偶数为帧，奇数为中间帧
+                    ArrayList<Dot> arr = new ArrayList<>();
+                    Dot[] dots = mGson.fromJson(json_s, Dot[].class);
+                    Collections.addAll(arr, dots);
+//                    Log.d(TAG, "loadAnimDotsFromTemp: " + Arrays.toString(dots));
+                    Hashtable<String, Dot> hashtable = mJsonDataHelper.Array2Hashtable(arr);
+                    anim_dots_list.add(hashtable);
+                }
+                else {
+                    ArrayList<InterDot> inter_arr = new ArrayList<>();
+                    InterDot[] inter_dots = mGson.fromJson(json_s, InterDot[].class);
+                    Collections.addAll(inter_arr, inter_dots);
+//                    Log.d(TAG, "loadAnimDotsFromTemp: " + Arrays.toString(inter_dots));
+                    Hashtable<String, InterDot> inter_hashtable = mJsonDataHelper.InterArray2Hashtable(inter_arr);
+                    inter_dots_list.add(inter_hashtable);
+                }
                 currentFrameNo += 1;
                 json_s = shared.getString(String.valueOf(currentFrameNo), "");
             }
@@ -971,7 +984,7 @@ public class AnimatedDiscBoard extends View {
 
         mTempName = temp_name;
 
-        return  anim_dots_list;
+        return  new AnimTemp(anim_dots_list, inter_dots_list);
     }
 
     /**
@@ -979,7 +992,9 @@ public class AnimatedDiscBoard extends View {
      * and update UI
      * */
     public void loadDotsAndUpdateUI(String temp_name){
-        mAnimDotsList = loadAniDotsFromTemp(temp_name);
+        AnimTemp animTemp = loadAnimDotsFromTemp(temp_name);
+        mAnimDotsList = animTemp.getAnimDotsList();
+        mInterDotsList = animTemp.getInterDotsList();
 
         // listener to change the save btn mark in the fragment
         mAnimDiscBoardListener.onLoad();

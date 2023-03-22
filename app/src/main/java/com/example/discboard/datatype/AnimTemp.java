@@ -1,32 +1,24 @@
 package com.example.discboard.datatype;
 
+import java.util.ArrayList;
+import java.util.Hashtable;
+
 // NOT USING
 public class AnimTemp {
-    String mTempName;
-    String mAniDotsJsonS;
-    AnimTemp(){
-        mTempName = "";
-        mAniDotsJsonS = "";
+    ArrayList<Hashtable<String, Dot>> animDotsList;
+    ArrayList<Hashtable<String, InterDot>> interDotsList;
+
+    public AnimTemp(ArrayList<Hashtable<String, Dot>> anim_dots_list,
+                    ArrayList<Hashtable<String, InterDot>> inter_dots_list){
+        this.animDotsList = anim_dots_list;
+        this.interDotsList = inter_dots_list;
     }
 
-    AnimTemp(String tempName, String aniDotsJsonS){
-        mTempName = tempName;
-        mAniDotsJsonS = aniDotsJsonS;
+    public ArrayList<Hashtable<String, Dot>> getAnimDotsList() {
+        return animDotsList;
     }
 
-    public void setTempName(String tempName) {
-        mTempName = tempName;
-    }
-
-    public String getTempName() {
-        return mTempName;
-    }
-
-    public void setAniDotsJsonS(String aniDotsJsonS) {
-        mAniDotsJsonS = aniDotsJsonS;
-    }
-
-    public String getAniDotsJsonS() {
-        return mAniDotsJsonS;
+    public ArrayList<Hashtable<String, InterDot>> getInterDotsList() {
+        return interDotsList;
     }
 }

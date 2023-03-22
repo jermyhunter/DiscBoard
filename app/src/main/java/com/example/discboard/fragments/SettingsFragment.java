@@ -243,7 +243,7 @@ public class SettingsFragment extends Fragment {
 
             int i = 0;
             for (String tempName : mAniTempList) {
-                ArrayList<Hashtable<String, Dot>> anim_dots = new ArrayList<>(mJsonDataHelper.loadAniDotsFromPref(tempName));
+                ArrayList<Hashtable<String, Dot>> anim_dots = new ArrayList<>(mJsonDataHelper.loadAnimDotsFromPref(tempName));
                 String json_s = mJsonDataHelper.transformData2Json(anim_dots);
 
                 JSONArray ja_dots = new JSONArray(json_s);
@@ -263,9 +263,9 @@ public class SettingsFragment extends Fragment {
             jo_anim_temp_list.put(IO_ANIM_TEMP_LIST, ja_anim_temp_list);
             ja_whole.put(jo_anim_temp_list);
 
-            JSONObject jo_anim_dots_list = new JSONObject();
-            jo_anim_dots_list.put(IO_ANIM_DOTS_LIST, ja_anim_dots_list);
-            ja_whole.put(jo_anim_dots_list);
+            JSONObject jo_dots_list = new JSONObject();
+            jo_dots_list.put(IO_ANIM_DOTS_LIST, ja_anim_dots_list);
+            ja_whole.put(jo_dots_list);
 
             mJsonDataHelper.writeToExternalFile(ja_whole.toString(), file_name);
         } else {
