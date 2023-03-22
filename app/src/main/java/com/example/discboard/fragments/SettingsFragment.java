@@ -132,7 +132,6 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-
         mExportDialogFragment = new ExportDialogFragment();
         mExportDialogFragment.setExportDialogListener(file_name -> {
             try {

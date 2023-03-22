@@ -52,6 +52,7 @@ import java.util.Objects;
  *      plan B, treat it as curved line, using inter_dot
  * */
 public class AnimatedDiscBoard extends View {
+    private boolean mSavedFlag;// used for unsaved data checking
     final static int STROKE_WIDTH = 8;
     Gson mGson;
     private static int STEP_NUM = 100;
@@ -62,6 +63,7 @@ public class AnimatedDiscBoard extends View {
     String mTempName;
     JsonDataHelper mJsonDataHelper;
 
+    /* abandoned plan A
     class DeltaXY{
         float delta_X, delta_Y;
         float pre_X, pre_Y;
@@ -104,7 +106,11 @@ public class AnimatedDiscBoard extends View {
             return pre_Y;
         }
     }
+    */
 
+    /*
+     * used for animation path length calculation
+     */
     class Dist{
         float dist;
         float deltaDis;
@@ -262,14 +268,22 @@ public class AnimatedDiscBoard extends View {
         mGson = new Gson();
     }
 
+    /**
+     * called in every load temp
+     */
     private void clearBoard() {
+        resetSavedFlag();
         // have to set CurrentFrameNo to 0 first, so the slider UI would be correct
         // then clear the dots
         setCurrentFrameNo(0);
-
         clearDots();
     }
-
+    void resetSavedFlag(){
+        mSavedFlag = false;
+    }
+    void setSavedFlag(){
+        mSavedFlag = true;
+    }
     private void clearDots() {
         mAnimDotsList.clear();
         mInterDotsList.clear();
@@ -278,6 +292,7 @@ public class AnimatedDiscBoard extends View {
     public void loadDefaultTemp(){
         clearBoard();
 
+        // load vertical stack as default
         loadVerstackPreset();
     }
 
@@ -485,6 +500,7 @@ public class AnimatedDiscBoard extends View {
                         Dot dot = cur_hashtable.get(id);
                         if (dot.isInside(event.getX(), event.getY())) {
                             mEnabledDot = mTouchedDot = dot;
+
                             // notice: mEnabledInterDot could be null
                             if (mCurrentFrameNo >= 1) {
                                 mEnabledInterDot = mInterDotsList.get(mCurrentFrameNo - 1).get(mEnabledDot.getRelativeInterDotID());
@@ -497,10 +513,14 @@ public class AnimatedDiscBoard extends View {
                 else{//  mEnabledDot != null && mEnabledInterDot != null
                     // 需要先检测dot,再是inter_dot,不然操作手感很差
                     if(mEnabledInterDot != null) {
-                        if (mEnabledDot.isInside(event.getX(), event.getY()))
+                        if (mEnabledDot.isInside(event.getX(), event.getY())) {
                             mTouchedDot = mEnabledDot;
-                        else if (mEnabledInterDot.isInside(event.getX(), event.getY()))
+
+                        }
+                        else if (mEnabledInterDot.isInside(event.getX(), event.getY())){
                             mTouchedInterDot = mEnabledInterDot;
+
+                        }
                         else {
                             /*
                              * 如果选中了某个点，但...
@@ -516,6 +536,7 @@ public class AnimatedDiscBoard extends View {
                                 Dot dot = cur_hashtable.get(id);
                                 if (dot.isInside(event.getX(), event.getY())) {
                                     mEnabledDot = mTouchedDot = dot;
+
                                     // notice: mEnabledInterDot could be null
                                     if (mCurrentFrameNo >= 1) {
                                         mEnabledInterDot = mInterDotsList.get(mCurrentFrameNo - 1).get(mEnabledDot.getRelativeInterDotID());
@@ -595,8 +616,7 @@ public class AnimatedDiscBoard extends View {
                     }
                     mTouchedDot = null;
                 }
-
-                if(mTouchedInterDot != null) {// reset status
+                else if(mTouchedInterDot != null) {// reset status
                     // prevent the dot from exceeding the border
                     if(mTouchedInterDot.getX() - (CIRCLE_RADIUS/2f + DELTA_E) < 0f){
                         mTouchedInterDot.setX(0f + CIRCLE_RADIUS/2f + DELTA_E);
@@ -614,7 +634,6 @@ public class AnimatedDiscBoard extends View {
                     // 移动中间节点后，需要设置其为移动过的点，不再随节点调整位置
                     if(!mTouchedInterDot.isTouched())
                         mTouchedInterDot.touched();
-
                     mTouchedInterDot = null;
                 }
                 invalidate();
@@ -956,10 +975,10 @@ public class AnimatedDiscBoard extends View {
      * */
     public void saveAniDots(String temp_name){
         mJsonDataHelper.addAniTempToPref(temp_name);//add a new name to the temp list
-
         mJsonDataHelper.saveAniDotsToPrefNew(temp_name, mAnimDotsList, mInterDotsList);
-    }
 
+        setSavedFlag();
+    }
 
     /**
      * load anim_dots_list data from preferences using template name
@@ -1004,7 +1023,7 @@ public class AnimatedDiscBoard extends View {
 
     /**
      * load dots by name, set the currentFrameNo to 0
-     * and update UI
+     * and update UI(eg. slider)
      * */
     public void loadDotsAndUpdateUI(String temp_name){
         AnimTemp animTemp = loadAnimDotsFromTemp(temp_name);

@@ -40,13 +40,13 @@ public class AnimatedBoardFragment extends Fragment {
     String TAG = "AnimatedBoardFragment";
     Boolean mLoadedMark;// true: if load/create btn has been pressed
     String mTempName;// store the name of already loaded template animation
-    Button mSaveOldTempBtn, mLoadTempBtn, mDelFrameBtn, mInsertFrameBtn;
+    Button mSaveOldTempBtn, mLoadTempBtn, mDelFrameBtn, mInsertFrameBtn,
+        mRevokeBtn;
     JsonDataHelper mJsonDataHelper;
     static ArrayList<String> mAniTempList;
     Slider mFrameSlider;
     static AnimatedDiscBoard mAnimatedDiscBoard;
     private boolean mDelPressFlag;
-
     public AnimatedBoardFragment() {
         // Required empty public constructor
     }
@@ -74,6 +74,8 @@ public class AnimatedBoardFragment extends Fragment {
 
         mJsonDataHelper = new JsonDataHelper(getContext());
         mDelPressFlag = false;
+
+        mLoadTempDialogFragment = new LoadTempDialogFragment();
     }
 
     @Override
@@ -84,43 +86,37 @@ public class AnimatedBoardFragment extends Fragment {
         mAnimatedDiscBoard = v.findViewById(R.id.animated_discboard);
         mSaveOldTempBtn = v.findViewById(R.id.save_old_temp_btn);
         mLoadTempBtn = v.findViewById(R.id.load_temp_btn);
+        mRevokeBtn = v.findViewById(R.id.revoke_btn);
         setLoadedMarkAndTempName(false, "");
 
         // load temp
-        mLoadTempBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mAniTempList = mJsonDataHelper.loadTempNamesFromPref();
-                if(mAniTempList == null || mAniTempList.size() == 0){
-                    Toast.makeText(getActivity(), "请先创建新的战术！", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    mLoadTempDialogFragment = new LoadTempDialogFragment();
-                    mLoadTempDialogFragment.show(getChildFragmentManager(), "读取战术模板");
-                }
+        mLoadTempBtn.setOnClickListener(view -> {
+            mAniTempList = mJsonDataHelper.loadTempNamesFromPref();
+            if(mAniTempList == null || mAniTempList.size() == 0){
+                Toast.makeText(getActivity(), "请先创建新的战术！", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                mLoadTempDialogFragment.show(getChildFragmentManager(), "读取战术模板");
             }
         });
 
         // 如果读取原有战术，那么添加“保存”选项；如果是新创建的战术，不显示“保存”选项
-        mSaveOldTempBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(isLoaded()) {
-                    mAnimatedDiscBoard.saveAniDots(mTempName);
-                }
-                else {
-                    Toast.makeText(getActivity(), "保存标记错误，出现bug", Toast.LENGTH_SHORT).show();
-                }
+        mSaveOldTempBtn.setOnClickListener(view -> {
+            if(isLoaded()) {
+                mAnimatedDiscBoard.saveAniDots(mTempName);
+                Toast.makeText(getContext(), R.string.SAVE_SUCCESS_HINT, Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(getActivity(), "保存标记错误，出现bug！", Toast.LENGTH_SHORT).show();
             }
         });
 
         v.findViewById(R.id.save_new_temp_btn).setOnClickListener(view -> {
             mSaveDialogFragment = new SaveDialogFragment();
-            mSaveDialogFragment.setSaveDialogListener(new SaveDialogFragment.SaveDialogListener() {
-                @Override
-                public void onSaveListener(String name) {
-                    setLoadedMarkAndTempName(true, name);
-                }
+            mSaveDialogFragment.setSaveDialogListener(name -> {
+                setLoadedMarkAndTempName(true, name);
+
+                Toast.makeText(getContext(), R.string.SAVE_AS_SUCCESS_HINT, Toast.LENGTH_SHORT).show();
             });
             mSaveDialogFragment.show(getChildFragmentManager(), "保存模板");
         });
@@ -131,17 +127,14 @@ public class AnimatedBoardFragment extends Fragment {
         });
 
         mDelFrameBtn = v.findViewById(R.id.del_frame_btn);
-        mDelFrameBtn.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if(!mDelPressFlag) {
-                    mDelFrameBtn.setText("删除帧");
-                    mDelPressFlag = true;
-                }
-                view.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.del_anim));
-                mAnimatedDiscBoard.deleteFrame();
-                return false;
+        mDelFrameBtn.setOnLongClickListener(view -> {
+            if(!mDelPressFlag) {
+                mDelFrameBtn.setText("删除帧");
+                mDelPressFlag = true;
             }
+            view.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.del_anim));
+            mAnimatedDiscBoard.deleteFrame();
+            return false;
         });
 
         v.findViewById(R.id.play_anim_btn).setOnClickListener(view -> {
@@ -258,7 +251,7 @@ public class AnimatedBoardFragment extends Fragment {
 
     void setLoadedMarkAndTempName(Boolean loadedMark, String tempName) {
         mLoadedMark = loadedMark;
-        setSaveOldBtn(loadedMark);
+        setSaveOldBtnState(loadedMark);
         mTempName = tempName;
     }
 
@@ -266,7 +259,7 @@ public class AnimatedBoardFragment extends Fragment {
         return mLoadedMark;
     }
 
-    private void setSaveOldBtn(boolean b) {
+    private void setSaveOldBtnState(boolean b) {
         if(b){
             mSaveOldTempBtn.setVisibility(View.VISIBLE);
             mSaveOldTempBtn.setEnabled(true);
@@ -330,7 +323,6 @@ public class AnimatedBoardFragment extends Fragment {
     }
 
     public static class LoadTempDialogFragment extends DialogFragment implements AnimTempItemAdapter.OnAniTempListener {
-//        List<String> aniTempList;
         RecyclerView recyclerView;
         AnimTempItemAdapter mAnimTempItemAdapter;
         static String TAG = "LoadTempDialogFragment";

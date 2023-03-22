@@ -8,29 +8,30 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.example.discboard.datatype.Dot;
-import com.example.discboard.datatype.InterDot;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.Hashtable;
 
 public class MainActivity extends AppCompatActivity {
     DrawerLayout mDrawerLayout;
@@ -43,8 +44,13 @@ public class MainActivity extends AppCompatActivity {
     NavController mNavController;
     String TAG = "MainTest";
 
+    DoubleCheckDialogFragment mDoubleCheckDialogFragment;
     Gson mGson;
+    MenuItem mSelectedMenuItem, mSelectedMenuItem1;
+    int mMenuPos, mMenuPos1;
+    int mNaviDestID, mNaviDestID1;
 
+    Hashtable<Integer, Integer> mMenuItemID2Pos, mMenuItemID2FragmentID;
     static final class FragmentIndex{
         static int StaticBoardIndex = 0,
         AnimatedBoardIndex = 1,
@@ -143,11 +149,66 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setDrawerLogic() {
+        mDoubleCheckDialogFragment = new DoubleCheckDialogFragment();
+        mDoubleCheckDialogFragment.setSaveDialogListener(() -> {
+            mNavigationView.getMenu().getItem(mMenuPos).setChecked(false);
+            mNavigationView.getMenu().getItem(mMenuPos1).setChecked(true);
+            mMenuPos = mMenuPos1;
+            mNaviDestID = mNaviDestID1;
+            mSelectedMenuItem = mSelectedMenuItem1;
+            mNavController.popBackStack();
+            mNavController.navigate(mNaviDestID);
+        });
+
+        mMenuItemID2Pos = new Hashtable<Integer, Integer>();
+        mMenuItemID2Pos.put(R.id.navi_static_board, FragmentIndex.StaticBoardIndex);
+        mMenuItemID2Pos.put(R.id.navi_animated_board, FragmentIndex.AnimatedBoardIndex);
+        mMenuItemID2Pos.put(R.id.navi_del_template_pad, FragmentIndex.DelTemplatePadIndex);
+        mMenuItemID2Pos.put(R.id.navi_settings, FragmentIndex.SettingsIndex);
+        mMenuItemID2Pos.put(R.id.navi_guiding, FragmentIndex.GuidingIndex);
+        mMenuItemID2Pos.put(R.id.navi_feedback, FragmentIndex.FeedbackIndex);
+
+        mMenuItemID2FragmentID= new Hashtable<Integer, Integer>();
+        mMenuItemID2FragmentID.put(R.id.navi_static_board, R.id.staticBoardFragment);
+        mMenuItemID2FragmentID.put(R.id.navi_animated_board, R.id.animatedBoardFragment);
+        mMenuItemID2FragmentID.put(R.id.navi_del_template_pad, R.id.delTemplatePadFragment);
+        mMenuItemID2FragmentID.put(R.id.navi_settings, R.id.settingsFragment);
+        mMenuItemID2FragmentID.put(R.id.navi_guiding, R.id.guidingFragment);
+        mMenuItemID2FragmentID.put(R.id.navi_feedback, R.id.feedbackFragment);
+
         mNavigationView = findViewById(R.id.navi_drawer_menu);
+
         // set the default item highlighted
-        mNavigationView.getMenu().getItem(0).setChecked(true);
+        mMenuPos = FragmentIndex.AnimatedBoardIndex;
+        mSelectedMenuItem = mNavigationView.getMenu().getItem(mMenuPos);
+        mNaviDestID = mSelectedMenuItem.getItemId();
+        mSelectedMenuItem.setChecked(true);
 
         mNavigationView.setNavigationItemSelectedListener(menu_item -> {
+            // 记录目的地，如果当前对象为 animBoard，那么 提示 doubleCheck
+            // reset last menu_item state
+            mSelectedMenuItem1 = menu_item;
+            int menu_item_id = mSelectedMenuItem1.getItemId();
+            mNaviDestID1 = mMenuItemID2FragmentID.get(menu_item_id);
+            mMenuPos1 = mMenuItemID2Pos.get(menu_item_id);
+            // if the before-switching pos is static or anim, then show the data check dialog
+            if(mMenuPos1 != mMenuPos){// if the start and dest are not the same location
+//                if(mMenuPos == FragmentIndex.StaticBoardIndex || mMenuPos == FragmentIndex.AnimatedBoardIndex) {
+//                    mDoubleCheckDialogFragment.show(mSupportFragmentManager, "数据丢弃确认");
+//                }
+//                else {
+                    mNavigationView.getMenu().getItem(mMenuPos).setChecked(false);
+                    mNavigationView.getMenu().getItem(mMenuPos1).setChecked(true);
+                    mNaviDestID = mNaviDestID1;
+                    mMenuPos = mMenuPos1;
+                    mSelectedMenuItem = mSelectedMenuItem1;
+                    mNavController.popBackStack();
+                    mNavController.navigate(mNaviDestID);
+//                }
+            }
+            // if the start and dest are the same location, then do nothing
+
+            /* abandoned menu switch plan
             int menu_item_id = menu_item.getItemId();
             int menu_size = mNavigationView.getMenu().size();
             switch (menu_item_id){
@@ -196,6 +257,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     break;
             }
+            */
             return true;
         });
     }
@@ -308,5 +370,36 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    public static class DoubleCheckDialogFragment extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the Builder class for convenient dialog construction
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            // Get the layout inflater
+            LayoutInflater inflater = getActivity().getLayoutInflater();// * 从 requireActivity() 改为 getActivity()
+
+            // Inflate and set the layout for the dialog
+            // Pass null as the parent view because its going in the dialog layout
+            View dialogView = inflater.inflate(R.layout.dialog_save_check, null);
+
+            builder.setView(dialogView)
+                    .setPositiveButton("跳转", (dialogInterface, i) -> mDoubleCheckDialogListener.onCheckListener())
+                    .setNegativeButton("取消", (dialogInterface, i) -> {
+                    });
+
+            return builder.create();
+        }
+
+        DoubleCheckDialogListener mDoubleCheckDialogListener;
+
+        public void setSaveDialogListener(DoubleCheckDialogListener DoubleCheckDialogListener) {
+            mDoubleCheckDialogListener = DoubleCheckDialogListener;
+        }
+
+        public interface DoubleCheckDialogListener{
+            void onCheckListener();
+        }
     }
 }
