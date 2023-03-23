@@ -7,7 +7,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="DEL_FRAME_HINT">长按删除帧！</string>
     <string name="NO_ANIM_HINT">请先制作战术！</string>
-    <string name="DEL_FRAME_SUCCESS_HINT">删除帧成功!</string>
+    <string name="DEL_FRAME_SUCCESS_HINT">删除成功!</string>
     <string name="SAVE_SUCCESS_HINT">保存战术成功！</string>
     <string name="SAVE_AS_SUCCESS_HINT">另存战术成功！</string>
+    <string name="AUTO_SAVE_SUCCESS_HINT">自动保存成功</string>
 </resources>

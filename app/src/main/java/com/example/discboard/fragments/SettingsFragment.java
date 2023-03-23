@@ -23,6 +23,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +54,7 @@ public class SettingsFragment extends Fragment {
     static String TAG = "Settings Fragment";
     JsonDataHelper mJsonDataHelper;
     Button mImportBtn, mExportBtn, mShareBtn;
+    CheckBox mAutoSaveCB;
     Slider mAnimSpeedCtrlSlider;
     TextView mSliderText;
     ArrayList<String> mAniTempList;
@@ -93,8 +96,20 @@ public class SettingsFragment extends Fragment {
         mExportBtn = v.findViewById(R.id.export_btn);
         mImportBtn = v.findViewById(R.id.import_btn);
         mShareBtn = v.findViewById(R.id.share_btn);
+        mAutoSaveCB = v.findViewById(R.id.auto_save_cb);
         mAnimSpeedCtrlSlider = v.findViewById(R.id.anim_speed_ctrl_slider);
         mAnimSpeedCtrlSlider.setValue(mJsonDataHelper.getIntegerFromUserPreferences(USER_DATA_ANIM_SPEED));
+
+        // initiate checkbox from loaded mark state
+        boolean auto_save_mark = mJsonDataHelper.getBooleanFromUserPreferences(USER_DATA_AUTO_SAVE_MARK, false);
+        mAutoSaveCB.setChecked(auto_save_mark);
+        mAutoSaveCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                mJsonDataHelper.setBooleanToUserPreferences(USER_DATA_AUTO_SAVE_MARK, b);
+//                Toast.makeText(getContext(), "" + b, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         mAnimSpeedCtrlSlider.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
             @SuppressLint("RestrictedApi")
@@ -165,7 +180,7 @@ public class SettingsFragment extends Fragment {
         v.findViewById(R.id.init_temp_btn).setOnClickListener(view -> {
             mJsonDataHelper.setBooleanToUserPreferences(USER_DATA_FIRST_RUN_MARK, true);
             Toast.makeText(getContext(), "模板初始化完成，请重新启动程序！", Toast.LENGTH_LONG).show();
-//            Log.d(TAG, "FIRST MARK: SETTING" + mJsonDataHelper.getBooleanToUserPreferences(USER_DATA_FIRST_RUN_MARK));
+//            Log.d(TAG, "FIRST MARK: SETTING" + mJsonDataHelper.getBooleanFromUserPreferences(USER_DATA_FIRST_RUN_MARK));
         });
         /*
          * 导入数据 ->
@@ -203,7 +218,7 @@ public class SettingsFragment extends Fragment {
                                     if (mJsonDataHelper.checkNameDuplication(temp_name)) {
                                         temp_name = temp_name + FILE_DUPLICATION_SUFFIX;
                                     }
-                                    mJsonDataHelper.saveAniDotsToPrefNew(temp_name, anim_dots_list, inter_dots_list);
+                                    mJsonDataHelper.saveAnimDotsToPrefNew(temp_name, anim_dots_list, inter_dots_list);
                                     mJsonDataHelper.addAniTempToPref(temp_name);
                                     temp_counter++;
                                 }
@@ -268,7 +283,7 @@ public class SettingsFragment extends Fragment {
             JSONArray ja_whole = new JSONArray();
 
             JSONObject jo_head = new JSONObject();
-            jo_head.put(IO_HEAD, IO_HEAD_TYPE);
+            jo_head.put(IO_HEAD, IO_HEAD_VERSION_NO);
             ja_whole.put(jo_head);
 
             JSONObject jo_anim_temp_list = new JSONObject();

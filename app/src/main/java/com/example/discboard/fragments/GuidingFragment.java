@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
@@ -25,7 +26,7 @@ import com.example.discboard.R;
 public class GuidingFragment extends Fragment {
     private static final String TAG = "GuidingFragment";
     MediaPlayer mTemplateSharingMP, mAnimationMP, mLoadAndSaveMP,
-    mExportingAndSharingMP, mImportingMP;
+    mExportingAndSharingMP, mImportingMP, mAutoSaveMP;
 
     MediaPlayer mCurrentMP;
 
@@ -148,7 +149,17 @@ public class GuidingFragment extends Fragment {
                 setCurrentMP(mImportingMP);
             }
         });
-        
+
+        v.findViewById(R.id.auto_save_btn).setOnClickListener(view -> {
+            releaseCurrentMP();
+            mAutoSaveMP = MediaPlayer.create(getContext(), R.raw.auto_save);
+            resizeSurfaceView2Video(mAutoSaveMP);
+            mAutoSaveMP.setDisplay(holder);
+            mAutoSaveMP.start();
+            mAutoSaveMP.setLooping(true);
+            setCurrentMP(mAutoSaveMP);
+        });
+
         return v;
     }
 
@@ -162,15 +173,20 @@ public class GuidingFragment extends Fragment {
 
     private void resizeSurfaceView2Video(MediaPlayer mp) {
 
-        // // Get the dimensions of the video
+         // Get the dimensions of the video
         int videoWidth = mp.getVideoWidth();
         int videoHeight = mp.getVideoHeight();
         float videoProportion = (float) videoWidth / (float) videoHeight;
 //        Log.d(TAG, "videoWidth: " + videoWidth);
 //        Log.d(TAG, "videoHeight: " + videoHeight);
 
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int screenWidth = displayMetrics.widthPixels - 5;
+
         // Get the width of the screen
-        int surfaceViewWidth = mSurfaceView.getWidth();
+        // surfaceView width must be smaller than the (screenWidth - delta_e)
+        int surfaceViewWidth = Math.min(mSurfaceView.getWidth(), screenWidth);
         int surfaceViewHeight = mSurfaceView.getHeight();
 //        Log.d(TAG, "surfaceViewWidth: " + surfaceViewWidth);
 //        Log.d(TAG, "surfaceViewHeight: " + surfaceViewHeight);

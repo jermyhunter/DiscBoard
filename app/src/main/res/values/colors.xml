@@ -8,7 +8,11 @@
     <color name="InterDotColor">#AFEEEE</color>
 
     <color name="btn_color">#00BFFF</color>
-    <color name="btn_highlight_color">#F08080</color>
+    <color name="btn_txt_highlight_color">#F08080</color>
+    <color name="btn_bg_highlight_color">#F08080</color>
+    <color name="btn_bg_deep_color">#CD5C5C</color>
+    <color name="txt_light_color">#FFFFFF</color>
+    <color name="txt_deep_color">#FF4500</color>
 
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>

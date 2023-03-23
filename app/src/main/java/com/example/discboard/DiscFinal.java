@@ -3,6 +3,7 @@ package com.example.discboard;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.DisplayMetrics;
+import android.view.View;
 
 import com.example.discboard.datatype.Dot;
 import com.example.discboard.datatype.InterDot;
@@ -12,6 +13,8 @@ import com.example.discboard.datatype.InterDot;
  * frequently used data, all static
  * */
 public class DiscFinal {
+    // auto-save delay, determine how often the auto-save function would launch
+    public final static int AUTO_SAVE_DELAY = 25 * 1000;
     public final static int CIRCLE_RADIUS = 35;
     public final static int INTER_DOT_RADIUS = 30;
     public final static int CIRCLET_RADIUS = 12;
@@ -36,11 +39,14 @@ public class DiscFinal {
     public final static String USER_DATA_EXPORTED_FILE_PATH = "exported_file_path";
     public final static String USER_DATA_ANIM_TEMP_LIST = "anim_temp_list";
     public final static String USER_DATA_ANIM_SPEED = "anim_speed";
+    public final static String USER_DATA_AUTO_SAVE_MARK = "auto_save";
     public final static String USER_INIT_PREFERENCE = "init_data";
 
     public final static int ANIM_SPEED_INIT = 75;
     public final static String IO_HEAD = "head";
-    public final static String IO_HEAD_TYPE = "animation_templates";
+    // add ver. number
+    public final static String IO_HEAD_VERSION_NO = "ver1.1";
+    // IO_HEAD_VERSION_NO 对应版本号，可以据此编写向前的版本兼容，将导入的文件转化为兼容版
     public final static String IO_ANIM_TEMP_LIST = "anim_temp_list";
     public final static String IO_ANIM_DOTS_LIST = "anim_dots_list";
     public final static String EXPORT_FILE_SUFFIX = ".json";
@@ -52,6 +58,25 @@ public class DiscFinal {
     }
 
     public static void moveCircleInbounds(Canvas canvas, Dot dot_new){
+//        Dot dot_new = new Dot(dot);
+        float x = dot_new.getX();
+        float y = dot_new.getY();
+        if(x - (CIRCLE_RADIUS/2f + DELTA_E) < 0f){
+            dot_new.setX(0f + CIRCLE_RADIUS/2f + DELTA_E);
+        }
+        if(x + (CIRCLE_RADIUS/2f + DELTA_E) > canvas.getWidth()){
+            dot_new.setX(canvas.getWidth() - (CIRCLE_RADIUS/2f + DELTA_E));
+        }
+
+        if(y - (CIRCLE_RADIUS/2f + DELTA_E) < 0f) {
+            dot_new.setY(0f + CIRCLE_RADIUS/2f + DELTA_E);
+        }
+        if(y + (CIRCLE_RADIUS/2f + DELTA_E) > canvas.getHeight()) {
+            dot_new.setY(canvas.getHeight() - (CIRCLE_RADIUS/2f + DELTA_E));
+        }
+    }
+
+    public static void moveCircleInbounds(View canvas, Dot dot_new){
 //        Dot dot_new = new Dot(dot);
         float x = dot_new.getX();
         float y = dot_new.getY();

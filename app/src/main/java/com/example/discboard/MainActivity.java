@@ -42,9 +42,11 @@ public class MainActivity extends AppCompatActivity {
 
     JsonDataHelper mJsonDataHelper;
     NavController mNavController;
-    String TAG = "MainTest";
 
-    DoubleCheckDialogFragment mDoubleCheckDialogFragment;
+    String TAG = "MainActivity";
+
+    UnSavedCheckDialogFragment mUnSavedCheckDialogFragment;
+    AutoSaveCheckDialogFragment mAutoSaveCheckDialogFragment;
     Gson mGson;
     MenuItem mSelectedMenuItem, mSelectedMenuItem1;
     int mMenuPos, mMenuPos1;
@@ -63,9 +65,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mGson = new Gson();
-
 //        // deserialize testing
 //        InterDot interDot = mGson.fromJson("{\"dot_type\":-1,\"seq_No\":2,\"x\":695.5,\"y\":628.5,\"touched\"=false}", InterDot.class);
 //        if(interDot instanceof InterDot)
@@ -76,26 +76,26 @@ public class MainActivity extends AppCompatActivity {
 //            Log.d(TAG, "onCreate: " + dot);
 
         mJsonDataHelper = new JsonDataHelper(this);
-        // TODO:在所有内容制作完成后删除
-        Toast.makeText(this, "本版本为预发布版\n主要功能已制作完成", Toast.LENGTH_SHORT).show();
-
         // 全屏沉浸模式
         setImmersedMode();
         // 保持屏幕常亮
         keepScreenAwake();
-
+        // requestFeature() must be called before adding contents
         setContentView(R.layout.activity_main);
-        // data init on 1st run
-        initDataOn1stRun();
+
         // init the side drawer menu
         initDrawerMenu();
 
         //-------------Navigation Init-------------
         initNavigationFragment();
 
-        //-------------Navigation Drawer Click Handler-------------
+        //------Navigation Drawer Click Handler-------
         setDrawerLogic();
 
+        //----------data init on 1st run-----------
+        initDataOn1stRun();
+        // TODO:在所有内容制作完成后删除
+        Toast.makeText(this, "本版本为预发布版\n主要功能已制作完成", Toast.LENGTH_SHORT).show();
         // pos_y:Endzone暂时跳过
 //        setContentView(R.layout.endzone);
     }
@@ -149,8 +149,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setDrawerLogic() {
-        mDoubleCheckDialogFragment = new DoubleCheckDialogFragment();
-        mDoubleCheckDialogFragment.setSaveDialogListener(() -> {
+        mUnSavedCheckDialogFragment = new UnSavedCheckDialogFragment();
+        mUnSavedCheckDialogFragment.setSaveDialogListener(() -> {
             mNavigationView.getMenu().getItem(mMenuPos).setChecked(false);
             mNavigationView.getMenu().getItem(mMenuPos1).setChecked(true);
             mMenuPos = mMenuPos1;
@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
         mNavigationView = findViewById(R.id.navi_drawer_menu);
 
         // set the default item highlighted
-        mMenuPos = FragmentIndex.AnimatedBoardIndex;
+        mMenuPos = FragmentIndex.StaticBoardIndex;
         mSelectedMenuItem = mNavigationView.getMenu().getItem(mMenuPos);
         mNaviDestID = mSelectedMenuItem.getItemId();
         mSelectedMenuItem.setChecked(true);
@@ -287,14 +287,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initDataOn1stRun(){
-        Gson gson = new Gson();
+        String s;
 
-        String s = null;
-        SharedPreferences shared = getSharedPreferences(USER_INIT_PREFERENCE, MODE_PRIVATE);
-
-
-        if(mJsonDataHelper.getBooleanToUserPreferences(USER_DATA_FIRST_RUN_MARK, true))
+        if(mJsonDataHelper.getBooleanFromUserPreferences(USER_DATA_FIRST_RUN_MARK, true))
         {
+            SharedPreferences shared = getSharedPreferences(USER_INIT_PREFERENCE, MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             s = mJsonDataHelper.loadJSONFromAsset("dots_3.json");
             editor.putString(USER_DATA_TEMP_3, s); // preload 3 players
@@ -304,6 +301,8 @@ public class MainActivity extends AppCompatActivity {
             editor.putString(USER_DATA_TEMP_VER, s); // preload 7 players / vertical stack
             s = mJsonDataHelper.loadJSONFromAsset("ho_stack.json");
             editor.putString(USER_DATA_TEMP_HO, s); // horizontal stack
+
+            editor.putBoolean(USER_DATA_AUTO_SAVE_MARK, false);
 
             editor.apply();
 
@@ -325,8 +324,28 @@ public class MainActivity extends AppCompatActivity {
 
             // init animation playing speed
             editor.putInt(USER_DATA_ANIM_SPEED, ANIM_SPEED_INIT);
-
             editor.apply();
+
+            mAutoSaveCheckDialogFragment = new AutoSaveCheckDialogFragment();
+            mAutoSaveCheckDialogFragment.setCancelable(false);
+            mAutoSaveCheckDialogFragment.setAutoSaveCheckDialogListener(new AutoSaveCheckDialogFragment.AutoSaveCheckDialogListener() {
+                @Override
+                public void onCancelListener() {
+                    SharedPreferences shared1 = getSharedPreferences(USER_DATA_PREF, MODE_PRIVATE);
+                    SharedPreferences.Editor editor1 = shared1.edit();
+                    editor1.putBoolean(USER_DATA_AUTO_SAVE_MARK, false);
+                    editor1.apply();
+                }
+
+                @Override
+                public void onConfirmListener() {
+                    SharedPreferences shared1 = getSharedPreferences(USER_DATA_PREF, MODE_PRIVATE);
+                    SharedPreferences.Editor editor1 = shared1.edit();
+                    editor1.putBoolean(USER_DATA_AUTO_SAVE_MARK, true);
+                    editor1.apply();
+                }
+            });
+            mAutoSaveCheckDialogFragment.show(mSupportFragmentManager, "自动保存初始化");
 
             Toast.makeText(this, "战术模板初始化成功", Toast.LENGTH_SHORT).show();
         }
@@ -372,7 +391,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    public static class DoubleCheckDialogFragment extends DialogFragment {
+    public static class UnSavedCheckDialogFragment extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             // Use the Builder class for convenient dialog construction
@@ -400,6 +419,37 @@ public class MainActivity extends AppCompatActivity {
 
         public interface DoubleCheckDialogListener{
             void onCheckListener();
+        }
+    }
+
+    public static class AutoSaveCheckDialogFragment extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the Builder class for convenient dialog construction
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            // Get the layout inflater
+            LayoutInflater inflater = getActivity().getLayoutInflater();// * 从 requireActivity() 改为 getActivity()
+
+            // Inflate and set the layout for the dialog
+            // Pass null as the parent view because its going in the dialog layout
+            View dialogView = inflater.inflate(R.layout.dialog_auto_save_init, null);
+
+            builder.setView(dialogView)
+                    .setPositiveButton("启用", (dialogInterface, i) -> AutoSaveCheckDialogListener.onConfirmListener())
+                    .setNegativeButton("取消", (dialogInterface, i) -> AutoSaveCheckDialogListener.onCancelListener());
+
+            return builder.create();
+        }
+
+        AutoSaveCheckDialogListener AutoSaveCheckDialogListener;
+
+        public void setAutoSaveCheckDialogListener(AutoSaveCheckDialogListener autoSaveCheckDialogListener) {
+            AutoSaveCheckDialogListener = autoSaveCheckDialogListener;
+        }
+
+        public interface AutoSaveCheckDialogListener{
+            void onCancelListener();
+            void onConfirmListener();
         }
     }
 }

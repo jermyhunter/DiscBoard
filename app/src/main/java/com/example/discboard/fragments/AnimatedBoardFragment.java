@@ -2,9 +2,12 @@ package com.example.discboard.fragments;
 
 import static android.app.AlertDialog.*;
 
+import static com.example.discboard.DiscFinal.AUTO_SAVE_DELAY;
 import static com.example.discboard.DiscFinal.FILE_DUPLICATION_SUFFIX;
+import static com.example.discboard.DiscFinal.USER_DATA_AUTO_SAVE_MARK;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 
@@ -15,17 +18,25 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.discboard.JsonDataHelper;
 import com.example.discboard.adapter.AnimTempItemAdapter;
 import com.example.discboard.R;
+import com.example.discboard.dialogs.UnsavedCheckDialog;
 import com.example.discboard.views.AnimatedDiscBoard;
 import com.example.discboard.dialogs.SelectTempDialog;
 import com.google.android.material.slider.Slider;
@@ -38,15 +49,26 @@ import java.util.Objects;
  * */
 public class AnimatedBoardFragment extends Fragment {
     String TAG = "AnimatedBoardFragment";
-    Boolean mLoadedMark;// true: if load/create btn has been pressed
-    String mTempName;// store the name of already loaded template animation
-    Button mSaveOldTempBtn, mLoadTempBtn, mDelFrameBtn, mInsertFrameBtn,
-        mRevokeBtn;
+    // true: if one saved template has been loaded
+    // it determines whether auto-save function is to be turned on
+    Boolean mLoadedMark;
+    Boolean mAutoSaveMark;
+    UnsavedCheckDialog mUCLoadDialog, mUCCreateDialog;
+    // to store the name of already loaded template animation
+    // if mTempName == "", then it's a newly created temp
+    // when user switching, then give a unsaved hint
+    String mTempName;
+    Button mSaveOldTempBtn, mLoadTempBtn, mDelFrameBtn, mInsertFrameBtn;
+    TextView mHintTxt;
+    AnimationSet mAnimFade;
     JsonDataHelper mJsonDataHelper;
     static ArrayList<String> mAniTempList;
     Slider mFrameSlider;
     static AnimatedDiscBoard mAnimatedDiscBoard;
     private boolean mDelPressFlag;
+
+    static Handler mHandler;// handling runnable threads
+    static Runnable mAutoSaveR;
     public AnimatedBoardFragment() {
         // Required empty public constructor
     }
@@ -76,6 +98,27 @@ public class AnimatedBoardFragment extends Fragment {
         mDelPressFlag = false;
 
         mLoadTempDialogFragment = new LoadTempDialogFragment();
+
+        mHandler = new Handler();
+
+        mUCLoadDialog = new UnsavedCheckDialog(getContext(), "");
+        mUCLoadDialog.setUnsavedDialogListener(() -> {
+            // TODO: unsaved
+            mLoadTempDialogFragment.show(getChildFragmentManager(), "读取战术模板");
+        });
+
+        mUCCreateDialog = new UnsavedCheckDialog(getContext(), "");
+        mUCCreateDialog.setUnsavedDialogListener(() -> {
+            // TODO: unsaved
+            mSelectTempDialog.show();
+        });
+        // initiated as "", for unsaved hint use
+        mTempName = "";
+
+        // whether to enable the auto-save function
+        mAutoSaveMark = mJsonDataHelper.getBooleanFromUserPreferences(USER_DATA_AUTO_SAVE_MARK, false);
+
+        InitAnimation();
     }
 
     @Override
@@ -86,8 +129,54 @@ public class AnimatedBoardFragment extends Fragment {
         mAnimatedDiscBoard = v.findViewById(R.id.animated_discboard);
         mSaveOldTempBtn = v.findViewById(R.id.save_old_temp_btn);
         mLoadTempBtn = v.findViewById(R.id.load_temp_btn);
-        mRevokeBtn = v.findViewById(R.id.revoke_btn);
-        setLoadedMarkAndTempName(false, "");
+
+        mSelectTempDialog = new SelectTempDialog(Objects.requireNonNull(getContext()));
+        mSelectTempDialog.setOnSelectListener(new SelectTempDialog.OnSelectListener() {
+            @Override
+            public void onPressMy() {
+                mAnimatedDiscBoard.loadMyPreset();
+            }
+
+            @Override
+            public void onPress3() {
+                mAnimatedDiscBoard.load3Preset();
+            }
+
+            @Override
+            public void onPress5() {
+                mAnimatedDiscBoard.load5Preset();
+            }
+
+            @Override
+            public void onPressHo() {
+                mAnimatedDiscBoard.loadHostackPreset();
+            }
+
+            @Override
+            public void onPressVert() {
+                mAnimatedDiscBoard.loadVerstackPreset();
+            }
+
+            @Override
+            public void onPress() {
+                // TODO: auto-save
+                mAnimatedDiscBoard.resetSavedFlag();
+                setLoadedMarkAndTempName(false, "");
+                mSelectTempDialog.dismiss();
+            }
+        });
+
+        // template selection dialog
+        v.findViewById(R.id.select_temp_btn).setOnClickListener(view -> {
+//            mSelectTempDialogFragment.show(getChildFragmentManager(), "选择模板");
+            // TODO: unsaved
+            if(mAnimatedDiscBoard.isSaved()) {
+                mSelectTempDialog.show();
+            }
+            else {
+                mUCCreateDialog.show();
+            }
+        });
 
         // load temp
         mLoadTempBtn.setOnClickListener(view -> {
@@ -96,7 +185,13 @@ public class AnimatedBoardFragment extends Fragment {
                 Toast.makeText(getActivity(), "请先创建新的战术！", Toast.LENGTH_SHORT).show();
             }
             else {
-                mLoadTempDialogFragment.show(getChildFragmentManager(), "读取战术模板");
+                // TODO: unsaved
+                if(mAnimatedDiscBoard.isSaved()) {
+                    mLoadTempDialogFragment.show(getChildFragmentManager(), "读取战术模板");
+                }
+                else {
+                    mUCLoadDialog.show();
+                }
             }
         });
 
@@ -113,9 +208,8 @@ public class AnimatedBoardFragment extends Fragment {
 
         v.findViewById(R.id.save_new_temp_btn).setOnClickListener(view -> {
             mSaveDialogFragment = new SaveDialogFragment();
-            mSaveDialogFragment.setSaveDialogListener(name -> {
-                setLoadedMarkAndTempName(true, name);
-
+            mSaveDialogFragment.setSaveDialogListener(tempName -> {
+                setLoadedMarkAndTempName(true, tempName);
                 Toast.makeText(getContext(), R.string.SAVE_AS_SUCCESS_HINT, Toast.LENGTH_SHORT).show();
             });
             mSaveDialogFragment.show(getChildFragmentManager(), "保存模板");
@@ -128,68 +222,20 @@ public class AnimatedBoardFragment extends Fragment {
 
         mDelFrameBtn = v.findViewById(R.id.del_frame_btn);
         mDelFrameBtn.setOnLongClickListener(view -> {
+            // after pressing the delete_btn, shorten the text
             if(!mDelPressFlag) {
                 mDelFrameBtn.setText("删除帧");
                 mDelPressFlag = true;
             }
             view.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.del_anim));
             mAnimatedDiscBoard.deleteFrame();
+
             return false;
         });
 
         v.findViewById(R.id.play_anim_btn).setOnClickListener(view -> {
             mAnimatedDiscBoard.startAnimationPlaying();
         });
-
-        mSelectTempDialog = new SelectTempDialog(Objects.requireNonNull(getContext()));
-        mSelectTempDialog.setOnSelectListener(new SelectTempDialog.OnSelectListener() {
-            @Override
-            public void onPressMy() {
-                mAnimatedDiscBoard.loadMyPreset();
-                mSelectTempDialog.dismiss();
-
-                setLoadedMarkAndTempName(false, "");
-            }
-
-            @Override
-            public void onPress3() {
-                mAnimatedDiscBoard.load3Preset();
-                mSelectTempDialog.dismiss();
-
-                setLoadedMarkAndTempName(false, "");
-            }
-
-            @Override
-            public void onPress5() {
-                mAnimatedDiscBoard.load5Preset();
-                mSelectTempDialog.dismiss();
-
-                setLoadedMarkAndTempName(false, "");
-            }
-
-            @Override
-            public void onPressHo() {
-                mAnimatedDiscBoard.loadHostackPreset();
-                mSelectTempDialog.dismiss();
-
-                setLoadedMarkAndTempName(false, "");
-            }
-
-            @Override
-            public void onPressVert() {
-                mAnimatedDiscBoard.loadVerstackPreset();
-                mSelectTempDialog.dismiss();
-
-                setLoadedMarkAndTempName(false, "");
-            }
-        });
-
-        // template selection dialog
-        v.findViewById(R.id.select_temp_btn).setOnClickListener(view -> {
-//            mSelectTempDialogFragment.show(getChildFragmentManager(), "选择模板");
-            mSelectTempDialog.show();
-        });
-
 
         mFrameSlider = v.findViewById(R.id.frame_slider);
 
@@ -233,6 +279,16 @@ public class AnimatedBoardFragment extends Fragment {
             public void onAnimationStop() {
                 mLoadTempBtn.setEnabled(true);
             }
+
+            @Override
+            public void onDeleteFrame() {
+                // delete success hint with animation
+                mHintTxt.setText(R.string.DEL_FRAME_SUCCESS_HINT);
+                mHintTxt.animate()
+                        .alpha(1)
+                        .setInterpolator(new AccelerateInterpolator());
+                mHintTxt.startAnimation(mAnimFade);
+            }
         });
 
         mFrameSlider.addOnChangeListener(new Slider.OnChangeListener() {
@@ -244,15 +300,97 @@ public class AnimatedBoardFragment extends Fragment {
             }
         });
 
+        mHintTxt = v.findViewById(R.id.hint_txt);
 
+        mLoadedMark = false;
+        setLoadedMarkAndTempName(false, "");
+        mAutoSaveR = new Runnable() {
+            public void run() {
+                if(mAutoSaveMark) {
+                    // TODO: if unsaved
+                    if (!mAnimatedDiscBoard.isSaved()) {
+                        mAnimatedDiscBoard.saveAniDots(mTempName);
+                        // auto-save message
+//                        Toast.makeText(getContext(), mTempName + " 自动保存成功", Toast.LENGTH_SHORT).show();
+
+                        // auto-save success hint with animation
+                        mHintTxt.setText(R.string.AUTO_SAVE_SUCCESS_HINT);
+                        mHintTxt.animate()
+                                .alpha(1)
+                                .setInterpolator(new AccelerateInterpolator());
+                        mHintTxt.startAnimation(mAnimFade);
+
+                        mAnimatedDiscBoard.setSavedFlag();
+                    }
+                    mHandler.postDelayed(this, AUTO_SAVE_DELAY);
+                }
+            }
+        };
         // Inflate the layout for this fragment
         return v;
     }
 
+    void InitAnimation(){
+        Animation animationIn = AnimationUtils.loadAnimation(getContext(),
+                R.anim.fade_in);
+        Animation animationOut = AnimationUtils.loadAnimation(getContext(),
+                R.anim.fade_out);
+
+        animationIn.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                mHintTxt.setVisibility(View.VISIBLE);
+            }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mHintTxt.startAnimation(animationOut);
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+
+        animationOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mHintTxt.setVisibility(View.INVISIBLE);
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+
+        mAnimFade = new AnimationSet(false); //change to false
+        mAnimFade.addAnimation(animationIn);
+        mAnimFade.addAnimation(animationOut);
+    }
+
     void setLoadedMarkAndTempName(Boolean loadedMark, String tempName) {
-        mLoadedMark = loadedMark;
-        setSaveOldBtnState(loadedMark);
+        // if previous animation is from loaded, then stop auto-save
+        if(mLoadedMark) {
+            stopAutoSave();
+        }
+
+        // if current animation is from loaded, then start auto-save
+        if(loadedMark){
+            // if the names are the same, then refresh the counter
+            if (tempName.equals(mTempName)) {
+                stopAutoSave();
+                startAutoSave();
+            }
+            else
+                startAutoSave();
+        }
+
         mTempName = tempName;
+        mLoadedMark = loadedMark;
+        // TODO: auto-save
+        mAnimatedDiscBoard.setSavedFlag();
+        // adjust save_old_btn state
+        setSaveOldBtnState(loadedMark);
     }
 
     public boolean isLoaded(){
@@ -277,6 +415,25 @@ public class AnimatedBoardFragment extends Fragment {
             else
                 mFrameSlider.setVisibility(View.INVISIBLE);
         }
+    }
+
+    static void startAutoSave(){
+        mHandler.postDelayed(mAutoSaveR, AUTO_SAVE_DELAY);
+    }
+    void stopAutoSave(){
+        mHandler.removeCallbacks(mAutoSaveR);
+    }
+
+    /**
+     * stop auto-saving thread
+     * */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        stopAutoSave();
+        // remove all
+//        mHandler.removeCallbacks(mAutoSaveR, null);
     }
 
     public static class SaveDialogFragment extends DialogFragment {
@@ -358,6 +515,8 @@ public class AnimatedBoardFragment extends Fragment {
             String name = mAnimTempItemAdapter.getData(position);
 //            Log.d(TAG, "onAniTempClick: " + name);
             mAnimatedDiscBoard.loadDotsAndUpdateUI(name);
+            // TODO: auto-save
+            mAnimatedDiscBoard.setSavedFlag();
             dismiss();
         }
     }

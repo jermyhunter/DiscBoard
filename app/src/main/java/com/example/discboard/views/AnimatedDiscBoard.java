@@ -5,6 +5,8 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.example.discboard.DiscFinal.*;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
@@ -14,16 +16,20 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathMeasure;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
 
 import com.example.discboard.JsonDataHelper;
+import com.example.discboard.MainActivity;
 import com.example.discboard.R;
 import com.example.discboard.datatype.AnimTemp;
 import com.example.discboard.datatype.Dot;
@@ -144,7 +150,8 @@ public class AnimatedDiscBoard extends View {
     // tracking current frameNo for quick index, default -> 0
     private int mCurrentFrameNo;
     float mDeltaY, mTextOffsetY;
-    private Dot mTouchedDot, mEnabledDot, mEnabledDotPreF;
+    private Dot mTouchedDot, mEnabledDot,
+            mEnabledDotPreF;
     private InterDot mEnabledInterDot, mTouchedInterDot;
     float[] pos;
     float[] tan;
@@ -171,6 +178,7 @@ public class AnimatedDiscBoard extends View {
         public void onLoad();
         public void onAnimationStart();
         public void onAnimationStop();
+        void onDeleteFrame();
     }
     private AnimDiscBoardListener mAnimDiscBoardListener;
 
@@ -222,6 +230,8 @@ public class AnimatedDiscBoard extends View {
         setCurrentFrameNo(0);
         loadDefaultTemp();
         mAnimationAllowed = false;
+
+        mSavedFlag = true;
 
         mJsonDataHelper = new JsonDataHelper(getContext());
         initAnimSpeed();
@@ -278,11 +288,14 @@ public class AnimatedDiscBoard extends View {
         setCurrentFrameNo(0);
         clearDots();
     }
-    void resetSavedFlag(){
+    public void resetSavedFlag(){
         mSavedFlag = false;
     }
-    void setSavedFlag(){
+    public void setSavedFlag(){
         mSavedFlag = true;
+    }
+    public boolean isSaved(){
+        return mSavedFlag;
     }
     private void clearDots() {
         mAnimDotsList.clear();
@@ -446,11 +459,17 @@ public class AnimatedDiscBoard extends View {
                 mAnimDotsList.remove(mCurrentFrameNo);
             }
 
+            // delete inter_dot frame
+            int inter_frame_No = mCurrentFrameNo - 1;// correlated inter_frame_no
+            if(inter_frame_No >= 0 && inter_frame_No < getInterFrameSum()){
+                mInterDotsList.remove(inter_frame_No);
+            }
+
+            mAnimDiscBoardListener.onDeleteFrame();
+
             onFrameSumChange();
             releaseTouchDots();
             invalidate();
-
-            Toast.makeText(getContext(), R.string.DEL_FRAME_SUCCESS_HINT, Toast.LENGTH_SHORT).show();
         }
         else {
             Toast.makeText(getContext(), R.string.NO_ANIM_HINT, Toast.LENGTH_SHORT).show();
@@ -583,13 +602,26 @@ public class AnimatedDiscBoard extends View {
                     mTouchedDot.setX(event.getX());
                     mTouchedDot.setY(event.getY());
 
+                    // move dots inbounds; if not, the inter_dot won't be in the right place
+                    moveCircleInbounds(this, mTouchedDot);
                     // 调整对应中间节点位置 mInterDotsList.get(mCurrentFrameNo).get(mTouchedDot.get)
                     if(mEnabledInterDot != null && !mEnabledInterDot.isTouched()){
-                        // 找到上一帧的对应的点，移动中间节点
-                        mEnabledDotPreF = mAnimDotsList.get(mCurrentFrameNo - 1).get(mEnabledDot.getDotID());
-                        mEnabledInterDot.setX((mEnabledDotPreF.getX() + mEnabledDot.getX())/2);
-                        mEnabledInterDot.setY((mEnabledDotPreF.getY() + mEnabledDot.getY())/2);
+                        // 找到上一帧的对应的点，移动当前帧的中间节点
+                        Dot enabled_dot_preF = mAnimDotsList.get(mCurrentFrameNo - 1).get(mTouchedDot.getDotID());
+                        mEnabledInterDot.setX((enabled_dot_preF.getX() + mTouchedDot.getX())/2);
+                        mEnabledInterDot.setY((enabled_dot_preF.getY() + mTouchedDot.getY())/2);
 //                        Log.d(TAG, "onTouchEvent: " + mEnabledDotPreF);
+                    }
+
+                    // 同时，如果当前帧不是最后一帧，那么也需要移动下一帧的中间节点
+                    // notice: the next-frame inter_dot's frame-index is ((mCurrentFrameNo +1) -1)
+                    if(mCurrentFrameNo + 1 < getFrameSum()){
+                        InterDot next_inter_dot = mInterDotsList.get(mCurrentFrameNo).get(mTouchedDot.getRelativeInterDotID());
+                        if(!next_inter_dot.isTouched()) {
+                            Dot next_dot = mAnimDotsList.get(mCurrentFrameNo + 1).get(mTouchedDot.getDotID());
+                            next_inter_dot.setX((mTouchedDot.getX() + next_dot.getX()) / 2);
+                            next_inter_dot.setY((mTouchedDot.getY() + next_dot.getY()) / 2);
+                        }
                     }
                 }
                 else if(mTouchedInterDot != null){
@@ -615,6 +647,9 @@ public class AnimatedDiscBoard extends View {
                         mTouchedDot.setY(getHeight() - (CIRCLE_RADIUS/2f + DELTA_E));
                     }
                     mTouchedDot = null;
+
+                    // TODO: auto-save
+                    resetSavedFlag();
                 }
                 else if(mTouchedInterDot != null) {// reset status
                     // prevent the dot from exceeding the border
@@ -635,6 +670,9 @@ public class AnimatedDiscBoard extends View {
                     if(!mTouchedInterDot.isTouched())
                         mTouchedInterDot.touched();
                     mTouchedInterDot = null;
+
+                    // TODO: auto-save
+                    resetSavedFlag();
                 }
                 invalidate();
                 break;
@@ -728,13 +766,14 @@ public class AnimatedDiscBoard extends View {
 //            DeltaXY deltaXY = new DeltaXY(cur_x, cur_y, delta_x, delta_y);
 //            mDeltaXYHashtable.put(id, deltaXY);
 
-            // TODO: 绘制经过中间节点的动画，需要用到 pathMeasure
+            // 绘制经过中间节点的动画，需要用到 pathMeasure
             Path path = new Path();
             path.moveTo(cur_x,cur_y);
             path.lineTo(inter_x,inter_y);
             path.lineTo(next_x,next_y);
             PathMeasure pathMeasure = new PathMeasure(path, false);
             mPathMeasureHashtable.put(id, pathMeasure);
+            // store step_size and the path length that has walked
             Dist dist = new Dist(0, pathMeasure.getLength() / STEP_NUM);
             mDistHashtable.put(id, dist);
         });
@@ -762,10 +801,6 @@ public class AnimatedDiscBoard extends View {
         else{
             Toast.makeText(getContext(), R.string.NO_ANIM_HINT, Toast.LENGTH_SHORT).show();
         }
-    }
-
-    void calcPathMeasure(){
-
     }
 
     /** for the canvas animation not being blinked when rendering
@@ -864,16 +899,6 @@ public class AnimatedDiscBoard extends View {
                         canvas.drawCircle(mEnabledInterDot.getX(), mEnabledInterDot.getY(), INTER_DOT_RADIUS, mInterCirclePaint);
                     }
                 }
-
-                // draw all inter_dots
-//                if(mCurrentFrameNo >= 1() > 0) {
-//                    mInterDotsList.get(mCurrentFrameNo - 1).forEach((dot_ID, inter_dot) -> {
-//                        // 将因为导入造成的外溢点转移到内部
-//                        moveCircleInbounds(canvas, inter_dot);
-//
-//                        canvas.drawCircle(inter_dot.getX(), inter_dot.getY(), INTER_DOT_RADIUS, mOffCircletPaint);
-//                    });
-//                }
 
                 // draw lines between every 2 frame, and draw previous frame dots with hollow strokes
                 // 前一帧与后一帧的连线，只有在帧数>=2 & mCurrentFrameNo >=1 时才进行操作
@@ -975,7 +1000,7 @@ public class AnimatedDiscBoard extends View {
      * */
     public void saveAniDots(String temp_name){
         mJsonDataHelper.addAniTempToPref(temp_name);//add a new name to the temp list
-        mJsonDataHelper.saveAniDotsToPrefNew(temp_name, mAnimDotsList, mInterDotsList);
+        mJsonDataHelper.saveAnimDotsToPrefNew(temp_name, mAnimDotsList, mInterDotsList);
 
         setSavedFlag();
     }

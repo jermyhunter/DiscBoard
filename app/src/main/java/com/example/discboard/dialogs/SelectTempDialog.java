@@ -38,6 +38,7 @@ public class SelectTempDialog extends Dialog {
             @Override
             public void onClick(View view) {
                 mOnSelectListener.onPressMy();
+                mOnSelectListener.onPress();
             }
         });
 
@@ -45,6 +46,7 @@ public class SelectTempDialog extends Dialog {
             @Override
             public void onClick(View view) {
                 mOnSelectListener.onPress3();
+                mOnSelectListener.onPress();
             }
         });
 
@@ -52,13 +54,7 @@ public class SelectTempDialog extends Dialog {
             @Override
             public void onClick(View view) {
                 mOnSelectListener.onPress5();
-            }
-        });
-
-        findViewById(R.id.hostack_preset_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mOnSelectListener.onPressHo();
+                mOnSelectListener.onPress();
             }
         });
 
@@ -66,6 +62,15 @@ public class SelectTempDialog extends Dialog {
             @Override
             public void onClick(View view) {
                 mOnSelectListener.onPressVert();
+                mOnSelectListener.onPress();
+            }
+        });
+
+        findViewById(R.id.hostack_preset_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mOnSelectListener.onPressHo();
+                mOnSelectListener.onPress();
             }
         });
     }
@@ -76,6 +81,7 @@ public class SelectTempDialog extends Dialog {
         public void onPress5();
         public void onPressHo();
         public void onPressVert();
+        void onPress();
     }
 
     OnSelectListener mOnSelectListener;

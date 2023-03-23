@@ -5,7 +5,7 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.example.discboard.DiscFinal.EXPORT_FILE_PREFIX;
 import static com.example.discboard.DiscFinal.EXPORT_FILE_SUFFIX;
 import static com.example.discboard.DiscFinal.IO_HEAD;
-import static com.example.discboard.DiscFinal.IO_HEAD_TYPE;
+import static com.example.discboard.DiscFinal.IO_HEAD_VERSION_NO;
 import static com.example.discboard.DiscFinal.USER_DATA_EXPORTED_FILE_PATH;
 import static com.example.discboard.DiscFinal.USER_DATA_PREF;
 import static com.example.discboard.DiscFinal.USER_DATA_ANIM_TEMP_LIST;
@@ -162,7 +162,7 @@ public class JsonDataHelper {
      * save arraylist type data to shared preferences
      * usually called with addAniTempToPref()
      */
-    public void saveAniDotsToPrefNew(String tempName, ArrayList<Hashtable<String, Dot>> animDotsList, ArrayList<Hashtable<String, InterDot>> interDotsList){
+    public void saveAnimDotsToPrefNew(String tempName, ArrayList<Hashtable<String, Dot>> animDotsList, ArrayList<Hashtable<String, InterDot>> interDotsList){
         SharedPreferences shared = getContext().getSharedPreferences(tempName, MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
 
@@ -364,12 +364,12 @@ public class JsonDataHelper {
     }
 
     /**
-     * check if the head of the JSONArray is IO_HEAD_TYPE
+     * check if the head of the JSONArray is IO_HEAD_VERSION_NO
      * return true if it is; return false if not
      * */
     public static Boolean checkFileType(JSONObject jo){
         try {
-            return jo.get(IO_HEAD).equals(IO_HEAD_TYPE);
+            return jo.get(IO_HEAD).equals(IO_HEAD_VERSION_NO);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
@@ -469,7 +469,7 @@ public class JsonDataHelper {
         editor.apply();
     }
 
-    public Boolean getBooleanToUserPreferences(String key, Boolean b){
+    public Boolean getBooleanFromUserPreferences(String key, Boolean b){
         SharedPreferences shared = getContext().getSharedPreferences(USER_DATA_PREF, MODE_PRIVATE);
         return shared.getBoolean(key, b);
     }

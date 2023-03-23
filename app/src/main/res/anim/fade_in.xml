@@ -6,12 +6,4 @@
         android:toAlpha="1"
         android:duration="@integer/fade_in_duration"
         android:interpolator="@android:anim/decelerate_interpolator"/>
-    <translate
-        android:startOffset="0"
-        android:fromXDelta="@fraction/startDeltaX"
-        android:toXDelta="@fraction/startDeltaX"
-        android:fromYDelta="@fraction/startDeltaY"
-        android:toYDelta="@fraction/startDeltaY"
-        android:duration="@integer/fade_in_duration"
-        android:interpolator="@android:anim/decelerate_interpolator" />
 </set>

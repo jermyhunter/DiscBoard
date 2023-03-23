@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.discboard.JsonDataHelper;
 import com.example.discboard.R;
@@ -96,6 +97,7 @@ public class DelTemplatePad extends Fragment implements AnimTempItemDelAdapter.O
 
     @Override
     public void onItemClick(int position) {
+        Toast.makeText(getContext(), mAnimTempItemDelAdapter.getData(position) + " 删除成功！", Toast.LENGTH_SHORT).show();
         mAnimTempItemDelAdapter.removeData(position);
     }
 

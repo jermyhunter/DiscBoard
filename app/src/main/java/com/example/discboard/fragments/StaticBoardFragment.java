@@ -2,7 +2,6 @@ package com.example.discboard.fragments;
 
 import static com.example.discboard.DiscFinal.*;
 
-import android.animation.AnimatorSet;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -69,7 +67,7 @@ public class StaticBoardFragment extends Fragment {
         mMenuHint = (ImageView)v.findViewById(R.id.menu_hint);
 
         mAnimationIn = AnimationUtils.loadAnimation(getContext(),
-                R.anim.fade_in);
+                R.anim.icon_fade_in);
 
         mAnimationIn.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -88,7 +86,7 @@ public class StaticBoardFragment extends Fragment {
         });
 
         mAnimationOut = AnimationUtils.loadAnimation(getContext(),
-                R.anim.fade_out);
+                R.anim.icon_fade_out);
         mAnimationOut.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -210,4 +208,6 @@ public class StaticBoardFragment extends Fragment {
     public void setTempName(String tempName) {
         mTempName = tempName;
     }
+
+
 }

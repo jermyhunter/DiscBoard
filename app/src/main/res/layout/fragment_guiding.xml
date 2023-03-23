@@ -20,7 +20,7 @@
                 android:layout_height="wrap_content"
                 android:minWidth="@dimen/btn_min_width"
                 android:layout_marginHorizontal="@dimen/btn_margin_single_gap"
-                android:backgroundTint="@color/btn_highlight_color"
+                android:backgroundTint="@color/btn_bg_highlight_color"
                 android:textSize="16dp"
                 android:text="模板共享" />
             <Button
@@ -29,8 +29,8 @@
                 android:layout_height="wrap_content"
                 android:minWidth="@dimen/btn_min_width"
                 android:layout_marginHorizontal="@dimen/btn_margin_single_gap"
-                android:backgroundTint="@color/btn_highlight_color"
-                android:textSize="16dp"
+                android:backgroundTint="@color/btn_bg_highlight_color"
+                android:textSize="16sp"
                 android:text="战术动画" />
             <Button
                 android:id="@+id/load_and_save_btn"
@@ -38,8 +38,8 @@
                 android:layout_height="wrap_content"
                 android:minWidth="@dimen/btn_min_width"
                 android:layout_marginHorizontal="@dimen/btn_margin_single_gap"
-                android:backgroundTint="@color/btn_highlight_color"
-                android:textSize="16dp"
+                android:backgroundTint="@color/btn_bg_highlight_color"
+                android:textSize="16sp"
                 android:text="读取与修改" />
             <Button
                 android:id="@+id/exporting_and_sharing_btn"
@@ -57,8 +57,17 @@
                 android:minWidth="@dimen/btn_min_width"
                 android:layout_marginHorizontal="@dimen/btn_margin_single_gap"
                 android:backgroundTint="@color/DeepSkyBlue"
-                android:textSize="16dp"
+                android:textSize="16sp"
                 android:text="导入数据" />
+            <Button
+                android:id="@+id/auto_save_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="@dimen/btn_min_width"
+                android:layout_marginHorizontal="@dimen/btn_margin_single_gap"
+                android:backgroundTint="@color/DeepSkyBlue"
+                android:textSize="16sp"
+                android:text="自动保存" />
 
         </LinearLayout>
         <SurfaceView
