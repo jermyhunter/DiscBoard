@@ -467,6 +467,9 @@ public class AnimatedDiscBoard extends View {
 
             mAnimDiscBoardListener.onDeleteFrame();
 
+            // TODO: auto-save
+            resetSavedFlag();
+
             onFrameSumChange();
             releaseTouchDots();
             invalidate();
@@ -482,7 +485,7 @@ public class AnimatedDiscBoard extends View {
             invalidate();
         }
         else
-            throw new RuntimeException("input FrameNo is out of bounds");
+            throw new RuntimeException("FrameNo 帧数越界！");
     }
     public int getFrameSum(){
         return mAnimDotsList.size();

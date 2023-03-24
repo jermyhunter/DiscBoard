@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -235,6 +236,24 @@ public class AnimatedBoardFragment extends Fragment {
 
         v.findViewById(R.id.play_anim_btn).setOnClickListener(view -> {
             mAnimatedDiscBoard.startAnimationPlaying();
+        });
+
+        // last/next frame btn
+        v.findViewById(R.id.last_frame_btn).setOnClickListener(view -> {
+            int frameNo = mAnimatedDiscBoard.getCurrentFrameNo() - 1;
+            Log.d(TAG, "onCreateView: " + frameNo);
+            if(frameNo >= 0) {
+                mAnimatedDiscBoard.loadFrame(frameNo);
+            }
+        });
+
+        v.findViewById(R.id.next_frame_btn).setOnClickListener(view -> {
+            int frameNo = mAnimatedDiscBoard.getCurrentFrameNo() + 1;
+            Log.d(TAG, "onCreateView: " + frameNo);
+            Log.d(TAG, "" + mAnimatedDiscBoard.getFrameSum());
+            if(frameNo < mAnimatedDiscBoard.getFrameSum()) {
+                mAnimatedDiscBoard.loadFrame(frameNo);
+            }
         });
 
         mFrameSlider = v.findViewById(R.id.frame_slider);

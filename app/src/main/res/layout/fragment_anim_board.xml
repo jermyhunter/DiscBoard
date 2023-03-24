@@ -29,7 +29,16 @@
                 android:layout_weight="0"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal">
+                <Button
+                    android:rotationY="180"
+                    android:layout_weight="0"
+                    android:id="@+id/last_frame_btn"
+                    android:layout_width="@dimen/frame_btn_length"
+                    android:layout_height="@dimen/frame_btn_length"
+                    android:layout_marginHorizontal="@dimen/btn_margin_between_wide_gap"
+                    android:background="@drawable/triangle_arrow" />
                 <com.google.android.material.slider.Slider
                     android:id="@+id/frame_slider"
                     android:rotation="0"
@@ -44,10 +53,17 @@
                     android:valueTo="2.0" />
                 <Button
                     android:layout_weight="0"
+                    android:id="@+id/next_frame_btn"
+                    android:layout_width="@dimen/frame_btn_length"
+                    android:layout_height="@dimen/frame_btn_length"
+                    android:layout_marginHorizontal="@dimen/btn_margin_between_wide_gap"
+                    android:background="@drawable/triangle_arrow" />
+                <Button
+                    android:layout_weight="0"
                     android:id="@+id/play_anim_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/btn_margin_single_gap"
+                    android:layout_marginHorizontal="@dimen/btn_margin_between_wide_gap"
                     android:minHeight="@dimen/btn_min_height"
                     android:minWidth="@dimen/btn_min_width"
                     android:backgroundTint="@color/btn_color"
