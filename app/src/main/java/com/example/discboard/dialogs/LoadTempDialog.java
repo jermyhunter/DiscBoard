@@ -41,7 +41,7 @@ public class LoadTempDialog extends Dialog implements AnimTempItemAdapter.OnAniT
 
     @Override
     public void onItemClick(int position) {
-        String name = mAnimTempItemAdapter.getData(position);
-        Log.d(TAG, "onAniTempClick: " + name);
+        mAnimTempItemAdapter.getData(position);
+//        Log.d(TAG, "onAniTempClick: " + name);
     }
 }

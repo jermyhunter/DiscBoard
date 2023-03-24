@@ -81,10 +81,10 @@ public class AnimTempItemDelAdapter extends RecyclerView.Adapter<AnimTempItemDel
         mJsonDataHelper.delAniNameFromPref(name);
         mJsonDataHelper.delAniDotsFromPref(name);
 
-        Log.d(TAG, "position: " + position);
+//        Log.d(TAG, "position: " + position);
     }
 
-    public void removeAllData() {
+    public boolean removeAllData() {
         int sum = getItemCount();
         while(sum > 0) {
             String name = getData(0);
@@ -95,6 +95,7 @@ public class AnimTempItemDelAdapter extends RecyclerView.Adapter<AnimTempItemDel
             mJsonDataHelper.delAniDotsFromPref(name);
             sum--;
         }
+        return true;
     }
 
     public String getData(int position){

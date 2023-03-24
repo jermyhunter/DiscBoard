@@ -8,11 +8,21 @@ import android.view.View;
 import com.example.discboard.datatype.Dot;
 import com.example.discboard.datatype.InterDot;
 
+import java.io.File;
+import java.util.Objects;
+
 /**
  * DiscFinal
  * frequently used data, all static
  * */
 public class DiscFinal {
+    public static class CanvasBGType{
+        public final static String FULL_GROUND = "全场";
+        public final static String END_ZONE = "得分区";
+    }
+
+    public final static String USER_DATA_CANVAS_BG_TYPE = "canvas_bg_type";
+
     // auto-save delay, determine how often the auto-save function would launch
     public final static int AUTO_SAVE_DELAY = 25 * 1000;
     public final static int CIRCLE_RADIUS = 35;
@@ -27,7 +37,7 @@ public class DiscFinal {
     public final static int INTER_DOT_ALPHA = 170;
 
     public final static String CONTACT_INFO = "479395433";
-    public final static String CONTACT_URL = "https://";
+    public final static String CONTACT_URL = "https://space.bilibili.com/177731643";
     public final static float DELTA_E = 25f;
     public final static String USER_DATA_PREF = "user_data";
     public final static String USER_DATA_FIRST_RUN_MARK = "first_time";
@@ -49,9 +59,12 @@ public class DiscFinal {
     // IO_HEAD_VERSION_NO 对应版本号，可以据此编写向前的版本兼容，将导入的文件转化为兼容版
     public final static String IO_ANIM_TEMP_LIST = "anim_temp_list";
     public final static String IO_ANIM_DOTS_LIST = "anim_dots_list";
+
+    // ------------------ EX/IMPORTING ------------------
+    public final static String EXPORT_FOLDER_SUB_PATH = "DiscBoard" + File.separator;
     public final static String EXPORT_FILE_SUFFIX = ".json";
     public final static String EXPORT_FILE_PREFIX = "disc_";
-    public final static String FILE_DUPLICATION_SUFFIX = "_new";
+    public final static String FILE_DUPLICATION_SUFFIX = "_1";
 
     public static float convertPixelsToDp(float px, Context context){
         return px / ((float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);

@@ -19,6 +19,7 @@ import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -31,6 +32,8 @@ import android.widget.Toast;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 
+import java.io.File;
+import java.nio.file.Path;
 import java.util.Hashtable;
 
 public class MainActivity extends AppCompatActivity {
@@ -65,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mGson = new Gson();
 //        // deserialize testing
 //        InterDot interDot = mGson.fromJson("{\"dot_type\":-1,\"seq_No\":2,\"x\":695.5,\"y\":628.5,\"touched\"=false}", InterDot.class);
@@ -94,10 +98,16 @@ public class MainActivity extends AppCompatActivity {
 
         //----------data init on 1st run-----------
         initDataOn1stRun();
+
         // TODO:在所有内容制作完成后删除
         Toast.makeText(this, "本版本为预发布版\n主要功能已制作完成", Toast.LENGTH_SHORT).show();
-        // pos_y:Endzone暂时跳过
+
 //        setContentView(R.layout.endzone);
+    }
+
+    private void initExportFolder() {
+        File file = mJsonDataHelper.getExportFolder();
+        Toast.makeText(this,"导出文件夹路径为：" + file, Toast.LENGTH_LONG).show();
     }
 
     private void keepScreenAwake() {
@@ -324,6 +334,9 @@ public class MainActivity extends AppCompatActivity {
 
             // init animation playing speed
             editor.putInt(USER_DATA_ANIM_SPEED, ANIM_SPEED_INIT);
+            // canvas_bg, default-> full_ground
+            editor.putString(USER_DATA_CANVAS_BG_TYPE, CanvasBGType.FULL_GROUND);
+
             editor.apply();
 
             mAutoSaveCheckDialogFragment = new AutoSaveCheckDialogFragment();
@@ -346,8 +359,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
             mAutoSaveCheckDialogFragment.show(mSupportFragmentManager, "自动保存初始化");
-
             Toast.makeText(this, "战术模板初始化成功", Toast.LENGTH_SHORT).show();
+
+            // 初次使用，创建导出文件夹
+            initExportFolder();
         }
     }
 

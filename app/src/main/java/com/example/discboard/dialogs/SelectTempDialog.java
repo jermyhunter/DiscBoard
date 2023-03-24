@@ -30,7 +30,7 @@ public class SelectTempDialog extends Dialog {
 
         mMyPresetBtn = findViewById(R.id.my_preset_btn);
 
-        if(mJsonDataHelper.getStringFromUserPreferences(USER_DATA_TEMP_MY).equals("")){
+        if(mJsonDataHelper.getStringFromUserPreferences(USER_DATA_TEMP_MY, "").equals("")){
             mMyPresetBtn.setEnabled(false);
         }
 

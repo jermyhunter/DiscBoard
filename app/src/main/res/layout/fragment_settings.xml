@@ -121,6 +121,35 @@
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
+            android:layout_marginTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_weight="0">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center|bottom"
+                android:paddingTop="8dp"
+                android:paddingBottom="10dp"
+                android:background="@drawable/highlighted_bg"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:paddingHorizontal="10dp"
+                    android:text="设置战术板背景："
+                    android:textColor="@color/txt_light_color"
+                    android:textSize="18sp" />
+                <Spinner
+                    android:id="@+id/canvas_bg_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"

@@ -6,11 +6,12 @@
     <dimen name="btn_margin_single_gap">4dp</dimen>
     <dimen name="slider_height">15dp</dimen>
     <dimen name="btn_layout_margin_ho">4dp</dimen>
-    <dimen name="IO_text_size">16sp</dimen>
 
     <dimen name="btn_min_width">60dp</dimen>
     <dimen name="btn_min_height">45dp</dimen>
     <dimen name="btn_margin_between_wide_gap">10dp</dimen>
     <dimen name="frame_btn_length">25dp</dimen>
 
+    <dimen name="IO_text_size">16sp</dimen>
+    <dimen name="spinner_txt_size">20sp</dimen>
 </resources>

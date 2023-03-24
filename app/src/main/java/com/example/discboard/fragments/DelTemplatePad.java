@@ -59,7 +59,7 @@ public class DelTemplatePad extends Fragment implements AnimTempItemDelAdapter.O
 
         mJsonDataHelper = new JsonDataHelper(getContext());
         mAniTempList = mJsonDataHelper.loadTempNamesFromPref();
-        Log.d(TAG, "onCreate: " + mAniTempList);
+//        Log.d(TAG, "onCreate: " + mAniTempList);
     }
 
     @Override
@@ -82,8 +82,8 @@ public class DelTemplatePad extends Fragment implements AnimTempItemDelAdapter.O
         mDataInitDialogFragment.setDataInitDialogListener(new DataInitDialogFragment.DataInitDialogListener() {
             @Override
             public void onDataInitListener() {
-                mAnimTempItemDelAdapter.removeAllData();
-                Log.d(TAG, "onDataInitListener: " + "战术已清空！");
+                if(mAnimTempItemDelAdapter.removeAllData())
+                    Toast.makeText(getContext(), "战术已清空！", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -97,7 +97,8 @@ public class DelTemplatePad extends Fragment implements AnimTempItemDelAdapter.O
 
     @Override
     public void onItemClick(int position) {
-        Toast.makeText(getContext(), mAnimTempItemDelAdapter.getData(position) + " 删除成功！", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), mAnimTempItemDelAdapter.getData(position)
+                + " 删除成功！", Toast.LENGTH_SHORT).show();
         mAnimTempItemDelAdapter.removeData(position);
     }
 

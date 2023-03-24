@@ -424,9 +424,8 @@ public class AnimatedDiscBoard extends View {
         setCurrentFrameNo(mCurrentFrameNo + 1);
         onFrameSumChange();
 
-        // DONE: 生成新的中间节点
+        // generate new inter_dot_frame
         int pre_frame_No = mCurrentFrameNo - 1;
-        Log.d(TAG, "insertFrame: " + pre_frame_No);
         Hashtable<String, InterDot> gen_inter_dots_hashtable = new Hashtable<>();
         Hashtable<String, Dot> pre_dots_hashtable = mAnimDotsList.get(pre_frame_No);
         pre_dots_hashtable.forEach((id, pre_dot) -> {
@@ -446,28 +445,48 @@ public class AnimatedDiscBoard extends View {
      * and call onFrameSumChange() in every branch
      */
     public void deleteFrame(){
+        int cur_frame_No = mCurrentFrameNo;
         // if the FrameSum >= 2
         if (getFrameSum() >= 2) {
             // if the current frame is the last frame
             // set current frame to the previous one, then delete the last frame
-            if (mCurrentFrameNo == getFrameSum() - 1) {
-                setCurrentFrameNo(mCurrentFrameNo - 1);
+            if (cur_frame_No == getFrameSum() - 1) {
+                setCurrentFrameNo(cur_frame_No - 1);
                 mAnimDotsList.remove(getFrameSum() - 1);
             }
             // else, current frame is not the last frame, then delete current frame
             else {
-                mAnimDotsList.remove(mCurrentFrameNo);
+                // if there is previous frame and next frame
+                // adjust next_frame_inter_dot
+                int next_inter_frame_No = (cur_frame_No - 1) + 1;
+                int pre_frame_No = cur_frame_No - 1;
+                int next_frame_No = cur_frame_No + 1;
+                if(pre_frame_No >= 0 && next_frame_No < getFrameSum()){
+                    Hashtable<String, InterDot> next_inter_dots_list = mInterDotsList.get(next_inter_frame_No);
+                    Hashtable<String, Dot> pre_dots_list = mAnimDotsList.get(pre_frame_No);
+                    Hashtable<String, Dot> next_dots_list = mAnimDotsList.get(next_frame_No);
+                    next_dots_list.forEach((id, next_dot) -> {
+                        InterDot next_inter_dot = next_inter_dots_list.get(next_dot.getRelativeInterDotID());
+                        if(!next_inter_dot.isTouched()) {
+//                            Log.d(TAG, "deleteFrame: " + "inter_dot前后串联成功");
+                            Dot pre_dot = pre_dots_list.get(next_dot.getDotID());
+                            next_inter_dot.setX((pre_dot.getX() + next_dot.getX()) / 2);
+                            next_inter_dot.setY((pre_dot.getY() + next_dot.getY()) / 2);
+                        }
+                    });
+                }
+                mAnimDotsList.remove(cur_frame_No);
             }
 
-            // delete inter_dot frame
-            int inter_frame_No = mCurrentFrameNo - 1;// correlated inter_frame_no
+            // delete current inter_dot frame
+            int inter_frame_No = cur_frame_No - 1;// correlated inter_frame_no
             if(inter_frame_No >= 0 && inter_frame_No < getInterFrameSum()){
                 mInterDotsList.remove(inter_frame_No);
             }
 
             mAnimDiscBoardListener.onDeleteFrame();
 
-            // TODO: auto-save
+            // restart auto-save
             resetSavedFlag();
 
             onFrameSumChange();
@@ -651,7 +670,7 @@ public class AnimatedDiscBoard extends View {
                     }
                     mTouchedDot = null;
 
-                    // TODO: auto-save
+                    // restart auto-save
                     resetSavedFlag();
                 }
                 else if(mTouchedInterDot != null) {// reset status
@@ -674,7 +693,7 @@ public class AnimatedDiscBoard extends View {
                         mTouchedInterDot.touched();
                     mTouchedInterDot = null;
 
-                    // TODO: auto-save
+                    // restart auto-save
                     resetSavedFlag();
                 }
                 invalidate();

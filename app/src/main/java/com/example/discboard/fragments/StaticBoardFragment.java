@@ -64,50 +64,12 @@ public class StaticBoardFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_static_board, container, false);
 
-        mMenuHint = (ImageView)v.findViewById(R.id.menu_hint);
-
-        mAnimationIn = AnimationUtils.loadAnimation(getContext(),
-                R.anim.icon_fade_in);
-
-        mAnimationIn.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                mMenuHint.startAnimation(mAnimationOut);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
-        mAnimationOut = AnimationUtils.loadAnimation(getContext(),
-                R.anim.icon_fade_out);
-        mAnimationOut.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                mMenuHint.startAnimation(mAnimationIn);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        mAnimationIn.setStartOffset(ANIM_DELAY);
-        mMenuHint.startAnimation(mAnimationIn);
-
         mDiscBoard = v.findViewById(R.id.static_discboard);
-        mSwapBtn = v.findViewById(R.id.swap_btn);
+        mJsonDataHelper.initBGByUserData(mDiscBoard);
+
+        mMenuHint = (ImageView)v.findViewById(R.id.menu_hint);
+        initMenuIconAnim();
+        mMenuHint.startAnimation(mAnimationIn);
 
         // external storage space readable test
 //        if(isExternalStorageReadable())
@@ -118,6 +80,7 @@ public class StaticBoardFragment extends Fragment {
 //        // 设置背景图片
 //        mDiscBoard.setBackground(getResources().getDrawable(R.drawable.disc_space));
 
+        mSwapBtn = v.findViewById(R.id.swap_btn);
         /*
         * 交换按钮
         *
@@ -203,6 +166,47 @@ public class StaticBoardFragment extends Fragment {
 
         // Inflate the layout for this fragment
         return v;
+    }
+
+    private void initMenuIconAnim() {
+        mAnimationIn = AnimationUtils.loadAnimation(getContext(),
+                R.anim.icon_fade_in);
+
+        mAnimationIn.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mMenuHint.startAnimation(mAnimationOut);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        mAnimationOut = AnimationUtils.loadAnimation(getContext(),
+                R.anim.icon_fade_out);
+        mAnimationOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mMenuHint.startAnimation(mAnimationIn);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        mAnimationIn.setStartOffset(ANIM_DELAY);
     }
 
     public void setTempName(String tempName) {

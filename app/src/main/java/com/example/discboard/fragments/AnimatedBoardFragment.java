@@ -5,6 +5,7 @@ import static android.app.AlertDialog.*;
 import static com.example.discboard.DiscFinal.AUTO_SAVE_DELAY;
 import static com.example.discboard.DiscFinal.FILE_DUPLICATION_SUFFIX;
 import static com.example.discboard.DiscFinal.USER_DATA_AUTO_SAVE_MARK;
+import static com.example.discboard.DiscFinal.USER_DATA_CANVAS_BG_TYPE;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -34,6 +35,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.discboard.DiscFinal;
 import com.example.discboard.JsonDataHelper;
 import com.example.discboard.adapter.AnimTempItemAdapter;
 import com.example.discboard.R;
@@ -104,13 +106,13 @@ public class AnimatedBoardFragment extends Fragment {
 
         mUCLoadDialog = new UnsavedCheckDialog(getContext(), "");
         mUCLoadDialog.setUnsavedDialogListener(() -> {
-            // TODO: unsaved
+            // unsaved hint
             mLoadTempDialogFragment.show(getChildFragmentManager(), "读取战术模板");
         });
 
         mUCCreateDialog = new UnsavedCheckDialog(getContext(), "");
         mUCCreateDialog.setUnsavedDialogListener(() -> {
-            // TODO: unsaved
+            // unsaved hint
             mSelectTempDialog.show();
         });
         // initiated as "", for unsaved hint use
@@ -128,6 +130,8 @@ public class AnimatedBoardFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_anim_board, container, false);
 
         mAnimatedDiscBoard = v.findViewById(R.id.animated_discboard);
+        mJsonDataHelper.initBGByUserData(mAnimatedDiscBoard);
+
         mSaveOldTempBtn = v.findViewById(R.id.save_old_temp_btn);
         mLoadTempBtn = v.findViewById(R.id.load_temp_btn);
 
@@ -160,7 +164,7 @@ public class AnimatedBoardFragment extends Fragment {
 
             @Override
             public void onPress() {
-                // TODO: auto-save
+                // auto-save hint
                 mAnimatedDiscBoard.resetSavedFlag();
                 setLoadedMarkAndTempName(false, "");
                 mSelectTempDialog.dismiss();
@@ -170,7 +174,7 @@ public class AnimatedBoardFragment extends Fragment {
         // template selection dialog
         v.findViewById(R.id.select_temp_btn).setOnClickListener(view -> {
 //            mSelectTempDialogFragment.show(getChildFragmentManager(), "选择模板");
-            // TODO: unsaved
+            // unsaved hint
             if(mAnimatedDiscBoard.isSaved()) {
                 mSelectTempDialog.show();
             }
@@ -186,7 +190,7 @@ public class AnimatedBoardFragment extends Fragment {
                 Toast.makeText(getActivity(), "请先创建新的战术！", Toast.LENGTH_SHORT).show();
             }
             else {
-                // TODO: unsaved
+                // unsaved hint
                 if(mAnimatedDiscBoard.isSaved()) {
                     mLoadTempDialogFragment.show(getChildFragmentManager(), "读取战术模板");
                 }
@@ -241,7 +245,6 @@ public class AnimatedBoardFragment extends Fragment {
         // last/next frame btn
         v.findViewById(R.id.last_frame_btn).setOnClickListener(view -> {
             int frameNo = mAnimatedDiscBoard.getCurrentFrameNo() - 1;
-            Log.d(TAG, "onCreateView: " + frameNo);
             if(frameNo >= 0) {
                 mAnimatedDiscBoard.loadFrame(frameNo);
             }
@@ -249,8 +252,6 @@ public class AnimatedBoardFragment extends Fragment {
 
         v.findViewById(R.id.next_frame_btn).setOnClickListener(view -> {
             int frameNo = mAnimatedDiscBoard.getCurrentFrameNo() + 1;
-            Log.d(TAG, "onCreateView: " + frameNo);
-            Log.d(TAG, "" + mAnimatedDiscBoard.getFrameSum());
             if(frameNo < mAnimatedDiscBoard.getFrameSum()) {
                 mAnimatedDiscBoard.loadFrame(frameNo);
             }
@@ -326,7 +327,7 @@ public class AnimatedBoardFragment extends Fragment {
         mAutoSaveR = new Runnable() {
             public void run() {
                 if(mAutoSaveMark) {
-                    // TODO: if unsaved
+                    // unsaved hint
                     if (!mAnimatedDiscBoard.isSaved()) {
                         mAnimatedDiscBoard.saveAniDots(mTempName);
                         // auto-save message
@@ -406,7 +407,7 @@ public class AnimatedBoardFragment extends Fragment {
 
         mTempName = tempName;
         mLoadedMark = loadedMark;
-        // TODO: auto-save
+        // auto-save hint
         mAnimatedDiscBoard.setSavedFlag();
         // adjust save_old_btn state
         setSaveOldBtnState(loadedMark);
@@ -477,7 +478,7 @@ public class AnimatedBoardFragment extends Fragment {
                         String temp_name = mSaveNameInput.getText().toString();
 
                         // check the possibility of name duplication
-                        if(mJsonDataHelper.checkNameDuplication(temp_name)){
+                        while (mJsonDataHelper.checkNameDuplication(temp_name)){
                             temp_name = temp_name + FILE_DUPLICATION_SUFFIX;
                         }
                         mAnimatedDiscBoard.saveAniDots(temp_name);
@@ -534,7 +535,7 @@ public class AnimatedBoardFragment extends Fragment {
             String name = mAnimTempItemAdapter.getData(position);
 //            Log.d(TAG, "onAniTempClick: " + name);
             mAnimatedDiscBoard.loadDotsAndUpdateUI(name);
-            // TODO: auto-save
+            // auto-save hint
             mAnimatedDiscBoard.setSavedFlag();
             dismiss();
         }

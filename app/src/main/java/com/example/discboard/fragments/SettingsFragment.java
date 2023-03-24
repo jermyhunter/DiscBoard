@@ -6,29 +6,31 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
-import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.discboard.DiscFinal;
 import com.example.discboard.JsonDataHelper;
 import com.example.discboard.R;
 import com.example.discboard.datatype.AnimTemp;
@@ -40,20 +42,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Hashtable;
 
 /**
  * SettingsFragment
  * used for importing & exporting user's data
  * */
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     static String TAG = "Settings Fragment";
     JsonDataHelper mJsonDataHelper;
     Button mImportBtn, mExportBtn, mShareBtn;
+    Spinner mCanvasBGSpinner;
     CheckBox mAutoSaveCB;
     Slider mAnimSpeedCtrlSlider;
     TextView mSliderText;
@@ -97,8 +101,11 @@ public class SettingsFragment extends Fragment {
         mImportBtn = v.findViewById(R.id.import_btn);
         mShareBtn = v.findViewById(R.id.share_btn);
         mAutoSaveCB = v.findViewById(R.id.auto_save_cb);
+        mCanvasBGSpinner = v.findViewById(R.id.canvas_bg_spinner);
         mAnimSpeedCtrlSlider = v.findViewById(R.id.anim_speed_ctrl_slider);
         mAnimSpeedCtrlSlider.setValue(mJsonDataHelper.getIntegerFromUserPreferences(USER_DATA_ANIM_SPEED));
+
+        initCanvasBGSpinner();
 
         // initiate checkbox from loaded mark state
         boolean auto_save_mark = mJsonDataHelper.getBooleanFromUserPreferences(USER_DATA_AUTO_SAVE_MARK, false);
@@ -138,7 +145,7 @@ public class SettingsFragment extends Fragment {
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
                 // get exported file path from preferences
-                Uri uri = Uri.parse(mJsonDataHelper.getStringFromUserPreferences(USER_DATA_EXPORTED_FILE_PATH));
+                Uri uri = Uri.parse(mJsonDataHelper.getStringFromUserPreferences(USER_DATA_EXPORTED_FILE_PATH, ""));
                 shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
                 shareIntent.setType("application/json");
                 startActivity(Intent.createChooser(shareIntent, null));
@@ -190,45 +197,51 @@ public class SettingsFragment extends Fragment {
         mImportData = registerForActivityResult(new ActivityResultContracts.GetContent(),
                 selectedFileUri -> {
                     if (null != selectedFileUri) {
-                        // read json data from external file
-                        String json_s = mJsonDataHelper.readFromExternalFile(selectedFileUri);
-                        try {
-                            JSONArray js_whole = new JSONArray(json_s);
-                            JSONObject jo_head = new JSONObject(String.valueOf(js_whole.get(0)));
-                            // check the file's head part, if it's a "animation_templates" file
-                            if (JsonDataHelper.checkFileType(jo_head)) {
-                                JSONArray ja_anim_temp_list = (JSONArray) new JSONObject(String.valueOf(js_whole.get(1))).get(IO_ANIM_TEMP_LIST);// get anim_temp_name_list
-                                JSONArray ja_anim_dots_list = (JSONArray) new JSONObject(String.valueOf(js_whole.get(2))).get(IO_ANIM_DOTS_LIST);// get anim_dots_list
+                        // check file type
+                        if(selectedFileUri.getPath().endsWith(".json")) {
+                            // read json data from external file
+                            String json_s = mJsonDataHelper.readFromExternalFile(selectedFileUri);
+                            try {
+                                JSONArray js_whole = new JSONArray(json_s);
+                                JSONObject jo_head = new JSONObject(String.valueOf(js_whole.get(0)));
+                                // check the file's head part, if it's a "animation_templates" file
+                                if (JsonDataHelper.checkFileType(jo_head)) {
+                                    JSONArray ja_anim_temp_list = (JSONArray) new JSONObject(String.valueOf(js_whole.get(1))).get(IO_ANIM_TEMP_LIST);// get anim_temp_name_list
+                                    JSONArray ja_anim_dots_list = (JSONArray) new JSONObject(String.valueOf(js_whole.get(2))).get(IO_ANIM_DOTS_LIST);// get anim_dots_list
 
-                                int temp_counter = 0;// record the current temp position
-                                while (temp_counter < ja_anim_temp_list.length()) {
-                                    JSONObject jo_anim_dots_list = ja_anim_dots_list.getJSONObject(temp_counter);
+                                    int temp_counter = 0;// record the current temp position
+                                    while (temp_counter < ja_anim_temp_list.length()) {
+                                        JSONObject jo_anim_dots_list = ja_anim_dots_list.getJSONObject(temp_counter);
 
-                                    String temp_name = jo_anim_dots_list.keys().next();
+                                        String temp_name = jo_anim_dots_list.keys().next();
 
-                                    // dealing with JSONArray data
-                                    JSONArray ja_anim_dots = (JSONArray) jo_anim_dots_list.get(temp_name);
-                                    // turn json string to anim_dots_lists
-                                    AnimTemp animTemp = mJsonDataHelper.JSONArray2ArrayListHashtableNew(ja_anim_dots);
-                                    ArrayList<Hashtable<String, Dot>> anim_dots_list = animTemp.getAnimDotsList();
-                                    ArrayList<Hashtable<String, InterDot>> inter_dots_list = animTemp.getInterDotsList();
+                                        // dealing with JSONArray data
+                                        JSONArray ja_anim_dots = (JSONArray) jo_anim_dots_list.get(temp_name);
+                                        // turn json string to anim_dots_lists
+                                        AnimTemp animTemp = mJsonDataHelper.JSONArray2ArrayListHashtableNew(ja_anim_dots);
+                                        ArrayList<Hashtable<String, Dot>> anim_dots_list = animTemp.getAnimDotsList();
+                                        ArrayList<Hashtable<String, InterDot>> inter_dots_list = animTemp.getInterDotsList();
 
-                                    // add data to pref
-                                    // check the possibility of name duplication
-                                    if (mJsonDataHelper.checkNameDuplication(temp_name)) {
-                                        temp_name = temp_name + FILE_DUPLICATION_SUFFIX;
+                                        // add data to pref
+                                        // check the possibility of name duplication
+                                        while (mJsonDataHelper.checkNameDuplication(temp_name)) {
+                                            temp_name = temp_name + FILE_DUPLICATION_SUFFIX;
+                                        }
+                                        mJsonDataHelper.saveAnimDotsToPrefNew(temp_name, anim_dots_list, inter_dots_list);
+                                        mJsonDataHelper.addAniTempToPref(temp_name);
+                                        temp_counter++;
                                     }
-                                    mJsonDataHelper.saveAnimDotsToPrefNew(temp_name, anim_dots_list, inter_dots_list);
-                                    mJsonDataHelper.addAniTempToPref(temp_name);
-                                    temp_counter++;
+                                } else {
+                                    Toast.makeText(getContext(), "早期版本数据，文件不兼容！", Toast.LENGTH_LONG).show();
                                 }
-                            } else {
-                                Toast.makeText(getContext(), "文件无效！", Toast.LENGTH_LONG).show();
-                            }
 //                            Log.d(TAG, "onCreateView: " + "导入成功");
-                            Toast.makeText(getContext(), "导入成功", Toast.LENGTH_LONG).show();
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
+                                Toast.makeText(getContext(), "导入成功", Toast.LENGTH_LONG).show();
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                        else {
+                            Toast.makeText(getContext(), "文件类型无效！", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -300,6 +313,49 @@ public class SettingsFragment extends Fragment {
         }
     }
 
+    // canvas_bg spinner
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        String s = String.valueOf(adapterView.getItemAtPosition(i));
+        if(s.equals(CanvasBGType.FULL_GROUND)) {
+            // canvas_bg write in
+            mJsonDataHelper.setStringToUserPreferences(USER_DATA_CANVAS_BG_TYPE, CanvasBGType.FULL_GROUND);
+//            Log.d(TAG, "onItemSelected: " + s);
+        }
+        else if(s.equals(CanvasBGType.END_ZONE)) {
+            mJsonDataHelper.setStringToUserPreferences(USER_DATA_CANVAS_BG_TYPE, CanvasBGType.END_ZONE);
+//            Log.d(TAG, "onItemSelected: " + s);
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+
+    void initCanvasBGSpinner(){
+        // canvas_bg
+        // 场地背景类别的下拉菜单
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.canvas_bg_array, R.layout.canvas_bg_type_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        mCanvasBGSpinner.setAdapter(adapter);
+        mCanvasBGSpinner.setOnItemSelectedListener(this);
+        // set the default value of the spinner
+
+        if(mCanvasBGSpinner != null){
+            String s_canvas_bg_type = mJsonDataHelper.getStringFromUserPreferences(USER_DATA_CANVAS_BG_TYPE, "");
+            ArrayAdapter arrayAdapter = (ArrayAdapter) mCanvasBGSpinner.getAdapter();
+            int pos = arrayAdapter.getPosition(s_canvas_bg_type);
+            mCanvasBGSpinner.setSelection(pos);
+        }
+        else{
+            Log.e(TAG, "CanvasBGSpinner 为 null!", new NullPointerException());
+        }
+    }
 
     /**
      * ExportDialogFragment

@@ -4,18 +4,21 @@ import static android.content.Context.MODE_PRIVATE;
 
 import static com.example.discboard.DiscFinal.EXPORT_FILE_PREFIX;
 import static com.example.discboard.DiscFinal.EXPORT_FILE_SUFFIX;
+import static com.example.discboard.DiscFinal.EXPORT_FOLDER_SUB_PATH;
 import static com.example.discboard.DiscFinal.IO_HEAD;
 import static com.example.discboard.DiscFinal.IO_HEAD_VERSION_NO;
+import static com.example.discboard.DiscFinal.USER_DATA_CANVAS_BG_TYPE;
 import static com.example.discboard.DiscFinal.USER_DATA_EXPORTED_FILE_PATH;
 import static com.example.discboard.DiscFinal.USER_DATA_PREF;
 import static com.example.discboard.DiscFinal.USER_DATA_ANIM_TEMP_LIST;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
-import android.util.Log;
+import android.provider.MediaStore;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.discboard.datatype.AnimTemp;
@@ -29,15 +32,12 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -271,7 +271,7 @@ public class JsonDataHelper {
     /**
      * check if the app only has the right to read external files
      * */
-    private static boolean isExternalStorageReadOnly() {
+    public static boolean isExternalStorageReadOnly() {
         String extStorageState = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED_READ_ONLY.equals(extStorageState);
     }
@@ -279,7 +279,7 @@ public class JsonDataHelper {
     /**
      * check if the app has the right to write external files
      * */
-    private static boolean isExternalStorageAvailable() {
+    public static boolean isExternalStorageAvailable() {
         String extStorageState = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(extStorageState);
     }
@@ -314,7 +314,7 @@ public class JsonDataHelper {
      * */
     public void writeToExternalFile(String s, String file_name){
 
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), EXPORT_FILE_PREFIX + file_name + EXPORT_FILE_SUFFIX);
+        File file = new File(getExportFolder(), EXPORT_FILE_PREFIX + file_name + EXPORT_FILE_SUFFIX);
 //        Log.d(TAG, "writeFile: " +file);
 //        Log.d(TAG, "writeFile: " +file.getAbsolutePath());
 
@@ -450,9 +450,9 @@ public class JsonDataHelper {
     /**
      * fetching and getting data from USER_DATA in shared prefences
      * */
-    public String getStringFromUserPreferences(String key){
+    public String getStringFromUserPreferences(String key, String s){
         SharedPreferences shared = getContext().getSharedPreferences(USER_DATA_PREF, MODE_PRIVATE);
-        return shared.getString(key, "");
+        return shared.getString(key, s);
     }
 
     public void setStringToUserPreferences(String key, String s){
@@ -496,10 +496,33 @@ public class JsonDataHelper {
      * if exists, then enable the share btn
      * */
     public Boolean sharedFileExists(){
-        String exported_file_path = getStringFromUserPreferences(USER_DATA_EXPORTED_FILE_PATH);
+        String exported_file_path = getStringFromUserPreferences(USER_DATA_EXPORTED_FILE_PATH, "");
 //        Uri exported_file_uri = Uri.parse(exported_file_path);
         File exported_file = new File(exported_file_path);
         return exported_file.exists();
+    }
+
+    public File getExportFolder(){
+        File exported_folder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), EXPORT_FOLDER_SUB_PATH);
+        boolean success;
+        if(!exported_folder.exists()){
+            success = exported_folder.mkdirs();
+        }
+        else {
+            //TODO:发布前需要修改
+//            Toast.makeText(mContext,"导出路径已存在：" + exported_folder, Toast.LENGTH_LONG).show();
+            return exported_folder;
+        }
+
+        if(success){
+            //TODO:发布前需要修改
+            Toast.makeText(mContext,"导出文件夹创建成功！" + exported_folder, Toast.LENGTH_LONG).show();
+            return exported_folder;
+        }
+        else {
+            Toast.makeText(mContext, "创建导出文件夹失败，请反馈bug！", Toast.LENGTH_SHORT).show();
+            return null;
+        }
     }
 
     public static JSONArray mergeAnimInterJsonArray(JSONArray jaAnim, JSONArray jaInter) {
@@ -514,5 +537,15 @@ public class JsonDataHelper {
         outArray.put(jaAnim.optJSONObject(i));
 
         return outArray;
+    }
+
+    public void initBGByUserData(View view) {
+        String s_canvas_bg_type = this.getStringFromUserPreferences(USER_DATA_CANVAS_BG_TYPE, "");
+        if(Objects.equals(s_canvas_bg_type, DiscFinal.CanvasBGType.FULL_GROUND))
+            view.setBackgroundResource(R.drawable.disc_space);
+        else if(Objects.equals(s_canvas_bg_type, DiscFinal.CanvasBGType.END_ZONE))
+            view.setBackgroundResource(R.drawable.end_zone);
+        else
+            view.setBackgroundResource(R.drawable.disc_space);
     }
 }

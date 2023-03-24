@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="canvas_bg_array">
+        <item>全场</item>
+        <item>得分区</item>
+    </string-array>
+</resources>

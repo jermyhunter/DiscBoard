@@ -75,9 +75,6 @@ public class GuidingFragment extends Fragment {
             public void surfaceDestroyed(SurfaceHolder holder) { }
         });
 
-        // TODO: 制作演示视频
-        // 模板共享
-
         v.findViewById(R.id.template_sharing_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
