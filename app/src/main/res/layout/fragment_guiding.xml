@@ -111,7 +111,7 @@
                     android:layout_height="wrap_content"
                     android:text="（例如大巴、火车等交通工具上，或其他未携带实体战术板的场合）"
                     android:textAlignment="viewStart"
-                    android:textSize="20sp" />
+                    android:textSize="17sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -128,7 +128,7 @@
                     android:layout_height="wrap_content"
                     android:text="分享者使用QQ群等通讯软件的“分享屏幕”功能\n结合语言说明，将战术演示共享给队友"
                     android:textAlignment="viewStart"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -145,7 +145,7 @@
                     android:layout_height="wrap_content"
                     android:text="分享者先使用“导出”打包战术\n再使用“分享”功能将打包好的文件传给对方“导入”"
                     android:textAlignment="viewStart"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:layout_width="wrap_content"

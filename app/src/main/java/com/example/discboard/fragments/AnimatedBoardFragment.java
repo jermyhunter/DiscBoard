@@ -7,6 +7,8 @@ import static com.example.discboard.DiscFinal.FILE_DUPLICATION_SUFFIX;
 import static com.example.discboard.DiscFinal.NORMAL_ALPHA;
 import static com.example.discboard.DiscFinal.PRESSED_ALPHA;
 import static com.example.discboard.DiscFinal.USER_DATA_AUTO_SAVE_MARK;
+import static com.example.discboard.DiscFinal.USER_DATA_BOARD_HEIGHT;
+import static com.example.discboard.DiscFinal.USER_DATA_BOARD_WIDTH;
 import static com.example.discboard.DiscFinal.USER_DATA_CANVAS_BG_TYPE;
 
 import android.annotation.SuppressLint;
@@ -134,6 +136,7 @@ public class AnimatedBoardFragment extends Fragment {
 
         mAnimatedDiscBoard = v.findViewById(R.id.animated_discboard);
         mJsonDataHelper.initBGByUserData(mAnimatedDiscBoard);
+        storeBoardMeasure();
 
         mSaveOldTempBtn = v.findViewById(R.id.save_old_temp_btn);
         mLoadTempBtn = v.findViewById(R.id.load_temp_btn);
@@ -372,8 +375,23 @@ public class AnimatedBoardFragment extends Fragment {
                 }
             }
         };
+
         // Inflate the layout for this fragment
         return v;
+    }
+
+    private void storeBoardMeasure() {
+        if(mJsonDataHelper.getFloatFromUserPreferences(USER_DATA_BOARD_WIDTH, 0f) == 0f ||
+                mJsonDataHelper.getFloatFromUserPreferences(USER_DATA_BOARD_HEIGHT, 0f) == 0f){
+            // store this phone's board measure on the first load
+            mAnimatedDiscBoard.post(() -> {
+//                Log.d(TAG, "storeBoardSize: width" + mAnimatedDiscBoard.getWidth());
+//                Log.d(TAG, "storeBoardSize: height" + mAnimatedDiscBoard.getHeight());
+                mJsonDataHelper.setFloatToUserPreferences(USER_DATA_BOARD_WIDTH, mAnimatedDiscBoard.getWidth());
+                mJsonDataHelper.setFloatToUserPreferences(USER_DATA_BOARD_HEIGHT, mAnimatedDiscBoard.getHeight());
+            });
+        }
+
     }
 
     void InitAnimation(){

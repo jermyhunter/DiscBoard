@@ -6,11 +6,12 @@ import static com.example.discboard.DiscFinal.EXPORT_FILE_PREFIX;
 import static com.example.discboard.DiscFinal.EXPORT_FILE_SUFFIX;
 import static com.example.discboard.DiscFinal.EXPORT_FOLDER_SUB_PATH;
 import static com.example.discboard.DiscFinal.IO_HEAD;
-import static com.example.discboard.DiscFinal.IO_HEAD_VERSION_NO;
+import static com.example.discboard.DiscFinal.IO_HEAD_VERSION_1_1;
 import static com.example.discboard.DiscFinal.USER_DATA_CANVAS_BG_TYPE;
 import static com.example.discboard.DiscFinal.USER_DATA_EXPORTED_FILE_PATH;
 import static com.example.discboard.DiscFinal.USER_DATA_PREF;
 import static com.example.discboard.DiscFinal.USER_DATA_ANIM_TEMP_LIST;
+import static com.example.discboard.DiscFinal.USER_INIT_PREF;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -18,6 +19,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
@@ -319,25 +321,31 @@ public class JsonDataHelper {
 //        Log.d(TAG, "writeFile: " +file);
 //        Log.d(TAG, "writeFile: " +file.getAbsolutePath());
 
-        try {
-            // Very simple code to copy a picture from the application's
-            // resource into the external file.  Note that this code does
-            // no error checking, and assumes the picture is small (does not
-            // try to copy it in chunks).  Note that if external storage is
-            // not currently mounted this will silently fail.
-            InputStream is = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
-            OutputStream os = Files.newOutputStream(file.toPath());
-            byte[] data = new byte[is.available()];
-            is.read(data);
-            os.write(data);
-            is.close();
-            os.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if(file.exists()){
+            Toast.makeText(mContext, "文件已存在，请重命名！", Toast.LENGTH_LONG).show();
         }
+        else {
+            try {
+                // Very simple code to copy a picture from the application's
+                // resource into the external file.  Note that this code does
+                // no error checking, and assumes the picture is small (does not
+                // try to copy it in chunks).  Note that if external storage is
+                // not currently mounted this will silently fail.
+                InputStream is = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
+                OutputStream os = Files.newOutputStream(file.toPath());
+                byte[] data = new byte[is.available()];
+                is.read(data);
+                os.write(data);
+                is.close();
+                os.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
-        // 设置导出文件路径，用于分享用
-        setStringToUserPreferences(USER_DATA_EXPORTED_FILE_PATH, file.getAbsolutePath());
+            Toast.makeText(mContext, "导出成功！", Toast.LENGTH_LONG).show();
+            // 设置导出文件路径，用于分享用
+            setStringToUserPreferences(USER_DATA_EXPORTED_FILE_PATH, file.getAbsolutePath());
+        }
     }
 
     /**
@@ -365,12 +373,12 @@ public class JsonDataHelper {
     }
 
     /**
-     * check if the head of the JSONArray is IO_HEAD_VERSION_NO
+     * check if the head of the JSONArray is IO_HEAD_VERSION_1_1
      * return true if it is; return false if not
      * */
-    public static Boolean checkFileType(JSONObject jo){
+    public static String getFileVersion(JSONObject jo){
         try {
-            return jo.get(IO_HEAD).equals(IO_HEAD_VERSION_NO);
+            return jo.getString(IO_HEAD);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
@@ -448,6 +456,18 @@ public class JsonDataHelper {
         return new AnimTemp(anim_dots_list, inter_dots_list);
     }
 
+    public float getFloatFromUserPreferences(String key, float default_f){
+        SharedPreferences shared = getContext().getSharedPreferences(USER_DATA_PREF, MODE_PRIVATE);
+        return shared.getFloat(key, default_f);
+    }
+
+    public void setFloatToUserPreferences(String key, float f){
+        SharedPreferences shared = getContext().getSharedPreferences(USER_DATA_PREF, MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putFloat(key, f);
+        editor.apply();
+    }
+
     /**
      * fetching and getting data from USER_DATA in shared prefences
      * */
@@ -472,6 +492,11 @@ public class JsonDataHelper {
 
     public Boolean getBooleanFromUserPreferences(String key, Boolean b){
         SharedPreferences shared = getContext().getSharedPreferences(USER_DATA_PREF, MODE_PRIVATE);
+        return shared.getBoolean(key, b);
+    }
+
+    public Boolean getBooleanFromInitPreferences(String key, Boolean b){
+        SharedPreferences shared = getContext().getSharedPreferences(USER_INIT_PREF, MODE_PRIVATE);
         return shared.getBoolean(key, b);
     }
 

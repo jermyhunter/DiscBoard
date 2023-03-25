@@ -31,6 +31,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.discboard.views.AnimatedDiscBoard;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 
@@ -203,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
             mMenuPos1 = mMenuItemID2Pos.get(menu_item_id);
             // if the before-switching pos is static or anim, then show the data check dialog
             if(mMenuPos1 != mMenuPos){// if the start and dest are not the same location
-                if(mMenuPos == FragmentIndex.AnimatedBoardIndex) {
+                if(mMenuPos == FragmentIndex.AnimatedBoardIndex && !AnimatedDiscBoard.isSaved()) {
                     mUnSavedCheckDialogFragment.show(mSupportFragmentManager, "数据丢弃确认");
                 }
                 else {
@@ -299,9 +300,9 @@ public class MainActivity extends AppCompatActivity {
     private void initDataOn1stRun(){
         String s;
 
-        if(mJsonDataHelper.getBooleanFromUserPreferences(USER_DATA_FIRST_RUN_MARK, true))
-        {
-            SharedPreferences shared = getSharedPreferences(USER_INIT_PREFERENCE, MODE_PRIVATE);
+        // 初次使用
+        if(mJsonDataHelper.getBooleanFromInitPreferences(USER_DATA_FIRST_RUN_MARK, true)){
+            SharedPreferences shared = getSharedPreferences(USER_INIT_PREF, MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             s = mJsonDataHelper.loadJSONFromAsset("dots_3.json");
             editor.putString(USER_DATA_TEMP_3, s); // preload 3 players
@@ -312,33 +313,17 @@ public class MainActivity extends AppCompatActivity {
             s = mJsonDataHelper.loadJSONFromAsset("ho_stack.json");
             editor.putString(USER_DATA_TEMP_HO, s); // horizontal stack
 
-            editor.putBoolean(USER_DATA_AUTO_SAVE_MARK, false);
-
-            editor.apply();
-
-            // save a copy to the "USER_SHARED_PREFERENCE"
-            shared = getSharedPreferences(USER_DATA_PREF, MODE_PRIVATE);
-            editor = shared.edit();
-
-            editor.putString(USER_DATA_TEMP_MY, ""); // 预设3棋子
-            s = mJsonDataHelper.loadJSONFromAsset("dots_3.json");
-            editor.putString(USER_DATA_TEMP_3, s); // 预设3棋子
-            s = mJsonDataHelper.loadJSONFromAsset("dots_5.json");
-            editor.putString(USER_DATA_TEMP_5, s); // 预设5棋子
-            s = mJsonDataHelper.loadJSONFromAsset("dots_7.json");
-            editor.putString(USER_DATA_TEMP_VER, s); // 预设7棋子
-            s = mJsonDataHelper.loadJSONFromAsset("ho_stack.json");
-            editor.putString(USER_DATA_TEMP_HO, s); // horizontal stack
-
-            editor.putBoolean(USER_DATA_FIRST_RUN_MARK, false);
-
             // init animation playing speed
             editor.putInt(USER_DATA_ANIM_SPEED, ANIM_SPEED_INIT);
             // canvas_bg, default-> full_ground
             editor.putString(USER_DATA_CANVAS_BG_TYPE, CanvasBGType.FULL_GROUND);
+            editor.putBoolean(USER_DATA_AUTO_SAVE_MARK, false);
+
+            editor.putBoolean(USER_DATA_FIRST_RUN_MARK, false);
 
             editor.apply();
 
+            // initiate auto-save setting
             mAutoSaveCheckDialogFragment = new AutoSaveCheckDialogFragment();
             mAutoSaveCheckDialogFragment.setCancelable(false);
             mAutoSaveCheckDialogFragment.setAutoSaveCheckDialogListener(new AutoSaveCheckDialogFragment.AutoSaveCheckDialogListener() {
@@ -358,11 +343,41 @@ public class MainActivity extends AppCompatActivity {
                     editor1.apply();
                 }
             });
+
             mAutoSaveCheckDialogFragment.show(mSupportFragmentManager, "自动保存初始化");
-            Toast.makeText(this, "战术模板初始化成功", Toast.LENGTH_SHORT).show();
 
             // 初次使用，创建导出文件夹
             initExportFolder();
+        }
+
+
+        // 初次使用 或 初始化模板后
+        if(mJsonDataHelper.getBooleanFromUserPreferences(USER_DATA_FIRST_RUN_MARK, true))
+        {
+            // save a copy to the "USER_SHARED_PREFERENCE"
+            SharedPreferences shared = getSharedPreferences(USER_DATA_PREF, MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+
+            editor.putString(USER_DATA_TEMP_MY, ""); // 预设3棋子
+            s = mJsonDataHelper.loadJSONFromAsset("dots_3.json");
+            editor.putString(USER_DATA_TEMP_3, s); // 预设3棋子
+            s = mJsonDataHelper.loadJSONFromAsset("dots_5.json");
+            editor.putString(USER_DATA_TEMP_5, s); // 预设5棋子
+            s = mJsonDataHelper.loadJSONFromAsset("dots_7.json");
+            editor.putString(USER_DATA_TEMP_VER, s); // 预设7棋子
+            s = mJsonDataHelper.loadJSONFromAsset("ho_stack.json");
+            editor.putString(USER_DATA_TEMP_HO, s); // horizontal stack
+
+            // init animation playing speed
+            editor.putInt(USER_DATA_ANIM_SPEED, ANIM_SPEED_INIT);
+            // canvas_bg, default-> full_ground
+            editor.putString(USER_DATA_CANVAS_BG_TYPE, CanvasBGType.FULL_GROUND);
+
+            editor.putBoolean(USER_DATA_FIRST_RUN_MARK, false);
+
+            editor.apply();
+
+            Toast.makeText(this, "战术模板初始化成功", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -83,6 +83,11 @@ public class Dot{
         return (getX() - x) * (getX() - x) + (getY() - y) * (getY() - y) <= TOUCH_RADIUS * TOUCH_RADIUS;
     }
 
+    public void scaleByRatio(float X_ratio, float Y_ratio){
+        this.x *= X_ratio;
+        this.y *= Y_ratio;
+    }
+
     public boolean isOffense(){
         return getDotType() == OFF_TYPE;
     }

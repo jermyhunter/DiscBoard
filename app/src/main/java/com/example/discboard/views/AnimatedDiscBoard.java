@@ -58,7 +58,12 @@ import java.util.Objects;
  *      plan B, treat it as curved line, using inter_dot
  * */
 public class AnimatedDiscBoard extends View {
-    private boolean mSavedFlag;// used for unsaved data checking
+    public static boolean mSavedFlag;// used for unsaved data checking
+
+    public static boolean isSaved() {
+        return mSavedFlag;
+    }
+
     final static int STROKE_WIDTH = 8;
     Gson mGson;
     private static int STEP_NUM = 100;
@@ -294,9 +299,7 @@ public class AnimatedDiscBoard extends View {
     public void setSavedFlag(){
         mSavedFlag = true;
     }
-    public boolean isSaved(){
-        return mSavedFlag;
-    }
+
     private void clearDots() {
         mAnimDotsList.clear();
         mInterDotsList.clear();

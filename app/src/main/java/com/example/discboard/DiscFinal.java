@@ -50,17 +50,20 @@ public class DiscFinal {
     public final static String USER_DATA_ANIM_TEMP_LIST = "anim_temp_list";
     public final static String USER_DATA_ANIM_SPEED = "anim_speed";
     public final static String USER_DATA_AUTO_SAVE_MARK = "auto_save";
-    public final static String USER_INIT_PREFERENCE = "init_data";
-
+    public final static String USER_INIT_PREF = "init_data";
+    public final static String USER_DATA_BOARD_WIDTH = "width";
+    public final static String USER_DATA_BOARD_HEIGHT = "height";
     public final static int ANIM_SPEED_INIT = 75;
+    // ------------------ EX/IMPORTING ------------------
     public final static String IO_HEAD = "head";
     // add ver. number
-    public final static String IO_HEAD_VERSION_NO = "ver1.1";
-    // IO_HEAD_VERSION_NO 对应版本号，可以据此编写向前的版本兼容，将导入的文件转化为兼容版
+    // IO_HEAD_VERSION_X_XX 对应版本号，可以据此编写向前的版本兼容，将导入的文件转化为兼容版
+    public final static String IO_HEAD_VERSION_1_1 = "ver1.1";
+    public final static String IO_HEAD_VERSION_1_2 = "ver1.2";
+    // store the board measure, "WIDTH" "HEIGHT" in order
+    public final static String IO_BOARD_MEASURE = "board_measure";
     public final static String IO_ANIM_TEMP_LIST = "anim_temp_list";
     public final static String IO_ANIM_DOTS_LIST = "anim_dots_list";
-
-    // ------------------ EX/IMPORTING ------------------
     public final static String EXPORT_FOLDER_SUB_PATH = "" + File.separator;
     public final static String EXPORT_FILE_SUFFIX = ".json";
     public final static String EXPORT_FILE_PREFIX = "disc_";

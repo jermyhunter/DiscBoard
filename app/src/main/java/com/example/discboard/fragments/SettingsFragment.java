@@ -19,8 +19,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -31,7 +29,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.discboard.DiscFinal;
 import com.example.discboard.JsonDataHelper;
 import com.example.discboard.R;
 import com.example.discboard.datatype.AnimTemp;
@@ -43,11 +40,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Objects;
 
@@ -66,6 +60,13 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
     ArrayList<String> mAniTempList;
     ActivityResultLauncher<String> mImportData;
     ExportDialogFragment mExportDialogFragment;
+
+    final static class ExportFileIndex{
+        final static int Head = 0;
+        final static int TempList = 1;
+        final static int AniDotsList = 2;
+        final static int BoardMeasure = 3;
+    }
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -164,8 +165,6 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
         mExportDialogFragment.setExportDialogListener(file_name -> {
             try {
                 exportUserData(file_name);
-
-                Toast.makeText(getContext(), "导出成功！", Toast.LENGTH_LONG).show();
 //                enableShareFunction();
 //                        Log.d(TAG, "onCreateView: " + "导出成功");
             } catch (JSONException e) {
@@ -209,12 +208,12 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
                             String json_s = mJsonDataHelper.readFromExternalFile(selectedFileUri);
                             // LACK FILE TYPE VERIFYING
                             try {
-                                JSONArray js_whole = new JSONArray(json_s);
-                                JSONObject jo_head = new JSONObject(String.valueOf(js_whole.get(0)));
-                                // check the file's head part, if it's a "animation_templates" file
-                                if (JsonDataHelper.checkFileType(jo_head)) {
-                                    JSONArray ja_anim_temp_list = (JSONArray) new JSONObject(String.valueOf(js_whole.get(1))).get(IO_ANIM_TEMP_LIST);// get anim_temp_name_list
-                                    JSONArray ja_anim_dots_list = (JSONArray) new JSONObject(String.valueOf(js_whole.get(2))).get(IO_ANIM_DOTS_LIST);// get anim_dots_list
+                                JSONArray ja_whole = new JSONArray(json_s);
+                                JSONObject jo_head = new JSONObject(String.valueOf(ja_whole.get(ExportFileIndex.Head)));
+                                // verify file version
+                                if (JsonDataHelper.getFileVersion(jo_head).equals(IO_HEAD_VERSION_1_1)) {
+                                    JSONArray ja_anim_temp_list = (JSONArray) new JSONObject(String.valueOf(ja_whole.get(ExportFileIndex.TempList))).get(IO_ANIM_TEMP_LIST);// get anim_temp_name_list
+                                    JSONArray ja_anim_dots_list = (JSONArray) new JSONObject(String.valueOf(ja_whole.get(ExportFileIndex.AniDotsList))).get(IO_ANIM_DOTS_LIST);// get anim_dots_list
 
                                     int temp_counter = 0;// record the current temp position
                                     while (temp_counter < ja_anim_temp_list.length()) {
@@ -238,12 +237,69 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
                                         mJsonDataHelper.addAniTempToPref(temp_name);
                                         temp_counter++;
                                     }
-//                                Log.d(TAG, "onCreateView: " + "导入成功");
+//                                    Log.d(TAG, "onCreateView: " + "导入成功");
                                     Toast.makeText(getContext(), "导入成功", Toast.LENGTH_LONG).show();
 
                                     // 重新读取列表
                                     fetchTempList();
-                                } else {
+                                }
+                                else if (JsonDataHelper.getFileVersion(jo_head).equals(IO_HEAD_VERSION_1_2)) {
+                                    // fetch width & height from JSONArray
+                                    JSONArray ja_board_measure = (JSONArray) new JSONObject(String.valueOf(ja_whole.get(ExportFileIndex.BoardMeasure))).get(IO_BOARD_MEASURE);// get anim_temp_name_list
+                                    float width = (float) ja_board_measure.getDouble(0);
+                                    float height = (float) ja_board_measure.getDouble(1);
+                                    // fetch target_width & target_height from current
+                                    float target_width = mJsonDataHelper.getFloatFromUserPreferences(USER_DATA_BOARD_WIDTH, 0f);
+                                    float target_height = mJsonDataHelper.getFloatFromUserPreferences(USER_DATA_BOARD_HEIGHT, 0f);
+
+                                    // for testing
+//                                    if(target_width == 0f || target_height == 0f){
+//                                        Log.d(TAG, "获取本机战术板尺寸失败");
+//                                    }
+
+                                    float W_ratio = target_width / width;
+                                    float H_ratio = target_height / height;
+
+                                    JSONArray ja_anim_temp_list = (JSONArray) new JSONObject(String.valueOf(ja_whole.get(ExportFileIndex.TempList))).get(IO_ANIM_TEMP_LIST);// get anim_temp_name_list
+                                    JSONArray ja_anim_dots_list = (JSONArray) new JSONObject(String.valueOf(ja_whole.get(ExportFileIndex.AniDotsList))).get(IO_ANIM_DOTS_LIST);// get anim_dots_list
+
+                                    int temp_counter = 0;// record the current temp position
+                                    while (temp_counter < ja_anim_temp_list.length()) {
+                                        JSONObject jo_anim_dots_list = ja_anim_dots_list.getJSONObject(temp_counter);
+
+                                        String temp_name = jo_anim_dots_list.keys().next();
+
+                                        // dealing with JSONArray data
+                                        JSONArray ja_anim_dots = (JSONArray) jo_anim_dots_list.get(temp_name);
+                                        // turn json string to anim_dots_lists
+                                        AnimTemp animTemp = mJsonDataHelper.JSONArray2ArrayListHashtableNew(ja_anim_dots);
+                                        ArrayList<Hashtable<String, Dot>> anim_dots_list = animTemp.getAnimDotsList();
+                                        ArrayList<Hashtable<String, InterDot>> inter_dots_list = animTemp.getInterDotsList();
+
+                                        // first used in VER_1_2, scale dots' pos by ratio
+                                        for(Hashtable<String, Dot> hashtable : anim_dots_list){
+                                            hashtable.forEach((id, dot) -> dot.scaleByRatio(W_ratio, H_ratio));
+                                        }
+                                        for(Hashtable<String, InterDot> hashtable : inter_dots_list){
+                                            hashtable.forEach((id, inter_dot) -> inter_dot.scaleByRatio(W_ratio, H_ratio));
+                                        }
+
+                                        // add data to pref
+                                        // check the possibility of name duplication
+                                        while (mJsonDataHelper.checkNameDuplication(temp_name)) {
+                                            temp_name = temp_name + FILE_DUPLICATION_SUFFIX;
+                                        }
+                                        mJsonDataHelper.saveAnimDotsToPrefNew(temp_name, anim_dots_list, inter_dots_list);
+                                        mJsonDataHelper.addAniTempToPref(temp_name);
+                                        temp_counter++;
+                                    }
+//                                    Log.d(TAG, "onCreateView: " + "导入成功");
+                                    Toast.makeText(getContext(), "导入成功", Toast.LENGTH_LONG).show();
+
+                                    // 重新读取列表
+                                    fetchTempList();
+                                }
+                                else {
                                     Toast.makeText(getContext(), "早期版本数据，文件不兼容！", Toast.LENGTH_LONG).show();
                                 }
                             } catch (JSONException e) {
@@ -304,17 +360,29 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
             }
             JSONArray ja_whole = new JSONArray();
 
+            // apk version
             JSONObject jo_head = new JSONObject();
-            jo_head.put(IO_HEAD, IO_HEAD_VERSION_NO);
+            jo_head.put(IO_HEAD, IO_HEAD_VERSION_1_2);
             ja_whole.put(jo_head);
 
+            // temp list
             JSONObject jo_anim_temp_list = new JSONObject();
             jo_anim_temp_list.put(IO_ANIM_TEMP_LIST, ja_anim_temp_list);
             ja_whole.put(jo_anim_temp_list);
 
+            // ani_dots list
             JSONObject jo_anim_dots_list = new JSONObject();
             jo_anim_dots_list.put(IO_ANIM_DOTS_LIST, ja_anim_dots_list);
             ja_whole.put(jo_anim_dots_list);
+
+            // board width & height
+            JSONObject jo_board_measure = new JSONObject();
+            ArrayList<Float> board_measure_list = new ArrayList();
+            board_measure_list.add(mJsonDataHelper.getFloatFromUserPreferences(USER_DATA_BOARD_WIDTH, 0f));
+            board_measure_list.add(mJsonDataHelper.getFloatFromUserPreferences(USER_DATA_BOARD_HEIGHT, 0f));
+            JSONArray ja_board_measure = new JSONArray(board_measure_list);
+            jo_board_measure.put(IO_BOARD_MEASURE, ja_board_measure);
+            ja_whole.put(jo_board_measure);
 
             mJsonDataHelper.writeToExternalFile(ja_whole.toString(), file_name);
         } else {
