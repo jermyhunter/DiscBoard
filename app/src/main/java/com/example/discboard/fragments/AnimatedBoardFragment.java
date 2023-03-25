@@ -4,6 +4,8 @@ import static android.app.AlertDialog.*;
 
 import static com.example.discboard.DiscFinal.AUTO_SAVE_DELAY;
 import static com.example.discboard.DiscFinal.FILE_DUPLICATION_SUFFIX;
+import static com.example.discboard.DiscFinal.NORMAL_ALPHA;
+import static com.example.discboard.DiscFinal.PRESSED_ALPHA;
 import static com.example.discboard.DiscFinal.USER_DATA_AUTO_SAVE_MARK;
 import static com.example.discboard.DiscFinal.USER_DATA_CANVAS_BG_TYPE;
 
@@ -61,7 +63,8 @@ public class AnimatedBoardFragment extends Fragment {
     // if mTempName == "", then it's a newly created temp
     // when user switching, then give a unsaved hint
     String mTempName;
-    Button mSaveOldTempBtn, mLoadTempBtn, mDelFrameBtn, mInsertFrameBtn;
+    Button mSaveOldTempBtn, mLoadTempBtn, mDelFrameBtn, mInsertFrameBtn,
+        mLastFrameBtn, mNextFrameBtn;
     TextView mHintTxt;
     AnimationSet mAnimFade;
     JsonDataHelper mJsonDataHelper;
@@ -243,14 +246,16 @@ public class AnimatedBoardFragment extends Fragment {
         });
 
         // last/next frame btn
-        v.findViewById(R.id.last_frame_btn).setOnClickListener(view -> {
+        mLastFrameBtn = v.findViewById(R.id.last_frame_btn);
+        mLastFrameBtn.setOnClickListener(view -> {
             int frameNo = mAnimatedDiscBoard.getCurrentFrameNo() - 1;
             if(frameNo >= 0) {
                 mAnimatedDiscBoard.loadFrame(frameNo);
             }
         });
 
-        v.findViewById(R.id.next_frame_btn).setOnClickListener(view -> {
+        mNextFrameBtn = v.findViewById(R.id.next_frame_btn);
+        mNextFrameBtn.setOnClickListener(view -> {
             int frameNo = mAnimatedDiscBoard.getCurrentFrameNo() + 1;
             if(frameNo < mAnimatedDiscBoard.getFrameSum()) {
                 mAnimatedDiscBoard.loadFrame(frameNo);
@@ -293,11 +298,19 @@ public class AnimatedBoardFragment extends Fragment {
             @Override
             public void onAnimationStart() {
                 mLoadTempBtn.setEnabled(false);
+                // lower the alpha value of the slider for better vision experience
+                mFrameSlider.setAlpha(NORMAL_ALPHA);
+                mLastFrameBtn.setAlpha(NORMAL_ALPHA);
+                mNextFrameBtn.setAlpha(NORMAL_ALPHA);
             }
 
             @Override
             public void onAnimationStop() {
                 mLoadTempBtn.setEnabled(true);
+                // restore the alpha value
+                mFrameSlider.setAlpha(PRESSED_ALPHA);
+                mLastFrameBtn.setAlpha(PRESSED_ALPHA);
+                mNextFrameBtn.setAlpha(PRESSED_ALPHA);
             }
 
             @Override
@@ -319,6 +332,19 @@ public class AnimatedBoardFragment extends Fragment {
                 mAnimatedDiscBoard.loadFrame((int)value - 1);
             }
         });
+        mFrameSlider.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
+            @SuppressLint("RestrictedApi")
+            @Override
+            public void onStartTrackingTouch(@NonNull Slider slider) {
+                slider.setAlpha(PRESSED_ALPHA);
+            }
+
+            @SuppressLint("RestrictedApi")
+            @Override
+            public void onStopTrackingTouch(@NonNull Slider slider) {
+                slider.setAlpha(NORMAL_ALPHA);
+            }
+        });
 
         mHintTxt = v.findViewById(R.id.hint_txt);
 
@@ -331,7 +357,7 @@ public class AnimatedBoardFragment extends Fragment {
                     if (!mAnimatedDiscBoard.isSaved()) {
                         mAnimatedDiscBoard.saveAniDots(mTempName);
                         // auto-save message
-//                        Toast.makeText(getContext(), mTempName + " 自动保存成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), mTempName + " 自动保存成功", Toast.LENGTH_SHORT).show();
 
                         // auto-save success hint with animation
                         mHintTxt.setText(R.string.AUTO_SAVE_SUCCESS_HINT);
@@ -369,6 +395,8 @@ public class AnimatedBoardFragment extends Fragment {
             public void onAnimationRepeat(Animation animation) {
             }
         });
+
+        animationIn.setStartOffset(2 * 1000);
 
         animationOut.setAnimationListener(new Animation.AnimationListener() {
             @Override

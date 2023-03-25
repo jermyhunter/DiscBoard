@@ -14,18 +14,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24dp"
-            android:text="施工中，敬请期待" />
+            android:fontFamily="@font/bold"
+            android:textSize="22sp"
+            android:textColor="@color/btn_bg_highlight_color"
+            android:text="较新机型的导出功能可能会失效" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:text="严重bug请联系qq479395433" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
-            android:text="暂不计划开发新功能" />
+            android:textSize="20sp"
+            android:text="（暂时不计划开发新功能）" />
         <Button
             android:id="@+id/copy_contact_btn"
             android:layout_width="wrap_content"
@@ -35,13 +37,19 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:text="↓支持开发者↓" />
         <Button
             android:id="@+id/copy_url_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:text="复制链接" />
     </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="17sp"
+        android:layout_gravity="bottom|end"
+        android:text="本应用仅为ultiplays的拙劣模仿\n网页版请使用 https://www.ultiplays.com" />
 </FrameLayout>

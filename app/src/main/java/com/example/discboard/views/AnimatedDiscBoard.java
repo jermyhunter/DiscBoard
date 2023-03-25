@@ -138,7 +138,7 @@ public class AnimatedDiscBoard extends View {
         }
     }
     int mStep;
-    int mAniCurrentFrameNo;
+    int mAniCurrentFrameNo;// used for animation processing
     int mAniFrameNoLimit;
 
     private static final String TAG = "AniBoard Class";
@@ -436,6 +436,8 @@ public class AnimatedDiscBoard extends View {
         });
         mInterDotsList.add(pre_frame_No, gen_inter_dots_hashtable);
 
+        // auto-save refresh
+        resetSavedFlag();
         releaseTouchDots();
         invalidate();
     }
@@ -625,7 +627,7 @@ public class AnimatedDiscBoard extends View {
                     mTouchedDot.setY(event.getY());
 
                     // move dots inbounds; if not, the inter_dot won't be in the right place
-                    moveCircleInbounds(this, mTouchedDot);
+                    moveDotInbounds(this, mTouchedDot);
                     // 调整对应中间节点位置 mInterDotsList.get(mCurrentFrameNo).get(mTouchedDot.get)
                     if(mEnabledInterDot != null && !mEnabledInterDot.isTouched()){
                         // 找到上一帧的对应的点，移动当前帧的中间节点
@@ -853,7 +855,7 @@ public class AnimatedDiscBoard extends View {
 //                    mDeltaXYHashtable.replace(id, deltaXY);
 
                     // 将因导入造成的外溢点转移到内部
-//                    moveCircleInbounds(canvas, cur_dot, pos_x, pos_y);
+//                    moveDotInbounds(canvas, cur_dot, pos_x, pos_y);
 
                     releasePos();// reset pathMeasure, in case that getPosTan does nothing to pos
                     PathMeasure pathMeasure = mPathMeasureHashtable.get(id);
@@ -900,6 +902,8 @@ public class AnimatedDiscBoard extends View {
                     if(mAniCurrentFrameNo + 1 < mAniFrameNoLimit) {
                         mStep = 0;
                         preprocessAniData(mAniCurrentFrameNo);
+                        // 保持滑动帧数一致
+                        setCurrentFrameNo(mAniCurrentFrameNo);
                     }
                     else {
                         stopAnimationPlaying();
@@ -912,12 +916,12 @@ public class AnimatedDiscBoard extends View {
                 // 高亮enabled_dot，并绘制touched_inter_dot
                 // enabled_dot and touched_inter_dot highlighted
                 if (mEnabledDot != null){
-                    moveCircleInbounds(canvas, mEnabledDot);
+                    moveDotInbounds(canvas, mEnabledDot);
                     canvas.drawCircle(mEnabledDot.getX(), mEnabledDot.getY(), CIRCLE_RADIUS + STROKE_WIDTH/2, mHollowCirclePaint);
 
                     // draw mEnabledInterDot
                     if(mEnabledInterDot != null) {
-                        moveCircleInbounds(canvas, mEnabledInterDot);
+                        moveDotInbounds(canvas, mEnabledInterDot);
                         canvas.drawCircle(mEnabledInterDot.getX(), mEnabledInterDot.getY(), INTER_DOT_RADIUS, mInterCirclePaint);
                     }
                 }
@@ -932,7 +936,7 @@ public class AnimatedDiscBoard extends View {
                         InterDot inter_dot = mInterDotsList.get(mCurrentFrameNo - 1).get(pre_dot.getRelativeInterDotID());
                         assert cur_dot != null;
                         assert inter_dot != null;
-                        moveCircleInbounds(canvas, cur_dot);
+                        moveDotInbounds(canvas, cur_dot);
                         float pre_x, pre_y, cur_x, cur_y, inter_x, inter_y;
                         pre_x = pre_dot.getX();
                         pre_y = pre_dot.getY();
@@ -962,7 +966,7 @@ public class AnimatedDiscBoard extends View {
                 // draw dots
                 mAnimDotsList.get(mCurrentFrameNo).forEach((dot_ID, dot) -> {
                     // 将因为导入造成的外溢点转移到内部
-                    moveCircleInbounds(canvas, dot);
+                    moveDotInbounds(canvas, dot);
 
                     if (dot.isDefense()) {
                         canvas.drawCircle(dot.getX(), dot.getY(), CIRCLE_RADIUS, mDefPaint);

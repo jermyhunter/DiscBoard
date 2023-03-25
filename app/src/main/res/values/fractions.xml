@@ -5,4 +5,7 @@
 
     <fraction name="startDeltaY">5%</fraction>
     <fraction name="endDeltaY">40%</fraction>
+
+    <fraction name="normal_alpha">0.5</fraction>
+    <fraction name="pressed_alpha">1.0</fraction>
 </resources>

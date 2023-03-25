@@ -28,6 +28,8 @@ public class GuidingFragment extends Fragment {
     MediaPlayer mTemplateSharingMP, mAnimationMP, mLoadAndSaveMP,
     mExportingAndSharingMP, mImportingMP, mAutoSaveMP;
 
+    View mRecommendTxtLayout;
+
     MediaPlayer mCurrentMP;
 
     SurfaceView mSurfaceView;
@@ -59,6 +61,7 @@ public class GuidingFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_guiding, container, false);
+        mRecommendTxtLayout = v.findViewById(R.id.recommend_txt_layout);
 
         mSurfaceView = v.findViewById(R.id.surface_view);
         SurfaceHolder holder = mSurfaceView.getHolder();
@@ -78,6 +81,8 @@ public class GuidingFragment extends Fragment {
         v.findViewById(R.id.template_sharing_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                hideHintAndShowSV();
+
                 releaseCurrentMP();
                 mTemplateSharingMP = MediaPlayer.create(getContext(), R.raw.template_sharing);
                 resizeSurfaceView2Video(mTemplateSharingMP);
@@ -93,6 +98,8 @@ public class GuidingFragment extends Fragment {
         v.findViewById(R.id.animation_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                hideHintAndShowSV();
+
                 releaseCurrentMP();
                 mAnimationMP = MediaPlayer.create(getContext(), R.raw.animation);
                 resizeSurfaceView2Video(mAnimationMP);
@@ -108,6 +115,8 @@ public class GuidingFragment extends Fragment {
         v.findViewById(R.id.load_and_save_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                hideHintAndShowSV();
+
                 releaseCurrentMP();
                 mLoadAndSaveMP = MediaPlayer.create(getContext(), R.raw.load_and_save);
                 resizeSurfaceView2Video(mLoadAndSaveMP);
@@ -122,6 +131,8 @@ public class GuidingFragment extends Fragment {
         v.findViewById(R.id.exporting_and_sharing_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                hideHintAndShowSV();
+
                 releaseCurrentMP();
                 mExportingAndSharingMP = MediaPlayer.create(getContext(), R.raw.exporting_and_sharing);
                 resizeSurfaceView2Video(mExportingAndSharingMP);
@@ -136,8 +147,9 @@ public class GuidingFragment extends Fragment {
         v.findViewById(R.id.importing_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                releaseCurrentMP();
+                hideHintAndShowSV();
 
+                releaseCurrentMP();
                 mImportingMP = MediaPlayer.create(getContext(), R.raw.importing);
                 resizeSurfaceView2Video(mImportingMP);
                 mImportingMP.setDisplay(holder);
@@ -148,6 +160,8 @@ public class GuidingFragment extends Fragment {
         });
 
         v.findViewById(R.id.auto_save_btn).setOnClickListener(view -> {
+            hideHintAndShowSV();
+
             releaseCurrentMP();
             mAutoSaveMP = MediaPlayer.create(getContext(), R.raw.auto_save);
             resizeSurfaceView2Video(mAutoSaveMP);
@@ -158,6 +172,18 @@ public class GuidingFragment extends Fragment {
         });
 
         return v;
+    }
+
+    /**
+     * hide recommendation hint txt layout, and show SurfaceView
+     */
+    private void hideHintAndShowSV() {
+        if(mRecommendTxtLayout.getVisibility() != View.GONE) {
+            mRecommendTxtLayout.setVisibility(View.GONE);
+        }
+        if(mSurfaceView.getVisibility() != View.VISIBLE) {
+            mSurfaceView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

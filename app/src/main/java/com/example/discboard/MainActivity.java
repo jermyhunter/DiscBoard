@@ -20,6 +20,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
@@ -100,14 +102,12 @@ public class MainActivity extends AppCompatActivity {
         initDataOn1stRun();
 
         // TODO:在所有内容制作完成后删除
-        Toast.makeText(this, "本版本为预发布版\n主要功能已制作完成", Toast.LENGTH_SHORT).show();
-
-//        setContentView(R.layout.endzone);
+//        Toast.makeText(this, "本版本为预发布版\n主要功能已制作完成", Toast.LENGTH_SHORT).show();
     }
 
     private void initExportFolder() {
         File file = mJsonDataHelper.getExportFolder();
-        Toast.makeText(this,"导出文件夹路径为：" + file, Toast.LENGTH_LONG).show();
+//        Toast.makeText(this,"导出文件夹路径为：" + file, Toast.LENGTH_LONG).show();
     }
 
     private void keepScreenAwake() {
@@ -203,10 +203,10 @@ public class MainActivity extends AppCompatActivity {
             mMenuPos1 = mMenuItemID2Pos.get(menu_item_id);
             // if the before-switching pos is static or anim, then show the data check dialog
             if(mMenuPos1 != mMenuPos){// if the start and dest are not the same location
-//                if(mMenuPos == FragmentIndex.StaticBoardIndex || mMenuPos == FragmentIndex.AnimatedBoardIndex) {
-//                    mDoubleCheckDialogFragment.show(mSupportFragmentManager, "数据丢弃确认");
-//                }
-//                else {
+                if(mMenuPos == FragmentIndex.AnimatedBoardIndex) {
+                    mUnSavedCheckDialogFragment.show(mSupportFragmentManager, "数据丢弃确认");
+                }
+                else {
                     mNavigationView.getMenu().getItem(mMenuPos).setChecked(false);
                     mNavigationView.getMenu().getItem(mMenuPos1).setChecked(true);
                     mNaviDestID = mNaviDestID1;
@@ -214,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
                     mSelectedMenuItem = mSelectedMenuItem1;
                     mNavController.popBackStack();
                     mNavController.navigate(mNaviDestID);
-//                }
+                }
             }
             // if the start and dest are the same location, then do nothing
 
@@ -417,6 +417,9 @@ public class MainActivity extends AppCompatActivity {
             // Inflate and set the layout for the dialog
             // Pass null as the parent view because its going in the dialog layout
             View dialogView = inflater.inflate(R.layout.dialog_save_check, null);
+
+            TextView txt = dialogView.findViewById(R.id.unsaved_hint_txt);
+            txt.setText("未保存的内容将丢失，");
 
             builder.setView(dialogView)
                     .setPositiveButton("跳转", (dialogInterface, i) -> mDoubleCheckDialogListener.onCheckListener())

@@ -24,7 +24,7 @@ public class DiscFinal {
     public final static String USER_DATA_CANVAS_BG_TYPE = "canvas_bg_type";
 
     // auto-save delay, determine how often the auto-save function would launch
-    public final static int AUTO_SAVE_DELAY = 25 * 1000;
+    public final static int AUTO_SAVE_DELAY = 10 * 1000;
     public final static int CIRCLE_RADIUS = 35;
     public final static int INTER_DOT_RADIUS = 30;
     public final static int CIRCLET_RADIUS = 12;
@@ -61,16 +61,19 @@ public class DiscFinal {
     public final static String IO_ANIM_DOTS_LIST = "anim_dots_list";
 
     // ------------------ EX/IMPORTING ------------------
-    public final static String EXPORT_FOLDER_SUB_PATH = "DiscBoard" + File.separator;
+    public final static String EXPORT_FOLDER_SUB_PATH = "" + File.separator;
     public final static String EXPORT_FILE_SUFFIX = ".json";
     public final static String EXPORT_FILE_PREFIX = "disc_";
     public final static String FILE_DUPLICATION_SUFFIX = "_1";
+
+    public final static float NORMAL_ALPHA = 0.5f;
+    public final static float PRESSED_ALPHA = 1.0f;
 
     public static float convertPixelsToDp(float px, Context context){
         return px / ((float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }
 
-    public static void moveCircleInbounds(Canvas canvas, Dot dot_new){
+    public static void moveDotInbounds(Canvas canvas, Dot dot_new){
 //        Dot dot_new = new Dot(dot);
         float x = dot_new.getX();
         float y = dot_new.getY();
@@ -89,7 +92,7 @@ public class DiscFinal {
         }
     }
 
-    public static void moveCircleInbounds(View canvas, Dot dot_new){
+    public static void moveDotInbounds(View canvas, Dot dot_new){
 //        Dot dot_new = new Dot(dot);
         float x = dot_new.getX();
         float y = dot_new.getY();
@@ -108,7 +111,7 @@ public class DiscFinal {
         }
     }
 
-    public static void moveCircleInbounds(Canvas canvas, InterDot inter_dot_new){
+    public static void moveDotInbounds(Canvas canvas, InterDot inter_dot_new){
 //        InterDot inter_dot_new = new InterDot(inter_dot);
         float x = inter_dot_new.getX();
         float y = inter_dot_new.getY();

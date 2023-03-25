@@ -7,12 +7,10 @@
     tools:context=".MainActivity"
     tools:ignore="MissingDefaultResource">
 
-    <GridLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:columnCount="1"
-        android:rowCount="4">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -70,7 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="，即可快速找到文件）"
+                android:text="可快速找到文件）"
                 android:textSize="18sp" />
         </LinearLayout>
         <LinearLayout
@@ -92,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/bold"
                 android:gravity="center"
-                android:text="/Download/DiscBoard"
+                android:text="/Download"
                 android:textColor="@color/holo_red_light"
                 android:textSize="16dp" />
             <TextView
@@ -137,5 +135,5 @@
             android:layout_rowSpan="1"
             android:layout_columnSpan="1"
             android:hint="输入导出文件名（不用添加后缀）" />
-    </GridLayout>
+    </LinearLayout>
 </LinearLayout>

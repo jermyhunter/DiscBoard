@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -48,6 +49,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Objects;
 
 /**
  * SettingsFragment
@@ -88,6 +90,10 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
 
         mJsonDataHelper = new JsonDataHelper(getContext());
 
+        fetchTempList();
+    }
+
+    private void fetchTempList() {
         mAniTempList = mJsonDataHelper.loadTempNamesFromPref();
     }
 
@@ -198,9 +204,10 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
                 selectedFileUri -> {
                     if (null != selectedFileUri) {
                         // check file type
-                        if(selectedFileUri.getPath().endsWith(".json")) {
+                        if(Objects.equals(JsonDataHelper.getMimeType(selectedFileUri.toString()), "application/json")) {
                             // read json data from external file
                             String json_s = mJsonDataHelper.readFromExternalFile(selectedFileUri);
+                            // LACK FILE TYPE VERIFYING
                             try {
                                 JSONArray js_whole = new JSONArray(json_s);
                                 JSONObject jo_head = new JSONObject(String.valueOf(js_whole.get(0)));
@@ -231,11 +238,14 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
                                         mJsonDataHelper.addAniTempToPref(temp_name);
                                         temp_counter++;
                                     }
+//                                Log.d(TAG, "onCreateView: " + "导入成功");
+                                    Toast.makeText(getContext(), "导入成功", Toast.LENGTH_LONG).show();
+
+                                    // 重新读取列表
+                                    fetchTempList();
                                 } else {
                                     Toast.makeText(getContext(), "早期版本数据，文件不兼容！", Toast.LENGTH_LONG).show();
                                 }
-//                            Log.d(TAG, "onCreateView: " + "导入成功");
-                                Toast.makeText(getContext(), "导入成功", Toast.LENGTH_LONG).show();
                             } catch (JSONException e) {
                                 throw new RuntimeException(e);
                             }
@@ -245,7 +255,6 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
                         }
                     }
                 });
-//        Log.d(TAG, "onCreateView: " + mJsonDataHelper.checkNameDuplication("战术板1"));
 
         return v;
     }

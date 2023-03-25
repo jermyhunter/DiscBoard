@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -70,11 +71,103 @@
                 android:text="自动保存" />
 
         </LinearLayout>
-        <SurfaceView
-            android:id="@+id/surface_view"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_weight="1"/>
+            android:gravity="center|start"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/recommend_txt_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="start|center"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/btn_margin_single_gap"
+                    android:fontFamily="@font/bold"
+                    android:text="使用方式推荐"
+                    android:textAlignment="viewStart"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="本应用尤其适用于移动场景的战术交流"
+                    android:textAlignment="viewStart"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="（例如大巴、火车等交通工具上，或其他未携带实体战术板的场合）"
+                    android:textAlignment="viewStart"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/btn_margin_single_gap"
+                    android:fontFamily="@font/bold"
+                    android:text="推荐使用方式一"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/btn_txt_highlight_color"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="分享者使用QQ群等通讯软件的“分享屏幕”功能\n结合语言说明，将战术演示共享给队友"
+                    android:textAlignment="viewStart"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/btn_margin_single_gap"
+                    android:fontFamily="@font/bold"
+                    android:text="推荐使用方式二"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/btn_txt_highlight_color"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="分享者先使用“导出”打包战术\n再使用“分享”功能将打包好的文件传给对方“导入”"
+                    android:textAlignment="viewStart"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/bold"
+                    android:text="（由于安卓安全性升级，较新机型的导出功能可能会失效）"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/btn_txt_highlight_color"
+                    android:textSize="17sp" />
+            </LinearLayout>
+
+            <SurfaceView
+                android:id="@+id/surface_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:visibility="invisible"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </LinearLayout>
 </FrameLayout>

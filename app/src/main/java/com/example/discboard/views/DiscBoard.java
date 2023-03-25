@@ -403,7 +403,7 @@ public class DiscBoard extends View {
          */
         mStaticDots.forEach(dot -> {
             // 将因导入造成的外溢点转移到内部
-            moveCircleInbounds(canvas, dot);
+            moveDotInbounds(canvas, dot);
 
             if(dot.isDefense()) {
                 canvas.drawCircle(dot.getX(), dot.getY(), CIRCLE_RADIUS, mDefPaint);
