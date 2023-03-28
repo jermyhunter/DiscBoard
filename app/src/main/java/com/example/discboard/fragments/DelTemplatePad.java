@@ -1,5 +1,9 @@
 package com.example.discboard.fragments;
 
+import static android.provider.ContactsContract.CommonDataKinds.StructuredName.SUFFIX;
+
+import static com.example.discboard.DiscFinal.TEMP_DUPLICATION_SUFFIX;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
@@ -15,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.discboard.JsonDataHelper;
@@ -92,16 +97,17 @@ public class DelTemplatePad extends Fragment implements AnimTempItemDelAdapter.O
             mDataInitDialogFragment.show(getChildFragmentManager(), "初始化战术板数据");
         });
 
+        TextView dup_name_hint = v.findViewById(R.id.duplicated_name_hint);
+        dup_name_hint.setText("导入的重名文件已添加\"" + TEMP_DUPLICATION_SUFFIX + "\" 后缀");
+
         return v;
     }
 
+    // not used
     @Override
-    public void onItemClick(int position) {
-        Toast.makeText(getContext(), mAnimTempItemDelAdapter.getData(position)
-                + " 删除成功！", Toast.LENGTH_SHORT).show();
+    public void onItemDelClick(int position) {
         mAnimTempItemDelAdapter.removeData(position);
     }
-
 
     /**
      * DataInitDialogFragment

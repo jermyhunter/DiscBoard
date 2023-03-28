@@ -3,7 +3,7 @@ package com.example.discboard.fragments;
 import static android.app.AlertDialog.*;
 
 import static com.example.discboard.DiscFinal.AUTO_SAVE_DELAY;
-import static com.example.discboard.DiscFinal.FILE_DUPLICATION_SUFFIX;
+import static com.example.discboard.DiscFinal.TEMP_DUPLICATION_SUFFIX;
 import static com.example.discboard.DiscFinal.NORMAL_ALPHA;
 import static com.example.discboard.DiscFinal.PRESSED_ALPHA;
 import static com.example.discboard.DiscFinal.USER_DATA_AUTO_SAVE_MARK;
@@ -525,7 +525,7 @@ public class AnimatedBoardFragment extends Fragment {
 
                         // check the possibility of name duplication
                         while (mJsonDataHelper.checkNameDuplication(temp_name)){
-                            temp_name = temp_name + FILE_DUPLICATION_SUFFIX;
+                            temp_name = temp_name + TEMP_DUPLICATION_SUFFIX;
                         }
                         mAnimatedDiscBoard.saveAniDots(temp_name);
                         mSaveDialogListener.onSaveListener(temp_name);

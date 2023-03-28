@@ -12,7 +12,9 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.example.discboard.BuildConfig;
 import com.example.discboard.R;
 
 /**
@@ -68,6 +70,10 @@ public class FeedbackFragment extends Fragment {
                 clipboard.setPrimaryClip(clip);
             }
         });
+
+        String version_name = BuildConfig.VERSION_NAME;
+        TextView verInfoTxt = v.findViewById(R.id.ver_info_txt);
+        verInfoTxt.setText("ver" + version_name);
 
         return v;
     }

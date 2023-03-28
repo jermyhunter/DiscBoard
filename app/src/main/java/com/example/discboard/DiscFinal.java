@@ -67,7 +67,7 @@ public class DiscFinal {
     public final static String EXPORT_FOLDER_SUB_PATH = "" + File.separator;
     public final static String EXPORT_FILE_SUFFIX = ".json";
     public final static String EXPORT_FILE_PREFIX = "disc_";
-    public final static String FILE_DUPLICATION_SUFFIX = "_1";
+    public final static String TEMP_DUPLICATION_SUFFIX = "_1";
 
     public final static float NORMAL_ALPHA = 0.5f;
     public final static float PRESSED_ALPHA = 1.0f;

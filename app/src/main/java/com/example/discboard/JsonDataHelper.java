@@ -46,6 +46,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -130,7 +131,7 @@ public class JsonDataHelper {
      * loading templates from shared preferences
      *      including inter_dots
      * */
-    public AnimTemp loadAnimDotsFromPrefNew(String name) {
+    public AnimTemp getAnimDotsFromPref(String name) {
         ArrayList<Hashtable<String, Dot>> anim_dots_list = new ArrayList<>();
         ArrayList<Hashtable<String, InterDot>> inter_dots_list = new ArrayList<>();
         SharedPreferences shared = getContext().getSharedPreferences(name, MODE_PRIVATE);
@@ -245,7 +246,6 @@ public class JsonDataHelper {
         editor.clear();
         editor.apply();
     }
-
 
     /**
      * change data from arraylist to hashtable
@@ -575,6 +575,7 @@ public class JsonDataHelper {
             view.setBackgroundResource(R.drawable.disc_space);
     }
 
+    // ABANDONED
     // url = file path or whatever suitable URL you want.
     public static String getMimeType(String url) {
         String type = null;
@@ -583,5 +584,37 @@ public class JsonDataHelper {
             type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
         }
         return type;
+    }
+
+    // used in:
+    // Renaming temp_name
+    public void copyAnimDots(String oldName, String newName){
+        //The shared preferences to copy from
+        SharedPreferences spOld = getContext().getSharedPreferences(oldName, MODE_PRIVATE);
+        //sp1 is the shared pref to copy to
+        SharedPreferences spNew = getContext().getSharedPreferences(newName, MODE_PRIVATE);
+        SharedPreferences.Editor ed = spNew.edit();
+        ed.clear(); // This clears the one we are copying to, but you don't necessarily need to do that.
+        //Cycle through all the entries in the sp
+        for(Map.Entry<String,?> entry : spOld.getAll().entrySet()){
+            Object v = entry.getValue();
+            String key = entry.getKey();
+            //Now we just figure out what type it is, so we can copy it.
+            // Note that i am using Boolean and Integer instead of boolean and int.
+            // That's because the Entry class can only hold objects and int and boolean are primatives.
+            if(v instanceof Boolean)
+                // Also note that i have to cast the object to a Boolean
+                // and then use .booleanValue to get the boolean
+                ed.putBoolean(key, (Boolean) v);
+            else if(v instanceof Float)
+                ed.putFloat(key, (Float) v);
+            else if(v instanceof Integer)
+                ed.putInt(key, (Integer) v);
+            else if(v instanceof Long)
+                ed.putLong(key, (Long) v);
+            else if(v instanceof String)
+                ed.putString(key, ((String)v));
+        }
+        ed.apply();
     }
 }

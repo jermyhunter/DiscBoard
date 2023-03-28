@@ -7,10 +7,19 @@
     android:orientation="vertical"
     tools:context=".MainActivity"
     tools:ignore="MissingDefaultResource">
-    <LinearLayout
+    <TextView
+        android:layout_marginTop="15dp"
+        android:layout_gravity="top|center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/bold"
+        android:textSize="15sp"
+        android:textColor="@color/btn_bg_highlight_color"
+        android:text="前排提醒：本应用使用免费" />
+    <LinearLayout
         android:layout_marginTop="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:gravity="center|bottom"
         android:orientation="horizontal">
         <TextView
@@ -33,7 +42,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/txt_deep_color"
+        android:textColor="@color/btn_bg_highlight_color"
         android:text="之后可以在“设置”中“取消”或“启用”"
         android:textSize="16sp" />
 </LinearLayout>

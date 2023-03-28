@@ -30,14 +30,22 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:text="已保存的战术列表"
-                    android:textSize="20dp"
+                    android:textSize="22sp"
                     android:textColor="@color/Ivory"/>
+                <TextView
+                    android:id="@+id/duplicated_name_hint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text=""
+                    android:textSize="17sp"
+                    android:textColor="@color/LightYellow"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:text="(点击叉号即删除，无二次提示，请谨慎使用)"
-                    android:textSize="18dp"
+                    android:text="(单击模板-重命名，叉号-删除模板)"
+                    android:textSize="17sp"
                     android:textColor="@color/LightYellow"/>
             </LinearLayout>
             <Button

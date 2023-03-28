@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.discboard.JsonDataHelper;
 import com.example.discboard.R;
+import com.example.discboard.dialogs.DelCheckDialog;
+import com.example.discboard.dialogs.RenameTempDialog;
 
 import java.util.List;
 
@@ -80,8 +82,21 @@ public class AnimTempItemDelAdapter extends RecyclerView.Adapter<AnimTempItemDel
 
         mJsonDataHelper.delAniNameFromPref(name);
         mJsonDataHelper.delAniDotsFromPref(name);
+    }
 
-//        Log.d(TAG, "position: " + position);
+    public void changeData(int position, String tempNameNew) {
+        String tempNameOld = getData(position);
+        mAniTempList.remove(position);
+        mAniTempList.add(position, tempNameNew);
+        notifyItemChanged(position);
+
+        // copy old temp data to new place
+        // and add new name to the temp_list
+        mJsonDataHelper.addAniTempToPref(tempNameNew);
+        mJsonDataHelper.copyAnimDots(tempNameOld, tempNameNew);
+        // delete old temp data
+        mJsonDataHelper.delAniNameFromPref(tempNameOld);
+        mJsonDataHelper.delAniDotsFromPref(tempNameOld);
     }
 
     public boolean removeAllData() {
@@ -106,7 +121,7 @@ public class AnimTempItemDelAdapter extends RecyclerView.Adapter<AnimTempItemDel
      * 对应的视图类
      * all subViews should be assigned by findViewById
      * */
-    class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ItemViewHolder extends RecyclerView.ViewHolder{
         CardView mCardView;
         TextView mTempNameText;
         ImageView mImageView;
@@ -120,17 +135,26 @@ public class AnimTempItemDelAdapter extends RecyclerView.Adapter<AnimTempItemDel
             mImageView = itemView.findViewById(R.id.img_del);
 
             this.onAniTempDelListener = onAniTempDelListener;// 点击事件
-            mImageView.setOnClickListener(this);
-        }
+            mImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    DelCheckDialog delCheckDialog = new DelCheckDialog(view.getContext(), getData(getAdapterPosition()));
+                    delCheckDialog.setDelCheckDialogListener(tempNameNew -> removeData(getAdapterPosition()));
+                    delCheckDialog.show();
+                }
+            });
 
-        // ItemViewHolder's onClick event
-        @Override
-        public void onClick(View view) {
-            onAniTempDelListener.onItemClick(getAdapterPosition());
+            // ItemViewHolder's onClick event
+            // renaming
+            itemView.setOnClickListener(view -> {
+                RenameTempDialog renameTempDialog = new RenameTempDialog(view.getContext(), getData(getAdapterPosition()));
+                renameTempDialog.setDelCheckDialogListener(tempNameNew -> changeData(getAdapterPosition(),tempNameNew));
+                renameTempDialog.show();
+            });
         }
     }
 
     public interface OnAniTempDelListener {
-        void onItemClick(int position);
+        void onItemDelClick(int position);
     }
 }

@@ -203,111 +203,106 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
                 selectedFileUri -> {
                     if (null != selectedFileUri) {
                         // check file type
-                        if(Objects.equals(JsonDataHelper.getMimeType(selectedFileUri.toString()), "application/json")) {
-                            // read json data from external file
-                            String json_s = mJsonDataHelper.readFromExternalFile(selectedFileUri);
-                            // LACK FILE TYPE VERIFYING
-                            try {
-                                JSONArray ja_whole = new JSONArray(json_s);
-                                JSONObject jo_head = new JSONObject(String.valueOf(ja_whole.get(ExportFileIndex.Head)));
-                                // verify file version
-                                if (JsonDataHelper.getFileVersion(jo_head).equals(IO_HEAD_VERSION_1_1)) {
-                                    JSONArray ja_anim_temp_list = (JSONArray) new JSONObject(String.valueOf(ja_whole.get(ExportFileIndex.TempList))).get(IO_ANIM_TEMP_LIST);// get anim_temp_name_list
-                                    JSONArray ja_anim_dots_list = (JSONArray) new JSONObject(String.valueOf(ja_whole.get(ExportFileIndex.AniDotsList))).get(IO_ANIM_DOTS_LIST);// get anim_dots_list
+                        // read json data from external file
+                        String json_s = mJsonDataHelper.readFromExternalFile(selectedFileUri);
+                        // LACK FILE TYPE VERIFYING
+                        try {
+                            JSONArray ja_whole = new JSONArray(json_s);
+                            JSONObject jo_head = new JSONObject(String.valueOf(ja_whole.get(ExportFileIndex.Head)));
+                            // verify file version
+                            if (JsonDataHelper.getFileVersion(jo_head).equals(IO_HEAD_VERSION_1_1)) {
+                                JSONArray ja_anim_temp_list = (JSONArray) new JSONObject(String.valueOf(ja_whole.get(ExportFileIndex.TempList))).get(IO_ANIM_TEMP_LIST);// get anim_temp_name_list
+                                JSONArray ja_anim_dots_list = (JSONArray) new JSONObject(String.valueOf(ja_whole.get(ExportFileIndex.AniDotsList))).get(IO_ANIM_DOTS_LIST);// get anim_dots_list
 
-                                    int temp_counter = 0;// record the current temp position
-                                    while (temp_counter < ja_anim_temp_list.length()) {
-                                        JSONObject jo_anim_dots_list = ja_anim_dots_list.getJSONObject(temp_counter);
+                                int temp_counter = 0;// record the current temp position
+                                while (temp_counter < ja_anim_temp_list.length()) {
+                                    JSONObject jo_anim_dots_list = ja_anim_dots_list.getJSONObject(temp_counter);
 
-                                        String temp_name = jo_anim_dots_list.keys().next();
+                                    String temp_name = jo_anim_dots_list.keys().next();
 
-                                        // dealing with JSONArray data
-                                        JSONArray ja_anim_dots = (JSONArray) jo_anim_dots_list.get(temp_name);
-                                        // turn json string to anim_dots_lists
-                                        AnimTemp animTemp = mJsonDataHelper.JSONArray2ArrayListHashtableNew(ja_anim_dots);
-                                        ArrayList<Hashtable<String, Dot>> anim_dots_list = animTemp.getAnimDotsList();
-                                        ArrayList<Hashtable<String, InterDot>> inter_dots_list = animTemp.getInterDotsList();
+                                    // dealing with JSONArray data
+                                    JSONArray ja_anim_dots = (JSONArray) jo_anim_dots_list.get(temp_name);
+                                    // turn json string to anim_dots_lists
+                                    AnimTemp animTemp = mJsonDataHelper.JSONArray2ArrayListHashtableNew(ja_anim_dots);
+                                    ArrayList<Hashtable<String, Dot>> anim_dots_list = animTemp.getAnimDotsList();
+                                    ArrayList<Hashtable<String, InterDot>> inter_dots_list = animTemp.getInterDotsList();
 
-                                        // add data to pref
-                                        // check the possibility of name duplication
-                                        while (mJsonDataHelper.checkNameDuplication(temp_name)) {
-                                            temp_name = temp_name + FILE_DUPLICATION_SUFFIX;
-                                        }
-                                        mJsonDataHelper.saveAnimDotsToPrefNew(temp_name, anim_dots_list, inter_dots_list);
-                                        mJsonDataHelper.addAniTempToPref(temp_name);
-                                        temp_counter++;
+                                    // add data to pref
+                                    // check the possibility of name duplication
+                                    while (mJsonDataHelper.checkNameDuplication(temp_name)) {
+                                        temp_name = temp_name + TEMP_DUPLICATION_SUFFIX;
                                     }
-//                                    Log.d(TAG, "onCreateView: " + "导入成功");
-                                    Toast.makeText(getContext(), "导入成功", Toast.LENGTH_LONG).show();
-
-                                    // 重新读取列表
-                                    fetchTempList();
+                                    mJsonDataHelper.saveAnimDotsToPrefNew(temp_name, anim_dots_list, inter_dots_list);
+                                    mJsonDataHelper.addAniTempToPref(temp_name);
+                                    temp_counter++;
                                 }
-                                else if (JsonDataHelper.getFileVersion(jo_head).equals(IO_HEAD_VERSION_1_2)) {
-                                    // fetch width & height from JSONArray
-                                    JSONArray ja_board_measure = (JSONArray) new JSONObject(String.valueOf(ja_whole.get(ExportFileIndex.BoardMeasure))).get(IO_BOARD_MEASURE);// get anim_temp_name_list
-                                    float width = (float) ja_board_measure.getDouble(0);
-                                    float height = (float) ja_board_measure.getDouble(1);
-                                    // fetch target_width & target_height from current
-                                    float target_width = mJsonDataHelper.getFloatFromUserPreferences(USER_DATA_BOARD_WIDTH, 0f);
-                                    float target_height = mJsonDataHelper.getFloatFromUserPreferences(USER_DATA_BOARD_HEIGHT, 0f);
+//                                    Log.d(TAG, "onCreateView: " + "导入成功");
+                                Toast.makeText(getContext(), "导入成功", Toast.LENGTH_LONG).show();
 
-                                    // for testing
+                                // 重新读取列表
+                                fetchTempList();
+                            }
+                            else if (JsonDataHelper.getFileVersion(jo_head).equals(IO_HEAD_VERSION_1_2)) {
+                                // fetch width & height from JSONArray
+                                JSONArray ja_board_measure = (JSONArray) new JSONObject(String.valueOf(ja_whole.get(ExportFileIndex.BoardMeasure))).get(IO_BOARD_MEASURE);// get anim_temp_name_list
+                                float width = (float) ja_board_measure.getDouble(0);
+                                float height = (float) ja_board_measure.getDouble(1);
+                                // fetch target_width & target_height from current
+                                float target_width = mJsonDataHelper.getFloatFromUserPreferences(USER_DATA_BOARD_WIDTH, 0f);
+                                float target_height = mJsonDataHelper.getFloatFromUserPreferences(USER_DATA_BOARD_HEIGHT, 0f);
+
+                                // for testing
 //                                    if(target_width == 0f || target_height == 0f){
 //                                        Log.d(TAG, "获取本机战术板尺寸失败");
 //                                    }
 
-                                    float W_ratio = target_width / width;
-                                    float H_ratio = target_height / height;
+                                float W_ratio = target_width / width;
+                                float H_ratio = target_height / height;
 
-                                    JSONArray ja_anim_temp_list = (JSONArray) new JSONObject(String.valueOf(ja_whole.get(ExportFileIndex.TempList))).get(IO_ANIM_TEMP_LIST);// get anim_temp_name_list
-                                    JSONArray ja_anim_dots_list = (JSONArray) new JSONObject(String.valueOf(ja_whole.get(ExportFileIndex.AniDotsList))).get(IO_ANIM_DOTS_LIST);// get anim_dots_list
+                                JSONArray ja_anim_temp_list = (JSONArray) new JSONObject(String.valueOf(ja_whole.get(ExportFileIndex.TempList))).get(IO_ANIM_TEMP_LIST);// get anim_temp_name_list
+                                JSONArray ja_anim_dots_list = (JSONArray) new JSONObject(String.valueOf(ja_whole.get(ExportFileIndex.AniDotsList))).get(IO_ANIM_DOTS_LIST);// get anim_dots_list
 
-                                    int temp_counter = 0;// record the current temp position
-                                    while (temp_counter < ja_anim_temp_list.length()) {
-                                        JSONObject jo_anim_dots_list = ja_anim_dots_list.getJSONObject(temp_counter);
+                                int temp_counter = 0;// record the current temp position
+                                while (temp_counter < ja_anim_temp_list.length()) {
+                                    JSONObject jo_anim_dots_list = ja_anim_dots_list.getJSONObject(temp_counter);
 
-                                        String temp_name = jo_anim_dots_list.keys().next();
+                                    String temp_name = jo_anim_dots_list.keys().next();
 
-                                        // dealing with JSONArray data
-                                        JSONArray ja_anim_dots = (JSONArray) jo_anim_dots_list.get(temp_name);
-                                        // turn json string to anim_dots_lists
-                                        AnimTemp animTemp = mJsonDataHelper.JSONArray2ArrayListHashtableNew(ja_anim_dots);
-                                        ArrayList<Hashtable<String, Dot>> anim_dots_list = animTemp.getAnimDotsList();
-                                        ArrayList<Hashtable<String, InterDot>> inter_dots_list = animTemp.getInterDotsList();
+                                    // dealing with JSONArray data
+                                    JSONArray ja_anim_dots = (JSONArray) jo_anim_dots_list.get(temp_name);
+                                    // turn json string to anim_dots_lists
+                                    AnimTemp animTemp = mJsonDataHelper.JSONArray2ArrayListHashtableNew(ja_anim_dots);
+                                    ArrayList<Hashtable<String, Dot>> anim_dots_list = animTemp.getAnimDotsList();
+                                    ArrayList<Hashtable<String, InterDot>> inter_dots_list = animTemp.getInterDotsList();
 
-                                        // first used in VER_1_2, scale dots' pos by ratio
-                                        for(Hashtable<String, Dot> hashtable : anim_dots_list){
-                                            hashtable.forEach((id, dot) -> dot.scaleByRatio(W_ratio, H_ratio));
-                                        }
-                                        for(Hashtable<String, InterDot> hashtable : inter_dots_list){
-                                            hashtable.forEach((id, inter_dot) -> inter_dot.scaleByRatio(W_ratio, H_ratio));
-                                        }
-
-                                        // add data to pref
-                                        // check the possibility of name duplication
-                                        while (mJsonDataHelper.checkNameDuplication(temp_name)) {
-                                            temp_name = temp_name + FILE_DUPLICATION_SUFFIX;
-                                        }
-                                        mJsonDataHelper.saveAnimDotsToPrefNew(temp_name, anim_dots_list, inter_dots_list);
-                                        mJsonDataHelper.addAniTempToPref(temp_name);
-                                        temp_counter++;
+                                    // first used in VER_1_2, scale dots' pos by ratio
+                                    for(Hashtable<String, Dot> hashtable : anim_dots_list){
+                                        hashtable.forEach((id, dot) -> dot.scaleByRatio(W_ratio, H_ratio));
                                     }
-//                                    Log.d(TAG, "onCreateView: " + "导入成功");
-                                    Toast.makeText(getContext(), "导入成功", Toast.LENGTH_LONG).show();
+                                    for(Hashtable<String, InterDot> hashtable : inter_dots_list){
+                                        hashtable.forEach((id, inter_dot) -> inter_dot.scaleByRatio(W_ratio, H_ratio));
+                                    }
 
-                                    // 重新读取列表
-                                    fetchTempList();
+                                    // add data to pref
+                                    // check the possibility of name duplication
+                                    while (mJsonDataHelper.checkNameDuplication(temp_name)) {
+                                        temp_name = temp_name + TEMP_DUPLICATION_SUFFIX;
+                                    }
+                                    mJsonDataHelper.saveAnimDotsToPrefNew(temp_name, anim_dots_list, inter_dots_list);
+                                    mJsonDataHelper.addAniTempToPref(temp_name);
+                                    temp_counter++;
                                 }
-                                else {
-                                    Toast.makeText(getContext(), "早期版本数据，文件不兼容！", Toast.LENGTH_LONG).show();
-                                }
-                            } catch (JSONException e) {
-                                throw new RuntimeException(e);
+//                                    Log.d(TAG, "onCreateView: " + "导入成功");
+                                Toast.makeText(getContext(), "导入成功", Toast.LENGTH_LONG).show();
+
+                                // 重新读取列表
+                                fetchTempList();
                             }
-                        }
-                        else {
-                            Toast.makeText(getContext(), "文件类型无效！", Toast.LENGTH_LONG).show();
+                            else {
+                                Toast.makeText(getContext(), "早期版本数据，文件不兼容！", Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
                         }
                     }
                 });
@@ -341,7 +336,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
 
             int i = 0;
             for (String tempName : mAniTempList) {
-                AnimTemp animTemp = mJsonDataHelper.loadAnimDotsFromPrefNew(tempName);
+                AnimTemp animTemp = mJsonDataHelper.getAnimDotsFromPref(tempName);
                 ArrayList<Hashtable<String, Dot>> anim_dots = animTemp.getAnimDotsList();
                 ArrayList<Hashtable<String, InterDot>> inter_dots = animTemp.getInterDotsList();
                 String json_anim = mJsonDataHelper.transformData2Json(anim_dots);
