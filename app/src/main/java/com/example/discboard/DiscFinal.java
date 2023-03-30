@@ -24,7 +24,7 @@ public class DiscFinal {
     public final static String USER_DATA_CANVAS_BG_TYPE = "canvas_bg_type";
 
     // auto-save delay, determine how often the auto-save function would launch
-    public final static int AUTO_SAVE_DELAY = 10 * 1000;
+    public final static int AUTO_SAVE_DELAY = 28 * 1000;
     public final static int CIRCLE_RADIUS = 35;
     public final static int INTER_DOT_RADIUS = 30;
     public final static int CIRCLET_RADIUS = 12;

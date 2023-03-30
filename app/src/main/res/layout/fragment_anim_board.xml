@@ -37,7 +37,7 @@
                     android:id="@+id/last_frame_btn"
                     android:layout_width="@dimen/frame_btn_length"
                     android:layout_height="@dimen/frame_btn_length"
-                    android:layout_marginEnd="@dimen/btn_margin_between_wide_gap"
+                    android:layout_marginEnd="@dimen/margin_between_wide_gap"
                     android:layout_marginStart="15dp"
                     android:background="@drawable/triangle_arrow" />
                 <com.google.android.material.slider.Slider
@@ -59,14 +59,14 @@
                     android:id="@+id/next_frame_btn"
                     android:layout_width="@dimen/frame_btn_length"
                     android:layout_height="@dimen/frame_btn_length"
-                    android:layout_marginHorizontal="@dimen/btn_margin_between_wide_gap"
+                    android:layout_marginHorizontal="@dimen/margin_between_wide_gap"
                     android:background="@drawable/triangle_arrow" />
                 <Button
                     android:layout_weight="0"
                     android:id="@+id/play_anim_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/btn_margin_between_wide_gap"
+                    android:layout_marginHorizontal="@dimen/margin_between_wide_gap"
                     android:minHeight="@dimen/btn_min_height"
                     android:minWidth="@dimen/btn_min_width"
                     android:backgroundTint="@color/btn_color"
@@ -134,7 +134,7 @@
                     android:id="@+id/hint_bg"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/btn_margin_single_gap"
+                    android:layout_marginTop="@dimen/margin_single_gap"
                     android:visibility="invisible"
                     android:background="@drawable/highlighted_bg"
                     android:orientation="vertical">

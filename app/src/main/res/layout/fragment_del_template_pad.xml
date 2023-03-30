@@ -36,6 +36,7 @@
                     android:id="@+id/duplicated_name_hint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_single_gap"
                     android:gravity="center_horizontal"
                     android:text=""
                     android:textSize="17sp"

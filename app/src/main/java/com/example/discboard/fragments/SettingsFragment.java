@@ -409,14 +409,6 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
 
     }
 
-    private void setAppLocale(String localeCode){
-        Resources resources = getResources();
-        DisplayMetrics displayMetrics = resources.getDisplayMetrics();
-        Configuration configuration = resources.getConfiguration();
-        configuration.setLocale(new Locale(localeCode.toLowerCase()));
-        resources.updateConfiguration(configuration, displayMetrics);
-    }
-
     void initCanvasBGSpinner(){
         // canvas_bg
         // 场地背景类别的下拉菜单

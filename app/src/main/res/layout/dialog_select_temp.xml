@@ -18,17 +18,18 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:layout_rowSpan="1"
             android:layout_columnSpan="5"
             android:gravity="center"
             android:text="@string/select_temp_string"
-            android:textSize="22dp" />
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/my_preset_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/btn_margin_single_gap"
+            android:layout_marginStart="@dimen/margin_single_gap"
             android:layout_rowSpan="1"
             android:layout_columnSpan="1"
             android:text="@string/my_temp_string" />
@@ -37,7 +38,7 @@
             android:id="@+id/three_preset_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/btn_margin_single_gap"
+            android:layout_marginStart="@dimen/margin_single_gap"
             android:layout_rowSpan="1"
             android:layout_columnSpan="1"
             android:text="@string/three_men_string" />
@@ -46,7 +47,7 @@
             android:id="@+id/five_preset_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/btn_margin_single_gap"
+            android:layout_marginStart="@dimen/margin_single_gap"
             android:layout_rowSpan="1"
             android:layout_columnSpan="1"
             android:text="@string/five_men_string" />
@@ -55,7 +56,7 @@
             android:id="@+id/verstack_preset_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/btn_margin_single_gap"
+            android:layout_marginStart="@dimen/margin_single_gap"
             android:layout_rowSpan="1"
             android:layout_columnSpan="1"
             android:text="@string/ver_stack_string" />
@@ -64,8 +65,8 @@
             android:id="@+id/hostack_preset_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/btn_margin_single_gap"
-            android:layout_marginEnd="@dimen/btn_margin_single_gap"
+            android:layout_marginStart="@dimen/margin_single_gap"
+            android:layout_marginEnd="@dimen/margin_single_gap"
             android:layout_rowSpan="1"
             android:layout_columnSpan="1"
             android:text="@string/ho_stack_string" />

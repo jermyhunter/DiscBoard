@@ -73,7 +73,7 @@ public class FeedbackFragment extends Fragment {
 
         String version_name = BuildConfig.VERSION_NAME;
         TextView verInfoTxt = v.findViewById(R.id.ver_info_txt);
-        verInfoTxt.setText("ver" + version_name);
+        verInfoTxt.setText("ver" + version_name + "\ndev by Yugar");
 
         return v;
     }

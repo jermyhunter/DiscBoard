@@ -1,20 +1,19 @@
 <resources>
     <string name="app_name">飞盘战术板</string>
     <!-- to toggle the open close button of the navigation drawer -->
-    <string name="nav_open">Open</string>
-    <string name="nav_close">Close</string>
-    <!-- pos_y: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="DEL_FRAME_HINT">长按删除帧！</string>
-    <string name="NO_ANIM_HINT">请先制作战术！</string>
-    <string name="DEL_FRAME_SUCCESS_HINT">删除成功!</string>
-    <string name="SAVE_SUCCESS_HINT">保存战术成功！</string>
-    <string name="SAVE_AS_SUCCESS_HINT">另存战术成功！</string>
-    <string name="AUTO_SAVE_SUCCESS_HINT">自动保存成功</string>
+    <string name="nav_open">推出</string>
+    <string name="nav_close">收起</string>
+
+    <string name="no_anim_hint">请先制作战术！</string>
+    <string name="del_frame_success_hint">删除成功!</string>
+    <string name="save_success_hint">保存战术成功！</string>
+    <string name="save_as_success_hint">另存战术成功！</string>
+    <string name="auto_save_as_success_hint">自动保存成功</string>
     <string name="temp_name_string">模板名称</string>
     <string name="free_for_use_hint_string">前排提醒：本应用使用免费</string>
     <string name="weather_to_activate_string">是否启用</string>
     <string name="auto_save_string">自动保存</string>
+    <string name="question_mark">？</string>
     <string name="auto_save_cancel_hint">之后可以在“设置”中“取消”或“启用”</string>
     <string name="del_all_temp_hint">确认删除所有模板?</string>
     <string name="act_irreversible_hint">（操作不可逆，请谨慎选择！）</string>
@@ -34,13 +33,15 @@
     <string name="ver_stack_string">竖排</string>
     <string name="ho_stack_string">横排</string>
     <string name="already_saved_strategy_list_string">已保存的战术列表</string>
-    <string name="strategy_manage_hint">(单击模板-重命名，叉号-删除模板)</string>
+    <string name="strategy_manage_hint">（单击模板-重命名，叉号-删除模板）</string>
     <string name="clear_list_string">清空\n列表</string>
     <string name="add_player_string">+队员</string>
     <string name="offense_string">O进攻</string>
     <string name="defense_string">D防守</string>
     <string name="static_save_string">保存修改</string>
     <string name="reset_string">重置</string>
+
+
     <string name="import_string">导入战术</string>
     <string name="export_string">导出战术</string>
     <string name="share_string">分享</string>
@@ -50,13 +51,14 @@
     <string name="set_canvas_bg_string">设置战术板背景：</string>
     <string name="fast_string">快</string>
     <string name="slow_string">慢</string>
-    <string name="anim_speed_hint"><![CDATA[拖动进度条 -> 修改动画播放速度]]></string>
+    <string name="anim_speed_hint">拖动进度条 -> 修改动画播放速度</string>
     <string name="temp_sharing_string">模板共享</string>
     <string name="animation_string">战术动画</string>
     <string name="save_and_load_string">读取与修改</string>
     <string name="export_and_sharing_string">导出与分享</string>
     <string name="importing_data_string">导入数据</string>
-    <string name="question_mark">？</string>
+
+
     <string name="guiding_intro_0">使用方式推荐</string>
     <string name="guiding_intro_01">本应用尤其适用于移动场景的战术交流</string>
     <string name="guiding_intro_02">（例如大巴、火车等交通工具上，或其他未携带实体战术板的场合）</string>
@@ -73,4 +75,13 @@
     <string name="feedback_support_dev">↓支持开发者↓</string>
     <string name="feedback_copy_link">复制链接</string>
     <string name="feedback_reference_hint">本应用部分内容参考自 ultiplays\n网页版请使用 https://www.ultiplays.com</string>
+    <string name="static_board_string">战术板</string>
+    <string name="anim_board_string">战术动画</string>
+    <string name="manage_tactics_string">管理战术动画</string>
+    <string name="settings_string">设置</string>
+    <string name="guiding_string">使用指南</string>
+    <string name="feedback_string">反馈</string>
+    <string name="name_duplication_hint_1">导入的重名战术已添加\"</string>
+    <string name="name_duplication_hint_2">\" 后缀</string>
+    <string name="auto_save_btn_string">自动保存</string>
 </resources>

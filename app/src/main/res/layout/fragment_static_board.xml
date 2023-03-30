@@ -37,7 +37,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minWidth="@dimen/btn_min_width"
-                    android:layout_marginStart="@dimen/btn_margin_single_gap"
+                    android:layout_marginStart="@dimen/margin_single_gap"
                     android:paddingEnd="18dp"
                     android:backgroundTint="@color/DeepSkyBlue"
                     android:text="@string/add_player_string" />
@@ -46,9 +46,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minWidth="@dimen/btn_min_width"
-                    android:layout_marginStart="@dimen/btn_margin_between_gap"
+                    android:minHeight="37dp"
+                    android:layout_marginStart="@dimen/margin_between_gap"
+                    android:checked="false"
+                    android:textColor="@color/txt_light_color"
                     android:textOff="@string/offense_string"
-                    android:textOn="@string/defense_string" />
+                    android:textOn="@string/defense_string"
+                    android:background="@drawable/toggle_btn_player_type"/>
             </LinearLayout>
             <View
                 android:id="@+id/splitter_full"
@@ -56,7 +60,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/teal"
                 android:alpha="0.6"
-                android:layout_marginStart="@dimen/btn_margin_between_gap" />
+                android:layout_marginStart="@dimen/margin_between_gap" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -68,7 +72,7 @@
                     android:layout_height="wrap_content"
                     android:minWidth="@dimen/btn_min_width"
                     android:backgroundTint="@color/btn_color"
-                    android:layout_marginStart="@dimen/btn_margin_between_gap"
+                    android:layout_marginStart="@dimen/margin_between_gap"
                     android:text="@string/static_save_string" />
 
                 <Button
@@ -77,7 +81,7 @@
                     android:layout_height="wrap_content"
                     android:minWidth="@dimen/btn_min_width"
                     android:backgroundTint="@color/btn_bg_deep_color"
-                    android:layout_marginStart="@dimen/btn_margin_between_gap"
+                    android:layout_marginStart="@dimen/margin_between_gap"
                     android:text="@string/reset_string" />
 
                 <Button
@@ -86,7 +90,7 @@
                     android:layout_height="wrap_content"
                     android:minWidth="@dimen/btn_min_width"
                     android:backgroundTint="@color/btn_color"
-                    android:layout_marginStart="@dimen/btn_margin_between_gap"
+                    android:layout_marginStart="@dimen/margin_between_gap"
                     android:text="@string/my_temp_string" />
 
                 <Button
@@ -95,7 +99,7 @@
                     android:layout_height="wrap_content"
                     android:minWidth="@dimen/btn_min_width"
                     android:backgroundTint="@color/btn_color"
-                    android:layout_marginStart="@dimen/btn_margin_between_gap"
+                    android:layout_marginStart="@dimen/margin_between_gap"
                     android:text="@string/three_men_string" />
 
                 <Button
@@ -104,7 +108,7 @@
                     android:layout_height="wrap_content"
                     android:minWidth="@dimen/btn_min_width"
                     android:backgroundTint="@color/btn_color"
-                    android:layout_marginStart="@dimen/btn_margin_between_gap"
+                    android:layout_marginStart="@dimen/margin_between_gap"
                     android:text="@string/five_men_string" />
 
                 <Button
@@ -113,7 +117,7 @@
                     android:layout_height="wrap_content"
                     android:minWidth="@dimen/btn_min_width"
                     android:backgroundTint="@color/btn_color"
-                    android:layout_marginStart="@dimen/btn_margin_between_gap"
+                    android:layout_marginStart="@dimen/margin_between_gap"
                     android:text="@string/ver_stack_string" />
 
                 <Button
@@ -122,7 +126,7 @@
                     android:layout_height="wrap_content"
                     android:minWidth="@dimen/btn_min_width"
                     android:backgroundTint="@color/btn_color"
-                    android:layout_marginStart="@dimen/btn_margin_between_gap"
+                    android:layout_marginStart="@dimen/margin_between_gap"
                     android:text="@string/ho_stack_string" />
             </LinearLayout>
 

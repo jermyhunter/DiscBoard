@@ -98,7 +98,7 @@ public class DelTemplatePad extends Fragment implements AnimTempItemDelAdapter.O
         });
 
         TextView dup_name_hint = v.findViewById(R.id.duplicated_name_hint);
-        dup_name_hint.setText("导入的重名文件已添加\"" + TEMP_DUPLICATION_SUFFIX + "\" 后缀");
+        dup_name_hint.setText(getString(R.string.name_duplication_hint_1) + TEMP_DUPLICATION_SUFFIX + getString(R.string.name_duplication_hint_2));
 
         return v;
     }

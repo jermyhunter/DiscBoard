@@ -18,57 +18,57 @@
             <Button
                 android:id="@+id/template_sharing_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:minWidth="@dimen/btn_min_width"
-                android:layout_marginHorizontal="@dimen/btn_margin_single_gap"
+                android:layout_marginHorizontal="@dimen/margin_single_gap"
                 android:backgroundTint="@color/btn_bg_highlight_color"
                 android:textSize="16sp"
                 android:text="@string/temp_sharing_string" />
             <Button
                 android:id="@+id/animation_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:minWidth="@dimen/btn_min_width"
-                android:layout_marginHorizontal="@dimen/btn_margin_single_gap"
+                android:layout_marginHorizontal="@dimen/margin_single_gap"
                 android:backgroundTint="@color/btn_bg_highlight_color"
                 android:textSize="16sp"
                 android:text="@string/animation_string" />
             <Button
                 android:id="@+id/load_and_save_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:minWidth="@dimen/btn_min_width"
-                android:layout_marginHorizontal="@dimen/btn_margin_single_gap"
+                android:layout_marginHorizontal="@dimen/margin_single_gap"
                 android:backgroundTint="@color/btn_bg_highlight_color"
                 android:textSize="16sp"
                 android:text="@string/save_and_load_string" />
             <Button
                 android:id="@+id/exporting_and_sharing_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:minWidth="@dimen/btn_min_width"
-                android:layout_marginHorizontal="@dimen/btn_margin_single_gap"
+                android:layout_marginHorizontal="@dimen/margin_single_gap"
                 android:backgroundTint="@color/DeepSkyBlue"
                 android:textSize="16sp"
                 android:text="@string/export_and_sharing_string" />
             <Button
                 android:id="@+id/importing_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:minWidth="@dimen/btn_min_width"
-                android:layout_marginHorizontal="@dimen/btn_margin_single_gap"
+                android:layout_marginHorizontal="@dimen/margin_single_gap"
                 android:backgroundTint="@color/DeepSkyBlue"
                 android:textSize="16sp"
                 android:text="@string/importing_data_string" />
             <Button
                 android:id="@+id/auto_save_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:minWidth="@dimen/btn_min_width"
-                android:layout_marginHorizontal="@dimen/btn_margin_single_gap"
+                android:layout_marginHorizontal="@dimen/margin_single_gap"
                 android:backgroundTint="@color/DeepSkyBlue"
                 android:textSize="16sp"
-                android:text="@string/auto_save_string" />
+                android:text="@string/auto_save_btn_string" />
 
         </LinearLayout>
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -93,7 +93,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/btn_margin_single_gap"
+                    android:layout_marginBottom="@dimen/margin_single_gap"
                     android:fontFamily="@font/bold"
                     android:text="@string/guiding_intro_0"
                     android:textAlignment="viewStart"
@@ -104,7 +104,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/guiding_intro_01"
                     android:textAlignment="viewStart"
-                    android:textSize="20sp" />
+                    android:textSize="17sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -116,41 +116,41 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/btn_margin_single_gap"
+                    android:layout_marginTop="@dimen/margin_single_gap"
                     android:fontFamily="@font/bold"
                     android:text="@string/guiding_intro_1"
                     android:textAlignment="viewStart"
                     android:textColor="@color/btn_txt_highlight_color"
-                    android:textSize="17sp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/guiding_intro_10"
                     android:textAlignment="viewStart"
-                    android:textSize="18sp" />
+                    android:textSize="17sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/btn_margin_single_gap"
+                    android:layout_marginTop="@dimen/margin_single_gap"
                     android:fontFamily="@font/bold"
                     android:text="@string/guiding_intro_2"
                     android:textAlignment="viewStart"
                     android:textColor="@color/btn_txt_highlight_color"
-                    android:textSize="17sp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/guiding_intro_20"
                     android:textAlignment="viewStart"
-                    android:textSize="18sp" />
+                    android:textSize="17sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/bold"
+                    android:layout_marginTop="@dimen/margin_single_gap"                    android:fontFamily="@font/bold"
                     android:text="@string/guiding_intro_21"
                     android:textAlignment="viewStart"
                     android:textColor="@color/btn_txt_highlight_color"

@@ -499,7 +499,7 @@ public class AnimatedDiscBoard extends View {
             invalidate();
         }
         else {
-            Toast.makeText(getContext(), R.string.NO_ANIM_HINT, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.no_anim_hint, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -826,7 +826,7 @@ public class AnimatedDiscBoard extends View {
         }
         // getFrameSum() < 2
         else{
-            Toast.makeText(getContext(), R.string.NO_ANIM_HINT, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.no_anim_hint, Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -5,25 +5,25 @@
 
     <item
         android:id="@+id/navi_static_board"
-        android:title="战术板" />
+        android:title="@string/static_board_string" />
 
     <item
         android:id="@+id/navi_animated_board"
-        android:title="战术动画" />
+        android:title="@string/anim_board_string" />
 
     <item
         android:id="@+id/navi_del_template_pad"
-        android:title="管理战术动画" />
+        android:title="@string/manage_tactics_string" />
 
     <item
         android:id="@+id/navi_settings"
-        android:title="设置" />
+        android:title="@string/settings_string" />
 
     <item
         android:id="@+id/navi_guiding"
-        android:title="使用指南" />
+        android:title="@string/guiding_string" />
 
     <item
         android:id="@+id/navi_feedback"
-        android:title="反馈" />
+        android:title="@string/feedback_string" />
 </menu>

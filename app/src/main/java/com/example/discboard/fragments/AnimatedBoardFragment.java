@@ -14,6 +14,7 @@ import static com.example.discboard.DiscFinal.USER_DATA_CANVAS_BG_TYPE;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -43,6 +44,7 @@ import com.example.discboard.DiscFinal;
 import com.example.discboard.JsonDataHelper;
 import com.example.discboard.adapter.AnimTempItemAdapter;
 import com.example.discboard.R;
+import com.example.discboard.dialogs.LoadTempDialog;
 import com.example.discboard.dialogs.UnsavedCheckDialog;
 import com.example.discboard.views.AnimatedDiscBoard;
 import com.example.discboard.dialogs.SelectTempDialog;
@@ -107,13 +109,15 @@ public class AnimatedBoardFragment extends Fragment {
         mDelPressFlag = false;
 
         mLoadTempDialogFragment = new LoadTempDialogFragment();
+        // unlock load_btn
+        mLoadTempDialogFragment.setLoadTempDialogListener(() -> mLoadTempBtn.setEnabled(true));
 
         mHandler = new Handler();
 
         mUCLoadDialog = new UnsavedCheckDialog(getContext(), "");
         mUCLoadDialog.setUnsavedDialogListener(() -> {
             // unsaved hint
-            mLoadTempDialogFragment.show(getChildFragmentManager(), "读取战术模板");
+            showLoadSelector();
         });
 
         mUCCreateDialog = new UnsavedCheckDialog(getContext(), "");
@@ -128,6 +132,11 @@ public class AnimatedBoardFragment extends Fragment {
         mAutoSaveMark = mJsonDataHelper.getBooleanFromUserPreferences(USER_DATA_AUTO_SAVE_MARK, false);
 
         InitAnimation();
+    }
+
+    private void showLoadSelector() {
+        mLoadTempBtn.setEnabled(false);
+        mLoadTempDialogFragment.show(getChildFragmentManager(), "读取战术模板");
     }
 
     @Override
@@ -192,14 +201,14 @@ public class AnimatedBoardFragment extends Fragment {
 
         // load temp
         mLoadTempBtn.setOnClickListener(view -> {
-            mAniTempList = mJsonDataHelper.loadTempNamesFromPref();
+                        mAniTempList = mJsonDataHelper.loadTempNamesFromPref();
             if(mAniTempList == null || mAniTempList.size() == 0){
                 Toast.makeText(getActivity(), "请先创建新的战术！", Toast.LENGTH_SHORT).show();
             }
             else {
                 // unsaved hint
                 if(mAnimatedDiscBoard.isSaved()) {
-                    mLoadTempDialogFragment.show(getChildFragmentManager(), "读取战术模板");
+                    showLoadSelector();
                 }
                 else {
                     mUCLoadDialog.show();
@@ -211,7 +220,7 @@ public class AnimatedBoardFragment extends Fragment {
         mSaveOldTempBtn.setOnClickListener(view -> {
             if(isLoaded()) {
                 mAnimatedDiscBoard.saveAniDots(mTempName);
-                Toast.makeText(getContext(), R.string.SAVE_SUCCESS_HINT, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.save_success_hint, Toast.LENGTH_SHORT).show();
             }
             else {
                 Toast.makeText(getActivity(), "保存标记错误，出现bug！", Toast.LENGTH_SHORT).show();
@@ -222,7 +231,7 @@ public class AnimatedBoardFragment extends Fragment {
             mSaveDialogFragment = new SaveDialogFragment();
             mSaveDialogFragment.setSaveDialogListener(tempName -> {
                 setLoadedMarkAndTempName(true, tempName);
-                Toast.makeText(getContext(), R.string.SAVE_AS_SUCCESS_HINT, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.save_as_success_hint, Toast.LENGTH_SHORT).show();
             });
             mSaveDialogFragment.show(getChildFragmentManager(), "保存模板");
         });
@@ -320,7 +329,7 @@ public class AnimatedBoardFragment extends Fragment {
             @Override
             public void onDeleteFrame() {
                 // delete success hint with animation
-                mHintTxt.setText(R.string.DEL_FRAME_SUCCESS_HINT);
+                mHintTxt.setText(R.string.del_frame_success_hint);
                 mHintLayout.startAnimation(mAnimFade);
             }
         });
@@ -362,7 +371,7 @@ public class AnimatedBoardFragment extends Fragment {
                         Toast.makeText(getContext(), mTempName + " 自动保存成功", Toast.LENGTH_SHORT).show();
 
                         // auto-save success hint with animation
-                        mHintTxt.setText(R.string.AUTO_SAVE_SUCCESS_HINT);
+                        mHintTxt.setText(R.string.auto_save_as_success_hint);
                         mHintLayout.startAnimation(mAnimFade);
 
                         mAnimatedDiscBoard.setSavedFlag();
@@ -580,7 +589,26 @@ public class AnimatedBoardFragment extends Fragment {
             mAnimatedDiscBoard.loadDotsAndUpdateUI(name);
             // auto-save hint
             mAnimatedDiscBoard.setSavedFlag();
+
+            mListener.onLoad();
             dismiss();
+        }
+
+        @Override
+        public void onCancel(@NonNull DialogInterface dialog) {
+            super.onCancel(dialog);
+
+            mListener.onLoad();
+        }
+
+        LoadTempDialogListener mListener;
+
+        public void setLoadTempDialogListener(LoadTempDialogListener listener) {
+            mListener = listener;
+        }
+
+        public interface LoadTempDialogListener{
+            void onLoad();
         }
     }
 }

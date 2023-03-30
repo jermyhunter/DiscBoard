@@ -17,10 +17,14 @@ import androidx.navigation.ui.NavigationUI;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.LocaleList;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -38,6 +42,7 @@ import com.google.gson.Gson;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Hashtable;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     DrawerLayout mDrawerLayout;
@@ -72,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setAppLocale("en");
+
         mGson = new Gson();
 //        // deserialize testing
 //        InterDot interDot = mGson.fromJson("{\"dot_type\":-1,\"seq_No\":2,\"x\":695.5,\"y\":628.5,\"touched\"=false}", InterDot.class);
@@ -104,6 +111,17 @@ public class MainActivity extends AppCompatActivity {
 
         // TODO:在所有内容制作完成后删除
 //        Toast.makeText(this, "本版本为预发布版\n主要功能已制作完成", Toast.LENGTH_SHORT).show();
+
+        // test user's default lang
+//        Log.d(TAG, "onCreate: " + LocaleList.getDefault());
+    }
+
+    private void setAppLocale(String localeCode){
+        Resources resources = getResources();
+        DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+        Configuration configuration = resources.getConfiguration();
+        configuration.setLocale(new Locale(localeCode.toLowerCase()));
+        resources.updateConfiguration(configuration, displayMetrics);
     }
 
     private void initExportFolder() {

@@ -5,8 +5,8 @@
     android:layout_height="match_parent"
     tools:context=".fragments.FeedbackFragment">
     <TextView
-        android:layout_marginStart="@dimen/btn_margin_single_gap"
-        android:layout_marginTop="@dimen/btn_margin_single_gap"
+        android:layout_marginStart="@dimen/margin_single_gap"
+        android:layout_marginTop="@dimen/margin_single_gap"
         android:layout_gravity="top|start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -27,16 +27,23 @@
             android:textSize="20sp"
             android:textColor="@color/btn_bg_highlight_color"
             android:text="@string/feedback_10" />
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="@string/feedback_11" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="@string/feedback_12" />
+            android:layout_marginTop="@dimen/margin_between_wide_gap"
+            android:orientation="vertical"
+            android:gravity="start">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:text="@string/feedback_11" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:text="@string/feedback_12" />
+        </LinearLayout>
         <Button
             android:id="@+id/copy_contact_btn"
             android:layout_width="wrap_content"
@@ -46,7 +53,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:textSize="17sp"
             android:text="@string/feedback_support_dev" />
         <Button
             android:id="@+id/copy_url_btn"
@@ -56,17 +63,20 @@
             android:text="@string/feedback_copy_link" />
     </LinearLayout>
     <TextView
-        android:layout_marginEnd="15dp"
+        android:layout_marginStart="@dimen/margin_single_gap"
+        android:layout_marginBottom="@dimens/margin_tiny"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="15sp"
-        android:layout_gravity="bottom|end"
+        android:layout_gravity="bottom|start"
         android:text="@string/feedback_reference_hint" />
     <TextView
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="@dimens/margin_tiny"
         android:id="@+id/ver_info_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/btn_margin_single_gap"
+        android:gravity="end"
         android:textSize="13sp"
-        android:layout_gravity="bottom|start" />
+        android:layout_gravity="bottom|end" />
 </FrameLayout>
