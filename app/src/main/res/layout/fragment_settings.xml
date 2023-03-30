@@ -32,7 +32,7 @@
                     android:minWidth="60dp"
                     android:layout_gravity="center"
                     android:textSize="@dimen/IO_text_size"
-                    android:text="导入战术" />
+                    android:text="@string/import_string" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -47,7 +47,7 @@
                     android:minWidth="60dp"
                     android:layout_gravity="center"
                     android:textSize="@dimen/IO_text_size"
-                    android:text="导出战术" />
+                    android:text="@string/export_string" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -67,13 +67,13 @@
                         android:backgroundTint="@color/btn_color"
                         android:textColor="@color/Ivory"
                         android:textSize="@dimen/IO_text_size"
-                        android:text="分享" />
+                        android:text="@string/share_string" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
-                        android:text="不推荐微信"
+                        android:text="@string/share_hint"
                         android:textSize="@dimen/IO_text_size" />
                 </LinearLayout>
             </LinearLayout>
@@ -100,7 +100,7 @@
                     android:textColor="@color/txt_light_color"
                     android:background="@drawable/highlighted_bg"
                     android:textSize="@dimen/IO_text_size"
-                    android:text="启用自动保存" />
+                    android:text="@string/active_auto_save_string" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -117,7 +117,7 @@
                     android:layout_gravity="center"
                     android:backgroundTint="@color/btn_bg_highlight_color"
                     android:textSize="@dimen/IO_text_size"
-                    android:text="恢复初始模板" />
+                    android:text="@string/restore_temp_data_string" />
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
@@ -140,7 +140,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:paddingHorizontal="10dp"
-                    android:text="设置战术板背景："
+                    android:text="@string/set_canvas_bg_string"
                     android:textColor="@color/txt_light_color"
                     android:textSize="18sp" />
                 <Spinner
@@ -174,7 +174,7 @@
                     android:paddingHorizontal="15dp"
                     android:textSize="@dimen/IO_text_size"
                     android:layout_weight="0"
-                    android:text="快" />
+                    android:text="@string/fast_string" />
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -197,7 +197,7 @@
                     android:paddingVertical="10dp"
                     android:paddingHorizontal="15dp"
                     android:textSize="@dimen/IO_text_size"
-                    android:text="慢" />
+                    android:text="@string/slow_string" />
             </LinearLayout>
             <TextView
                 android:layout_width="wrap_content"
@@ -206,7 +206,7 @@
                 android:paddingVertical="7dp"
                 android:paddingHorizontal="14dp"
                 android:textSize="@dimen/IO_text_size"
-                android:text="拖动进度条  ->  修改动画播放速度"
+                android:text="@string/anim_speed_hint"
                 android:textColor="@color/Ivory"
                 android:background="@drawable/rounded_edge_purple" />
         </LinearLayout>

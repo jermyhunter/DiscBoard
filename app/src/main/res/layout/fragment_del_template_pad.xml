@@ -29,7 +29,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:text="已保存的战术列表"
+                    android:text="@string/already_saved_strategy_list_string"
                     android:textSize="22sp"
                     android:textColor="@color/Ivory"/>
                 <TextView
@@ -44,7 +44,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:text="(单击模板-重命名，叉号-删除模板)"
+                    android:text="@string/strategy_manage_hint"
                     android:textSize="17sp"
                     android:textColor="@color/LightYellow"/>
             </LinearLayout>
@@ -59,7 +59,7 @@
                 android:textColor="@color/Ivory"
                 android:fontFamily="@font/bold"
                 android:textSize="18dp"
-                android:text="清空\n列表"/>
+                android:text="@string/clear_list_string"/>
         </LinearLayout>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"

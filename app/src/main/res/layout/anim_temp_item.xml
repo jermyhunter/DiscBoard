@@ -21,7 +21,7 @@
                 android:textSize="14sp"
                 android:layout_marginVertical="5dp"
                 android:layout_marginHorizontal="5dp"
-                android:text="模板名称"
+                android:text="@string/temp_name_string"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </RelativeLayout>

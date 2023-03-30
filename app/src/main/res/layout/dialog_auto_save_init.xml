@@ -15,7 +15,7 @@
         android:fontFamily="@font/bold"
         android:textSize="15sp"
         android:textColor="@color/btn_bg_highlight_color"
-        android:text="前排提醒：本应用使用免费" />
+        android:text="@string/free_for_use_hint_string" />
     <LinearLayout
         android:layout_marginTop="15dp"
         android:layout_width="wrap_content"
@@ -25,24 +25,25 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="是否启用 "
+            android:text="@string/weather_to_activate_string"
+            android:layout_marginEnd="2dp"
             android:textSize="18sp" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/bold"
-            android:text="自动保存"
+            android:text="@string/auto_save_string"
             android:textSize="20sp" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" ？"
+            android:text="@string/question_mark"
             android:textSize="20sp" />
     </LinearLayout>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/btn_bg_highlight_color"
-        android:text="之后可以在“设置”中“取消”或“启用”"
+        android:text="@string/auto_save_cancel_hint"
         android:textSize="16sp" />
 </LinearLayout>

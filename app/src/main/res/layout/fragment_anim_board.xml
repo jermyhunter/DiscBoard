@@ -70,7 +70,7 @@
                     android:minHeight="@dimen/btn_min_height"
                     android:minWidth="@dimen/btn_min_width"
                     android:backgroundTint="@color/btn_color"
-                    android:text="播   放"/>
+                    android:text="@string/play_anim_string"/>
             </LinearLayout>
         </LinearLayout>
         <View
@@ -95,14 +95,14 @@
                     android:layout_height="wrap_content"
                     android:minHeight="@dimen/btn_min_height"
                     android:backgroundTint="@color/btn_color"
-                    android:text="新建战术" />
+                    android:text="@string/create_new_strategy_string" />
                 <Button
                     android:id="@+id/load_temp_btn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="@dimen/btn_min_height"
                     android:backgroundTint="@color/btn_color"
-                    android:text="读取战术" />
+                    android:text="@string/load_strategy_string" />
             </LinearLayout>
             <View
                 android:layout_width="match_parent"
@@ -120,7 +120,7 @@
                     android:layout_height="wrap_content"
                     android:minHeight="@dimen/btn_min_height"
                     android:backgroundTint="@color/btn_color"
-                    android:text="插入帧" />
+                    android:text="@string/insert_frame_string" />
 
                 <Button
                     android:id="@+id/del_frame_btn"
@@ -128,7 +128,7 @@
                     android:layout_height="wrap_content"
                     android:minHeight="@dimen/btn_min_height"
                     android:backgroundTint="@color/btn_bg_highlight_color"
-                    android:text="删除帧\n(长按)"/>
+                    android:text="@string/del_frame_init_string"/>
 
                 <LinearLayout
                     android:id="@+id/hint_bg"
@@ -158,14 +158,14 @@
                     android:layout_height="wrap_content"
                     android:minHeight="@dimen/btn_min_height"
                     android:backgroundTint="@color/btn_color"
-                    android:text="保   存" />
+                    android:text="@string/save_string" />
                 <Button
                     android:id="@+id/save_new_temp_btn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="@dimen/btn_min_height"
                     android:backgroundTint="@color/btn_color"
-                    android:text="另存战术" />
+                    android:text="@string/save_as_string" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

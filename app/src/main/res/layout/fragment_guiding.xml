@@ -22,8 +22,8 @@
                 android:minWidth="@dimen/btn_min_width"
                 android:layout_marginHorizontal="@dimen/btn_margin_single_gap"
                 android:backgroundTint="@color/btn_bg_highlight_color"
-                android:textSize="16dp"
-                android:text="模板共享" />
+                android:textSize="16sp"
+                android:text="@string/temp_sharing_string" />
             <Button
                 android:id="@+id/animation_btn"
                 android:layout_width="wrap_content"
@@ -32,7 +32,7 @@
                 android:layout_marginHorizontal="@dimen/btn_margin_single_gap"
                 android:backgroundTint="@color/btn_bg_highlight_color"
                 android:textSize="16sp"
-                android:text="战术动画" />
+                android:text="@string/animation_string" />
             <Button
                 android:id="@+id/load_and_save_btn"
                 android:layout_width="wrap_content"
@@ -41,7 +41,7 @@
                 android:layout_marginHorizontal="@dimen/btn_margin_single_gap"
                 android:backgroundTint="@color/btn_bg_highlight_color"
                 android:textSize="16sp"
-                android:text="读取与修改" />
+                android:text="@string/save_and_load_string" />
             <Button
                 android:id="@+id/exporting_and_sharing_btn"
                 android:layout_width="wrap_content"
@@ -49,8 +49,8 @@
                 android:minWidth="@dimen/btn_min_width"
                 android:layout_marginHorizontal="@dimen/btn_margin_single_gap"
                 android:backgroundTint="@color/DeepSkyBlue"
-                android:textSize="16dp"
-                android:text="导出与分享" />
+                android:textSize="16sp"
+                android:text="@string/export_and_sharing_string" />
             <Button
                 android:id="@+id/importing_btn"
                 android:layout_width="wrap_content"
@@ -59,7 +59,7 @@
                 android:layout_marginHorizontal="@dimen/btn_margin_single_gap"
                 android:backgroundTint="@color/DeepSkyBlue"
                 android:textSize="16sp"
-                android:text="导入数据" />
+                android:text="@string/importing_data_string" />
             <Button
                 android:id="@+id/auto_save_btn"
                 android:layout_width="wrap_content"
@@ -68,7 +68,7 @@
                 android:layout_marginHorizontal="@dimen/btn_margin_single_gap"
                 android:backgroundTint="@color/DeepSkyBlue"
                 android:textSize="16sp"
-                android:text="自动保存" />
+                android:text="@string/auto_save_string" />
 
         </LinearLayout>
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -95,21 +95,21 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/btn_margin_single_gap"
                     android:fontFamily="@font/bold"
-                    android:text="使用方式推荐"
+                    android:text="@string/guiding_intro_0"
                     android:textAlignment="viewStart"
                     android:textSize="20sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="本应用尤其适用于移动场景的战术交流"
+                    android:text="@string/guiding_intro_01"
                     android:textAlignment="viewStart"
                     android:textSize="20sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="（例如大巴、火车等交通工具上，或其他未携带实体战术板的场合）"
+                    android:text="@string/guiding_intro_02"
                     android:textAlignment="viewStart"
                     android:textSize="17sp" />
 
@@ -118,7 +118,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/btn_margin_single_gap"
                     android:fontFamily="@font/bold"
-                    android:text="推荐使用方式一"
+                    android:text="@string/guiding_intro_1"
                     android:textAlignment="viewStart"
                     android:textColor="@color/btn_txt_highlight_color"
                     android:textSize="17sp" />
@@ -126,7 +126,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="分享者使用QQ群等通讯软件的“分享屏幕”功能\n结合语言说明，将战术演示共享给队友"
+                    android:text="@string/guiding_intro_10"
                     android:textAlignment="viewStart"
                     android:textSize="18sp" />
 
@@ -135,7 +135,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/btn_margin_single_gap"
                     android:fontFamily="@font/bold"
-                    android:text="推荐使用方式二"
+                    android:text="@string/guiding_intro_2"
                     android:textAlignment="viewStart"
                     android:textColor="@color/btn_txt_highlight_color"
                     android:textSize="17sp" />
@@ -143,7 +143,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="分享者先使用“导出”打包战术\n再使用“分享”功能将打包好的文件传给对方“导入”"
+                    android:text="@string/guiding_intro_20"
                     android:textAlignment="viewStart"
                     android:textSize="18sp" />
 
@@ -151,7 +151,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/bold"
-                    android:text="（由于安卓安全性升级，较新机型的导出功能可能会失效）"
+                    android:text="@string/guiding_intro_21"
                     android:textAlignment="viewStart"
                     android:textColor="@color/btn_txt_highlight_color"
                     android:textSize="17sp" />

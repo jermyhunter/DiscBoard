@@ -236,7 +236,7 @@ public class AnimatedBoardFragment extends Fragment {
         mDelFrameBtn.setOnLongClickListener(view -> {
             // after pressing the delete_btn, shorten the text
             if(!mDelPressFlag) {
-                mDelFrameBtn.setText("删除帧");
+                mDelFrameBtn.setText(R.string.del_frame_string);
                 mDelPressFlag = true;
             }
             view.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.del_anim));
