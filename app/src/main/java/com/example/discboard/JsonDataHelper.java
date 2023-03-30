@@ -528,6 +528,12 @@ public class JsonDataHelper {
         return exported_file.exists();
     }
 
+    /**
+     * NOTICE:
+     *      this function could malfunction
+     *      for `Environment.getExternalStoragePublicDirectory` is deprecated in API 30+
+     * it's OK not to export data, the other functions still work well
+     */
     public File getExportFolder(){
         File exported_folder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), EXPORT_FOLDER_SUB_PATH);
         boolean success;
