@@ -68,6 +68,7 @@ public class AnimatedBoardFragment extends Fragment {
     Button mSaveOldTempBtn, mLoadTempBtn, mDelFrameBtn, mInsertFrameBtn,
         mLastFrameBtn, mNextFrameBtn;
     TextView mHintTxt;
+    View mHintLayout;
     AnimationSet mAnimFade;
     JsonDataHelper mJsonDataHelper;
     static ArrayList<String> mAniTempList;
@@ -320,10 +321,7 @@ public class AnimatedBoardFragment extends Fragment {
             public void onDeleteFrame() {
                 // delete success hint with animation
                 mHintTxt.setText(R.string.DEL_FRAME_SUCCESS_HINT);
-                mHintTxt.animate()
-                        .alpha(1)
-                        .setInterpolator(new AccelerateInterpolator());
-                mHintTxt.startAnimation(mAnimFade);
+                mHintLayout.startAnimation(mAnimFade);
             }
         });
 
@@ -350,6 +348,7 @@ public class AnimatedBoardFragment extends Fragment {
         });
 
         mHintTxt = v.findViewById(R.id.hint_txt);
+        mHintLayout = v.findViewById(R.id.hint_bg);
 
         mLoadedMark = false;
         setLoadedMarkAndTempName(false, "");
@@ -364,10 +363,7 @@ public class AnimatedBoardFragment extends Fragment {
 
                         // auto-save success hint with animation
                         mHintTxt.setText(R.string.AUTO_SAVE_SUCCESS_HINT);
-                        mHintTxt.animate()
-                                .alpha(1)
-                                .setInterpolator(new AccelerateInterpolator());
-                        mHintTxt.startAnimation(mAnimFade);
+                        mHintLayout.startAnimation(mAnimFade);
 
                         mAnimatedDiscBoard.setSavedFlag();
                     }
@@ -403,18 +399,19 @@ public class AnimatedBoardFragment extends Fragment {
         animationIn.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                mHintTxt.setVisibility(View.VISIBLE);
+                mHintLayout.setVisibility(View.VISIBLE);
             }
             @Override
             public void onAnimationEnd(Animation animation) {
-                mHintTxt.startAnimation(animationOut);
+                mHintLayout.startAnimation(animationOut);
             }
             @Override
             public void onAnimationRepeat(Animation animation) {
             }
         });
 
-        animationIn.setStartOffset(2 * 1000);
+        // the start offset of animation
+//        animationIn.setStartOffset(2 * 1000);
 
         animationOut.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -422,7 +419,7 @@ public class AnimatedBoardFragment extends Fragment {
             }
             @Override
             public void onAnimationEnd(Animation animation) {
-                mHintTxt.setVisibility(View.INVISIBLE);
+                mHintLayout.setVisibility(View.INVISIBLE);
             }
             @Override
             public void onAnimationRepeat(Animation animation) {

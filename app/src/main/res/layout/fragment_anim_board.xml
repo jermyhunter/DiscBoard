@@ -131,9 +131,11 @@
                     android:text="删除帧\n(长按)"/>
 
                 <LinearLayout
+                    android:id="@+id/hint_bg"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/btn_margin_single_gap"
+                    android:visibility="invisible"
                     android:background="@drawable/highlighted_bg"
                     android:orientation="vertical">
                     <TextView
@@ -141,7 +143,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:alpha="0"
                         android:minHeight="@dimen/btn_min_height"
                         android:textColor="@color/txt_light_color"
                         android:text=""/>

@@ -54,6 +54,7 @@
                 android:layout_width="10dp"
                 android:layout_height="match_parent"
                 android:background="@color/teal"
+                android:alpha="0.6"
                 android:layout_marginStart="@dimen/btn_margin_between_gap" />
 
             <LinearLayout
