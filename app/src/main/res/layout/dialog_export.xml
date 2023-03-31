@@ -6,60 +6,44 @@
     android:orientation="vertical"
     tools:context=".MainActivity"
     tools:ignore="MissingDefaultResource">
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_single_gap"
+        android:gravity="center|bottom"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="请输入导出文件名"
+            android:textSize="20sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="1dp"
+            android:text="（不用添加后缀）"
+            android:textColor="@color/holo_red_light"
+            android:fontFamily="@font/bold"
+            android:textSize="18sp" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:orientation="vertical">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_rowSpan="1"
-            android:layout_columnSpan="1"
-            android:layout_marginBottom="@dimen/margin_single_gap"
-            android:gravity="center"
+            android:gravity="center|bottom"
             android:orientation="horizontal">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="请输入导出文件名"
-                android:textSize="22sp" />
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="1dp"
-                    android:text="（不用添加后缀）"
-                    android:textColor="@color/holo_red_light"
-                    android:fontFamily="@font/bold"
-                    android:textSize="18sp" />
-            </LinearLayout>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_rowSpan="1"
-            android:layout_columnSpan="1"
-            android:gravity="center"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
                 android:text="（在手机的文件管理中搜索"
                 android:textSize="18sp" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/bold"
                 android:text="disc"
                 android:textColor="@color/holo_red_light"
@@ -67,73 +51,59 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
                 android:text="可快速找到文件）"
                 android:textSize="18sp" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_rowSpan="1"
-            android:layout_columnSpan="1"
-            android:gravity="center"
+            android:gravity="center|bottom"
             android:orientation="horizontal">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:text="导出的文件位于 "
-                android:textSize="16dp" />
-
+                android:textSize="17sp" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/bold"
-                android:gravity="center"
-                android:text="/Download"
+                android:text="/Download "
                 android:textColor="@color/holo_red_light"
-                android:textSize="16dp" />
+                android:textSize="17sp" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text=" 文件夹中"
-                android:textSize="16dp" />
+                android:text="文件夹中"
+                android:textSize="17sp" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_rowSpan="1"
-            android:layout_columnSpan="1"
-            android:gravity="center"
+            android:gravity="center|bottom"
             android:orientation="horizontal">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:text="文件名为  "
-                android:textSize="16dp" />
+                android:textSize="17sp" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/bold"
                 android:text="disc_输入的文件名.json"
                 android:textColor="@color/holo_red_light"
-                android:textSize="16dp" />
+                android:textSize="17sp" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:text="，请妥善保存"
-                android:textSize="16dp" />
+                android:textSize="17sp" />
         </LinearLayout>
-        <EditText
-            android:id="@+id/export_name_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_rowSpan="1"
-            android:layout_columnSpan="1"
-            android:hint="输入导出文件名（不用添加后缀）" />
     </LinearLayout>
+    <EditText
+        android:id="@+id/export_name_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="输入导出文件名（不用添加后缀），例如：阿杰の奇术套餐" />
 </LinearLayout>

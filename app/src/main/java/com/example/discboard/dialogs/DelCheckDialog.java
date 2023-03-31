@@ -20,8 +20,7 @@ public class DelCheckDialog extends AlertDialog {
 
     public DelCheckDialog(@NonNull Context context, String tempName) {
         super(context);
-//        mTempName = tempName;
-        mTempName = "测试模板";
+        mTempName = tempName;
     }
 
 
@@ -33,16 +32,16 @@ public class DelCheckDialog extends AlertDialog {
         mTempNameTxt = v.findViewById(R.id.temp_name_txt);
         mTempNameTxt.setText(mTempName);
 
-        setButton(DialogInterface.BUTTON_POSITIVE, "确定", new OnClickListener() {
+        setButton(DialogInterface.BUTTON_POSITIVE, getContext().getString(R.string.confirm_string), new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 listener.onDialogPositiveClick(String.valueOf(mTempNameTxt.getText()));
                 Toast.makeText(getContext(), mTempName
-                        + " 删除成功！", Toast.LENGTH_SHORT).show();
+                        + " " + getContext().getString(R.string.delete_success_hint), Toast.LENGTH_SHORT).show();
             }
         });
 
-        setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new OnClickListener() {
+        setButton(DialogInterface.BUTTON_NEGATIVE, getContext().getString(R.string.cancel_string), new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
             }

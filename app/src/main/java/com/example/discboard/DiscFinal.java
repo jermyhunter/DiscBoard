@@ -20,8 +20,12 @@ public class DiscFinal {
         public final static String FULL_GROUND = "全场";
         public final static String END_ZONE = "得分区";
     }
-
     public final static String USER_DATA_CANVAS_BG_TYPE = "canvas_bg_type";
+    public static class LocaleType{
+        public final static String CN = "zh";
+        public final static String EN = "en";
+    }
+    public final static String LOCALE_CODE = "locale_code";
 
     // auto-save delay, determine how often the auto-save function would launch
     public final static int AUTO_SAVE_DELAY = 28 * 1000;
@@ -37,10 +41,12 @@ public class DiscFinal {
     public final static int INTER_DOT_ALPHA = 170;
 
     public final static String CONTACT_INFO = "479395433";
+    public final static String CONTACT_EMAIL = "jermyhunter123@gmail.com";
     public final static String CONTACT_URL = "https://space.bilibili.com/177731643";
     public final static float DELTA_E = 25f;
     public final static String USER_DATA_PREF = "user_data";
     public final static String USER_DATA_FIRST_RUN_MARK = "first_time";
+    public final static String USER_DATA_RESET_MARK = "reset_mark";
     public final static String USER_DATA_TEMP_MY = "my_temp";
     public final static String USER_DATA_TEMP_3 = "3";
     public final static String USER_DATA_TEMP_5 = "5";
@@ -55,6 +61,14 @@ public class DiscFinal {
     public final static String USER_DATA_BOARD_HEIGHT = "height";
     public final static int ANIM_SPEED_INIT = 75;
     // ------------------ EX/IMPORTING ------------------
+
+    final public static class ExportFileIndex{
+        final public static int Head = 0;
+        final public static int TempList = 1;
+        final public static int AniDotsList = 2;
+        final public static int BoardMeasure = 3;
+    }
+
     public final static String IO_HEAD = "head";
     // add ver. number
     // IO_HEAD_VERSION_X_XX 对应版本号，可以据此编写向前的版本兼容，将导入的文件转化为兼容版

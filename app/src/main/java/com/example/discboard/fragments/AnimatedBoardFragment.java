@@ -9,10 +9,8 @@ import static com.example.discboard.DiscFinal.PRESSED_ALPHA;
 import static com.example.discboard.DiscFinal.USER_DATA_AUTO_SAVE_MARK;
 import static com.example.discboard.DiscFinal.USER_DATA_BOARD_HEIGHT;
 import static com.example.discboard.DiscFinal.USER_DATA_BOARD_WIDTH;
-import static com.example.discboard.DiscFinal.USER_DATA_CANVAS_BG_TYPE;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -25,26 +23,20 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.discboard.DiscFinal;
 import com.example.discboard.JsonDataHelper;
 import com.example.discboard.adapter.AnimTempItemAdapter;
 import com.example.discboard.R;
-import com.example.discboard.dialogs.LoadTempDialog;
 import com.example.discboard.dialogs.UnsavedCheckDialog;
 import com.example.discboard.views.AnimatedDiscBoard;
 import com.example.discboard.dialogs.SelectTempDialog;
@@ -114,13 +106,13 @@ public class AnimatedBoardFragment extends Fragment {
 
         mHandler = new Handler();
 
-        mUCLoadDialog = new UnsavedCheckDialog(getContext(), "");
+        mUCLoadDialog = new UnsavedCheckDialog(getContext());
         mUCLoadDialog.setUnsavedDialogListener(() -> {
             // unsaved hint
             showLoadSelector();
         });
 
-        mUCCreateDialog = new UnsavedCheckDialog(getContext(), "");
+        mUCCreateDialog = new UnsavedCheckDialog(getContext());
         mUCCreateDialog.setUnsavedDialogListener(() -> {
             // unsaved hint
             mSelectTempDialog.show();
@@ -203,7 +195,7 @@ public class AnimatedBoardFragment extends Fragment {
         mLoadTempBtn.setOnClickListener(view -> {
                         mAniTempList = mJsonDataHelper.loadTempNamesFromPref();
             if(mAniTempList == null || mAniTempList.size() == 0){
-                Toast.makeText(getActivity(), "请先创建新的战术！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.empty_list_warning, Toast.LENGTH_SHORT).show();
             }
             else {
                 // unsaved hint
@@ -223,7 +215,7 @@ public class AnimatedBoardFragment extends Fragment {
                 Toast.makeText(getContext(), R.string.save_success_hint, Toast.LENGTH_SHORT).show();
             }
             else {
-                Toast.makeText(getActivity(), "保存标记错误，出现bug！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.save_failure_warning, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -368,7 +360,7 @@ public class AnimatedBoardFragment extends Fragment {
                     if (!mAnimatedDiscBoard.isSaved()) {
                         mAnimatedDiscBoard.saveAniDots(mTempName);
                         // auto-save message
-                        Toast.makeText(getContext(), mTempName + " 自动保存成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), mTempName + " " + getString(R.string.auto_save_success_hint), Toast.LENGTH_SHORT).show();
 
                         // auto-save success hint with animation
                         mHintTxt.setText(R.string.auto_save_as_success_hint);

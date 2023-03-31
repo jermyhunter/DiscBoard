@@ -23,7 +23,7 @@
                 android:layout_marginHorizontal="5dp"
                 android:text="@string/temp_name_string"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="match_parent"/>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </FrameLayout>

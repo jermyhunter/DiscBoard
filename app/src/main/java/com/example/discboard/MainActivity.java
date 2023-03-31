@@ -43,6 +43,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.Hashtable;
 import java.util.Locale;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     DrawerLayout mDrawerLayout;
@@ -58,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
 
     UnSavedCheckDialogFragment mUnSavedCheckDialogFragment;
     AutoSaveCheckDialogFragment mAutoSaveCheckDialogFragment;
-    Gson mGson;
     MenuItem mSelectedMenuItem, mSelectedMenuItem1;
     int mMenuPos, mMenuPos1;
     int mNaviDestID, mNaviDestID1;
@@ -77,9 +77,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setAppLocale("en");
+        mJsonDataHelper = new JsonDataHelper(this);
+        // lang setting
+        mJsonDataHelper.initAppLocale();
 
-        mGson = new Gson();
 //        // deserialize testing
 //        InterDot interDot = mGson.fromJson("{\"dot_type\":-1,\"seq_No\":2,\"x\":695.5,\"y\":628.5,\"touched\"=false}", InterDot.class);
 //        if(interDot instanceof InterDot)
@@ -89,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
 //        if(dot instanceof Dot)
 //            Log.d(TAG, "onCreate: " + dot);
 
-        mJsonDataHelper = new JsonDataHelper(this);
         // 全屏沉浸模式
         setImmersedMode();
         // 保持屏幕常亮
@@ -109,19 +109,8 @@ public class MainActivity extends AppCompatActivity {
         //----------data init on 1st run-----------
         initDataOn1stRun();
 
-        // TODO:在所有内容制作完成后删除
-//        Toast.makeText(this, "本版本为预发布版\n主要功能已制作完成", Toast.LENGTH_SHORT).show();
-
         // test user's default lang
 //        Log.d(TAG, "onCreate: " + LocaleList.getDefault());
-    }
-
-    private void setAppLocale(String localeCode){
-        Resources resources = getResources();
-        DisplayMetrics displayMetrics = resources.getDisplayMetrics();
-        Configuration configuration = resources.getConfiguration();
-        configuration.setLocale(new Locale(localeCode.toLowerCase()));
-        resources.updateConfiguration(configuration, displayMetrics);
     }
 
     private void initExportFolder() {
@@ -320,6 +309,10 @@ public class MainActivity extends AppCompatActivity {
 
         // 初次使用
         if(mJsonDataHelper.getBooleanFromInitPreferences(USER_DATA_FIRST_RUN_MARK, true)){
+            // TODO:在所有内容制作完成后删除
+            Toast.makeText(this, R.string.first_launch_hint, Toast.LENGTH_SHORT).show();
+
+            // ------------------ save temps to INIT pref -----------------------
             SharedPreferences shared = getSharedPreferences(USER_INIT_PREF, MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             s = mJsonDataHelper.loadJSONFromAsset("dots_3.json");
@@ -331,13 +324,19 @@ public class MainActivity extends AppCompatActivity {
             s = mJsonDataHelper.loadJSONFromAsset("ho_stack.json");
             editor.putString(USER_DATA_TEMP_HO, s); // horizontal stack
 
+            editor.putBoolean(USER_DATA_FIRST_RUN_MARK, false);
+            editor.apply();
+
+            // ------------------ initial settings -----------------------
+            // save a copy to the "USER_SHARED_PREFERENCE"
+            shared = getSharedPreferences(USER_DATA_PREF, MODE_PRIVATE);
+            editor = shared.edit();
+
             // init animation playing speed
             editor.putInt(USER_DATA_ANIM_SPEED, ANIM_SPEED_INIT);
             // canvas_bg, default-> full_ground
             editor.putString(USER_DATA_CANVAS_BG_TYPE, CanvasBGType.FULL_GROUND);
-            editor.putBoolean(USER_DATA_AUTO_SAVE_MARK, false);
-
-            editor.putBoolean(USER_DATA_FIRST_RUN_MARK, false);
+            editor.putBoolean(USER_DATA_RESET_MARK, true);
 
             editor.apply();
 
@@ -368,9 +367,8 @@ public class MainActivity extends AppCompatActivity {
             initExportFolder();
         }
 
-
-        // 初次使用 或 初始化模板后
-        if(mJsonDataHelper.getBooleanFromUserPreferences(USER_DATA_FIRST_RUN_MARK, true))
+        // init/reset temps
+        if(mJsonDataHelper.getBooleanFromUserPreferences(USER_DATA_RESET_MARK, true))
         {
             // save a copy to the "USER_SHARED_PREFERENCE"
             SharedPreferences shared = getSharedPreferences(USER_DATA_PREF, MODE_PRIVATE);
@@ -386,16 +384,11 @@ public class MainActivity extends AppCompatActivity {
             s = mJsonDataHelper.loadJSONFromAsset("ho_stack.json");
             editor.putString(USER_DATA_TEMP_HO, s); // horizontal stack
 
-            // init animation playing speed
-            editor.putInt(USER_DATA_ANIM_SPEED, ANIM_SPEED_INIT);
-            // canvas_bg, default-> full_ground
-            editor.putString(USER_DATA_CANVAS_BG_TYPE, CanvasBGType.FULL_GROUND);
-
-            editor.putBoolean(USER_DATA_FIRST_RUN_MARK, false);
+            editor.putBoolean(USER_DATA_RESET_MARK, false);
 
             editor.apply();
 
-            Toast.makeText(this, "战术模板初始化成功", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.temps_init_success_hint, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -428,7 +421,7 @@ public class MainActivity extends AppCompatActivity {
         if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
             // 两次退出命令的间隔超过2s，则退出程序
             if((System.currentTimeMillis()-exitTime) > 2000){
-                Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.exit_check_hint, Toast.LENGTH_SHORT).show();
                 exitTime = System.currentTimeMillis();
             } else {
                 finish();
@@ -452,11 +445,11 @@ public class MainActivity extends AppCompatActivity {
             View dialogView = inflater.inflate(R.layout.dialog_save_check, null);
 
             TextView txt = dialogView.findViewById(R.id.unsaved_hint_txt);
-            txt.setText("未保存的内容将丢失，");
+            txt.setText(R.string.unsaved_hint_10);
 
             builder.setView(dialogView)
-                    .setPositiveButton("跳转", (dialogInterface, i) -> mDoubleCheckDialogListener.onCheckListener())
-                    .setNegativeButton("取消", (dialogInterface, i) -> {
+                    .setPositiveButton(R.string.confirm_string, (dialogInterface, i) -> mDoubleCheckDialogListener.onCheckListener())
+                    .setNegativeButton(R.string.cancel_string, (dialogInterface, i) -> {
                     });
 
             return builder.create();
@@ -486,8 +479,8 @@ public class MainActivity extends AppCompatActivity {
             View dialogView = inflater.inflate(R.layout.dialog_auto_save_init, null);
 
             builder.setView(dialogView)
-                    .setPositiveButton("启用", (dialogInterface, i) -> AutoSaveCheckDialogListener.onConfirmListener())
-                    .setNegativeButton("取消", (dialogInterface, i) -> AutoSaveCheckDialogListener.onCancelListener());
+                    .setPositiveButton(R.string.activate_string, (dialogInterface, i) -> AutoSaveCheckDialogListener.onConfirmListener())
+                    .setNegativeButton(R.string.cancel_string, (dialogInterface, i) -> AutoSaveCheckDialogListener.onCancelListener());
 
             return builder.create();
         }

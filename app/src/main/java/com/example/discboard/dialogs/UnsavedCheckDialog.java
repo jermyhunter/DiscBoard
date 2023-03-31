@@ -19,7 +19,7 @@ import com.example.discboard.adapter.AnimTempItemAdapter;
 import java.util.ArrayList;
 
 public class UnsavedCheckDialog extends AlertDialog {
-    public UnsavedCheckDialog(@NonNull Context context, String s) {
+    public UnsavedCheckDialog(@NonNull Context context) {
         super(context);
     }
 
@@ -27,14 +27,14 @@ public class UnsavedCheckDialog extends AlertDialog {
     protected void onCreate(Bundle savedInstanceState) {
         View content = LayoutInflater.from(getContext()).inflate(R.layout.dialog_save_check, null);
         setView(content);
-        setButton(DialogInterface.BUTTON_POSITIVE, "确定", new OnClickListener() {
+        setButton(DialogInterface.BUTTON_POSITIVE, getContext().getString(R.string.confirm_string), new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mUnsavedCheckDialogListener.onCheckListener();
             }
         });
 
-        setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new OnClickListener() {
+        setButton(DialogInterface.BUTTON_NEGATIVE, getContext().getString(R.string.cancel_string), new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
             }

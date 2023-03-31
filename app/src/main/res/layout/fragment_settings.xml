@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        
+
         <Space
             android:id="@+id/head_space"
             android:layout_width="match_parent"
@@ -19,7 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_weight="0">
+            android:layout_weight="0"
+            android:baselineAligned="false">
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -126,29 +127,37 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center"
             android:layout_weight="0">
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center|bottom"
+                android:gravity="center"
+                android:layout_weight="1"
                 android:paddingTop="8dp"
                 android:paddingBottom="10dp"
-                android:background="@drawable/highlighted_bg"
-                android:orientation="horizontal">
-                <TextView
+                android:orientation="vertical">
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:paddingHorizontal="10dp"
-                    android:text="@string/set_canvas_bg_string"
-                    android:textColor="@color/txt_light_color"
-                    android:textSize="18sp" />
-                <Spinner
-                    android:id="@+id/canvas_bg_spinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minHeight="@dimen/btn_min_height"/>
+                    android:gravity="center|bottom"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="10dp"
+                    android:background="@drawable/highlighted_bg"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:paddingHorizontal="10dp"
+                        android:text="@string/set_canvas_bg_string"
+                        android:textColor="@color/txt_light_color"
+                        android:textSize="18sp" />
+                    <Spinner
+                        android:id="@+id/canvas_bg_spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minHeight="@dimen/btn_min_height"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
@@ -172,6 +181,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_huge"
                     android:paddingVertical="10dp"
                     android:paddingHorizontal="15dp"
                     android:textSize="@dimen/IO_text_size"
@@ -181,7 +191,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingVertical="10dp"
-                    android:paddingHorizontal="20dp"
                     android:layout_weight="1"
                     android:orientation="vertical">
                     <com.google.android.material.slider.Slider
@@ -195,6 +204,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_huge"
                     android:layout_weight="0"
                     android:paddingVertical="10dp"
                     android:paddingHorizontal="15dp"
@@ -213,4 +223,14 @@
                 android:background="@drawable/rounded_edge_purple" />
         </LinearLayout>
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/lang_setting_btn"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="@dimen/margin_huge"
+        android:layout_marginEnd="@dimen/margin_huge"
+        tools:src="@drawable/cn_lang"
+        tools:ignore="ContentDescription" />
 </FrameLayout>

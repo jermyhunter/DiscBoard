@@ -6,29 +6,16 @@
     android:orientation="vertical"
     tools:context=".MainActivity"
     tools:ignore="MissingDefaultResource">
-
-    <GridLayout
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:columnCount="1"
-        android:rowCount="2">
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/saved_temp_name_string"
+        android:textSize="22sp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_rowSpan="1"
-            android:layout_columnSpan="1"
-            android:gravity="center"
-            android:text="保存的战术板名称"
-            android:textSize="22dp" />
-
-        <EditText
-            android:id="@+id/anim_name_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_rowSpan="1"
-            android:layout_columnSpan="1"
-            android:hint="输入名称，例如：逼边 竖排防守" />
-    </GridLayout>
+    <EditText
+        android:id="@+id/anim_name_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/save_name_hint" />
 </LinearLayout>

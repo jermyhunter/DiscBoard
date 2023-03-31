@@ -1,0 +1,120 @@
+<resources>
+    <string name="app_name">Disc Board</string>
+    <!-- to toggle the open close button of the navigation drawer -->
+    <string name="nav_open">Open</string>
+    <string name="nav_close">Close</string>
+
+    <string name="no_anim_hint">Please make a animation first！</string>
+    <string name="del_frame_success_hint">Delete Successful!</string>
+    <string name="save_success_hint">Save Successful!</string>
+    <string name="save_as_success_hint">Save new Successful!</string>
+    <string name="auto_save_as_success_hint">Auto save successful</string>
+    <string name="temp_name_string">Template name</string>
+    <string name="free_for_use_hint_string">Notice: this App is free to use</string>
+    <string name="weather_to_activate_string">Weather to activate</string>
+    <string name="auto_save_string">auto save</string>
+    <string name="question_mark">\?</string>
+    <string name="auto_save_cancel_hint">You can cancel or activate auto-save in \"settings\" afterwards</string>
+    <string name="del_all_temp_hint">Delete all temps?</string>
+    <string name="act_irreversible_hint">(Caution: this act is irreversible.)</string>
+    <string name="del_temp_hint">Are you sure that you want to delete this anim?</string>
+    <string name="play_anim_string">Play Anim</string>
+    <string name="create_new_strategy_string">Create</string>
+    <string name="load_strategy_string">Load</string>
+    <string name="insert_frame_string">Insert\nFrame</string>
+    <string name="del_frame_init_string">Delete\nFrame\n(Long\nPress)</string>
+    <string name="del_frame_string">Delete\nFrame</string>
+    <string name="save_string">Save</string>
+    <string name="save_as_string">Save as</string>
+    <string name="select_temp_string">Select one template as start frame:</string>
+    <string name="my_temp_string">Mine</string>
+    <string name="three_men_string">3v3</string>
+    <string name="five_men_string">5v5</string>
+    <string name="ver_stack_string">Ver</string>
+    <string name="ho_stack_string">Ho</string>
+    <string name="already_saved_strategy_list_string">The list of already saved strategies</string>
+    <string name="strategy_manage_hint">(Click - Rename, Click cross mark - Delete)</string>
+    <string name="clear_list_string">Delete\nAll</string>
+    <string name="add_player_string">+Player</string>
+    <string name="offense_string">Off</string>
+    <string name="defense_string">Def</string>
+    <string name="static_save_string">Save</string>
+    <string name="reset_string">Reset</string>
+
+
+    <string name="import_string">Import</string>
+    <string name="export_string">Export</string>
+    <string name="share_string">Share</string>
+    <string name="share_hint">WeChat unrecommended</string>
+    <string name="active_auto_save_string">Activate auto-save</string>
+    <string name="restore_temp_data_string">Initiate\nTemplates</string>
+    <string name="set_canvas_bg_string">Ground setting:</string>
+    <string name="fast_string">Fast</string>
+    <string name="slow_string">Slow</string>
+    <string name="anim_speed_hint">Drag to adjust animation speed</string>
+    <string name="temp_sharing_string">Temp\nSharing</string>
+    <string name="animation_string">Anim</string>
+    <string name="save_and_load_string">Save\nLoad</string>
+    <string name="export_and_sharing_string">Export\nShare</string>
+    <string name="importing_data_string">Import</string>
+    <string name="auto_save_btn_string">auto\nsave</string>
+
+
+    <string name="guiding_intro_0">Recommended Usage</string>
+    <string name="guiding_intro_01">This App is built for urgent tactical communi in mobile scenarios.</string>
+    <string name="guiding_intro_02">(e.g. on bus or train, while the real playbook is not on your side.)</string>
+    <string name="guiding_intro_1">Method One</string>
+    <string name="guiding_intro_10">The sharer use \"screen sharing\" in communication software(like QQ).\n
+        Display the animation with vocal explanation.</string>
+    <string name="guiding_intro_2">Method Two</string>
+    <string name="guiding_intro_20">The sharer \"export\" tactics first, then use \"share\"\n
+        to transport the exported file to the your teammates.</string>
+    <string name="guiding_intro_21">(Considering the enhancement of android OS\'s security level,\n
+        \"export\" could malfunction on relatively new android OS.)</string>
+
+
+    <string name="feedback_free_for_use_hint">This App is free to use.
+        \nAny charged resources should be avoided.</string>
+    <string name="feedback_10">\"Export\" could malfunction on relatively new android OS.</string>
+    <string name="feedback_11">If severe bugs have be encountered, please contact:
+        \nQQ 479395433, or email jermyhunter123@gmail.com</string>
+    <string name="feedback_12">(There will be no new functions in the schedule.)</string>
+    <string name="feedback_copy_contact">Copy QQ</string>
+    <string name="feedback_support_dev">↓Support Dev↓</string>
+    <string name="feedback_copy_link">Copy Link</string>
+    <string name="feedback_reference_hint">The dev of this app partly refers to ultiplays.
+        \nIf you\'re PC user, please visit \"https://www.ultiplays.com\" for better usage.</string>
+    <string name="static_board_string">Tactic Board</string>
+    <string name="anim_board_string">Tactic Anim</string>
+    <string name="manage_tactics_string">Manage Tactics</string>
+    <string name="settings_string">Settings</string>
+    <string name="guiding_string">Guiding</string>
+    <string name="feedback_string">Feedback</string>
+    <string name="name_duplication_hint_1">The imported duplicated tactic has be added \"</string>
+    <string name="name_duplication_hint_2">\" suffix</string>
+    <string name="temps_init_success_hint">Templates initiation successful</string>
+    <string name="exit_check_hint">One more to exit</string>
+    <string name="name_duplication_warning">File existed, please rename it!</string>
+    <string name="export_success_hint">Export successful!</string>
+    <string name="export_folder_created_success_hint">Creating export folder succussful!</string>
+    <string name="export_folder_creating_failed_error">Creating export folder failed, please use other functions!</string>
+    <string name="empty_list_warning">One tactic at least needed!</string>
+    <string name="save_failure_warning">Save mark error, severe bug!</string>
+    <string name="auto_save_success_hint">Auto-save successful!</string>
+    <string name="tactics_cleared_hint">All tactics have been cleared!</string>
+    <string name="temp_updated_success_hint">Templates update successful!</string>
+    <string name="sharing_file_empty_warning">Please \"export\" first before sharing</string>
+    <string name="importing_success_hint">Importing successful!</string>
+    <string name="data_file_incompatible_error">Too earlier file data, incompatible error!</string>
+    <string name="confirm_string">Confrim</string>
+    <string name="cancel_string">Cancel</string>
+    <string name="unsaved_hint_00">"Unsaved content will be lost. "</string>
+    <string name="unsaved_hint_01">Are you sure to do that?</string>
+    <string name="unsaved_hint_10">"Unsaved content will be lost. "</string>
+    <string name="activate_string">Activate</string>
+    <string name="delete_success_hint">Delete successful!</string>
+    <string name="old_name_string">" (old name)"</string>
+    <string name="saved_temp_name_string">The name of to-be-saved tactic</string>
+    <string name="save_name_hint">Input name, e.g. Sideline, 3–3–1 force backhand</string>
+    <string name="first_launch_hint">Disc Board ver1.2\\nMain Functions are already finished.</string>
+</resources>

@@ -113,7 +113,7 @@ public class StaticBoardFragment extends Fragment {
             public void onClick(View view) {
                 mDiscBoard.saveTemp(mTempName);
 
-                Toast.makeText(getContext(), "模板修改成功！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.temp_updated_success_hint, Toast.LENGTH_SHORT).show();
             }
         });
 

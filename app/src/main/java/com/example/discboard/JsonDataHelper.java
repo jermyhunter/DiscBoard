@@ -7,6 +7,7 @@ import static com.example.discboard.DiscFinal.EXPORT_FILE_SUFFIX;
 import static com.example.discboard.DiscFinal.EXPORT_FOLDER_SUB_PATH;
 import static com.example.discboard.DiscFinal.IO_HEAD;
 import static com.example.discboard.DiscFinal.IO_HEAD_VERSION_1_1;
+import static com.example.discboard.DiscFinal.LOCALE_CODE;
 import static com.example.discboard.DiscFinal.USER_DATA_CANVAS_BG_TYPE;
 import static com.example.discboard.DiscFinal.USER_DATA_EXPORTED_FILE_PATH;
 import static com.example.discboard.DiscFinal.USER_DATA_PREF;
@@ -15,10 +16,14 @@ import static com.example.discboard.DiscFinal.USER_INIT_PREF;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.LocaleList;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -27,11 +32,6 @@ import android.widget.Toast;
 import com.example.discboard.datatype.AnimTemp;
 import com.example.discboard.datatype.Dot;
 import com.example.discboard.datatype.InterDot;
-import com.google.gson.Gson;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -46,19 +46,25 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 // not finished, and not being used
 public class JsonDataHelper {
     static String TAG = "JsonDataHelper";
     Gson mGson;
     Context mContext;
-
     public JsonDataHelper(Context context){
-        mGson = new Gson();
         mContext = context;
+        mGson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
     }
 
     public Context getContext() {
@@ -266,6 +272,7 @@ public class JsonDataHelper {
      * transform object type data to json string
      *
      * @param object
+     * list data type at most, not too complex
      */
     public String transformData2Json(Object object){
         return mGson.toJson(object);
@@ -322,7 +329,7 @@ public class JsonDataHelper {
 //        Log.d(TAG, "writeFile: " +file.getAbsolutePath());
 
         if(file.exists()){
-            Toast.makeText(mContext, "文件已存在，请重命名！", Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, R.string.name_duplication_warning, Toast.LENGTH_LONG).show();
         }
         else {
             try {
@@ -342,7 +349,7 @@ public class JsonDataHelper {
                 throw new RuntimeException(e);
             }
 
-            Toast.makeText(mContext, "导出成功！", Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, R.string.export_success_hint, Toast.LENGTH_LONG).show();
             // 设置导出文件路径，用于分享用
             setStringToUserPreferences(USER_DATA_EXPORTED_FILE_PATH, file.getAbsolutePath());
         }
@@ -548,11 +555,11 @@ public class JsonDataHelper {
 
         if(success){
             //TODO:发布前需要修改
-            Toast.makeText(mContext,"导出文件夹创建成功！" + exported_folder, Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext,mContext.getString(R.string.export_folder_created_success_hint) + exported_folder, Toast.LENGTH_LONG).show();
             return exported_folder;
         }
         else {
-            Toast.makeText(mContext, "创建导出文件夹失败，请反馈bug！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, R.string.export_folder_creating_failed_error, Toast.LENGTH_SHORT).show();
             return null;
         }
     }
@@ -622,5 +629,32 @@ public class JsonDataHelper {
                 ed.putString(key, ((String)v));
         }
         ed.apply();
+    }
+
+    // setting locale for multi-lang use
+    public void setAppLocale(String localeCode){
+        Resources resources = getContext().getResources();
+        DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+        Configuration configuration = resources.getConfiguration();
+        configuration.setLocale(new Locale(localeCode.toLowerCase()));
+        resources.updateConfiguration(configuration, displayMetrics);
+    }
+
+    // setting locale for multi-lang use
+    public void initAppLocale(){
+        String localeCode = getStringFromUserPreferences(LOCALE_CODE, "");
+
+        // initiate
+        if(localeCode.equals("")) {
+            // sample data: [zh_CN]
+            localeCode = String.valueOf(LocaleList.getDefault().get(0));
+            if (localeCode.startsWith(DiscFinal.LocaleType.CN)) {
+                localeCode = DiscFinal.LocaleType.CN;
+            } else {
+                localeCode = DiscFinal.LocaleType.EN;
+            }
+            setStringToUserPreferences(LOCALE_CODE, localeCode);
+        }
+        setAppLocale(localeCode);
     }
 }

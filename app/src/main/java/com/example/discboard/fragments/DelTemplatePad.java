@@ -88,7 +88,7 @@ public class DelTemplatePad extends Fragment implements AnimTempItemDelAdapter.O
             @Override
             public void onDataInitListener() {
                 if(mAnimTempItemDelAdapter.removeAllData())
-                    Toast.makeText(getContext(), "战术已清空！", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), R.string.tactics_cleared_hint, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -121,10 +121,11 @@ public class DelTemplatePad extends Fragment implements AnimTempItemDelAdapter.O
             View dialogView = inflater.inflate(R.layout.dialog_data_init, null);
 
             builder.setView(dialogView)
-                    .setPositiveButton("确认删除", (dialogInterface, i) -> {
+                    .setPositiveButton(R.string.confirm_string
+                            , (dialogInterface, i) -> {
                         mDataInitDialogListener.onDataInitListener();
                     })
-                    .setNegativeButton("取消", (dialogInterface, i) -> {
+                    .setNegativeButton(R.string.cancel_string, (dialogInterface, i) -> {
                     });
 
             return builder.create();

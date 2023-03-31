@@ -9,21 +9,20 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_single_gap"
         android:layout_gravity="center"
         android:orientation="horizontal">
         <TextView
             android:id="@+id/unsaved_hint_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="有内容未保存，"
-            android:textSize="20dp" />
+            android:text="@string/unsaved_hint_00"
+            android:textSize="20sp" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
             android:textColor="@color/btn_txt_highlight_color"
-            android:text="确定跳转？"
-            android:textSize="20dp" />
+            android:text="@string/unsaved_hint_01"
+            android:textSize="20sp" />
     </LinearLayout>
 </LinearLayout>

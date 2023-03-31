@@ -28,10 +28,13 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
+import com.example.discboard.DiscFinal;
 import com.example.discboard.JsonDataHelper;
 import com.example.discboard.R;
 import com.example.discboard.datatype.AnimTemp;
@@ -54,9 +57,10 @@ import java.util.Objects;
  * used for importing & exporting user's data
  * */
 public class SettingsFragment extends Fragment implements AdapterView.OnItemSelectedListener {
-    static String TAG = "Settings Fragment";
+    static String TAG = "SettingsFragment";
     JsonDataHelper mJsonDataHelper;
     Button mImportBtn, mExportBtn, mShareBtn;
+    ImageButton mLangBtn;
     Spinner mCanvasBGSpinner;
     CheckBox mAutoSaveCB;
     Slider mAnimSpeedCtrlSlider;
@@ -65,12 +69,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
     ActivityResultLauncher<String> mImportData;
     ExportDialogFragment mExportDialogFragment;
 
-    final static class ExportFileIndex{
-        final static int Head = 0;
-        final static int TempList = 1;
-        final static int AniDotsList = 2;
-        final static int BoardMeasure = 3;
-    }
+
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -118,15 +117,29 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
 
         initCanvasBGSpinner();
 
+        // lang_btn state setting
+        mLangBtn = v.findViewById(R.id.lang_setting_btn);
+        initLangBtn();
+        // change between CN and EN
+        mLangBtn.setOnClickListener(view -> {
+            String localeCode = mJsonDataHelper.getStringFromUserPreferences(LOCALE_CODE, LocaleType.CN);
+            if(localeCode.equals(LocaleType.CN)) {
+                localeCode = LocaleType.EN;
+            }
+            else if(localeCode.equals(LocaleType.EN)){
+                localeCode = LocaleType.CN;
+            }
+
+            mJsonDataHelper.setStringToUserPreferences(LOCALE_CODE, localeCode);
+            mJsonDataHelper.setAppLocale(localeCode);
+            getActivity().recreate();
+        });
+
         // initiate checkbox from loaded mark state
         boolean auto_save_mark = mJsonDataHelper.getBooleanFromUserPreferences(USER_DATA_AUTO_SAVE_MARK, false);
         mAutoSaveCB.setChecked(auto_save_mark);
-        mAutoSaveCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                mJsonDataHelper.setBooleanToUserPreferences(USER_DATA_AUTO_SAVE_MARK, b);
-//                Toast.makeText(getContext(), "" + b, Toast.LENGTH_SHORT).show();
-            }
+        mAutoSaveCB.setOnCheckedChangeListener((compoundButton, b) -> {
+            mJsonDataHelper.setBooleanToUserPreferences(USER_DATA_AUTO_SAVE_MARK, b);
         });
 
         mAnimSpeedCtrlSlider.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
@@ -161,7 +174,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
                 shareIntent.setType("application/json");
                 startActivity(Intent.createChooser(shareIntent, null));
             } else {
-                Toast.makeText(getContext(), "使用\"分享战术\"前，请先\"导出战术\"", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.sharing_file_empty_warning, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -184,7 +197,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
             if (mAniTempList.size() > 0) {
                 mExportDialogFragment.show(getChildFragmentManager(), "导出引导框");
             } else {
-                Toast.makeText(getContext(), "请先制作战术模板", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.no_anim_hint, Toast.LENGTH_SHORT).show();
             }
 
         });
@@ -194,9 +207,9 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
         });
 
         v.findViewById(R.id.init_temp_btn).setOnClickListener(view -> {
-            mJsonDataHelper.setBooleanToUserPreferences(USER_DATA_FIRST_RUN_MARK, true);
-            Toast.makeText(getContext(), "模板初始化完成，请重新启动程序！", Toast.LENGTH_LONG).show();
-//            Log.d(TAG, "FIRST MARK: SETTING" + mJsonDataHelper.getBooleanFromUserPreferences(USER_DATA_FIRST_RUN_MARK));
+            mJsonDataHelper.setBooleanToUserPreferences(USER_DATA_RESET_MARK, true);
+            getActivity().recreate();
+//            Toast.makeText(getContext(), "模板初始化完成，请重新启动程序！", Toast.LENGTH_LONG).show();
         });
         /*
          * 导入数据 ->
@@ -205,6 +218,9 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
          * */
         mImportData = registerForActivityResult(new ActivityResultContracts.GetContent(),
                 selectedFileUri -> {
+                    // bug: if this line not added, the locale will return to default
+                    mJsonDataHelper.initAppLocale();
+
                     if (null != selectedFileUri) {
                         // check file type
                         // read json data from external file
@@ -213,6 +229,8 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
                         try {
                             JSONArray ja_whole = new JSONArray(json_s);
                             JSONObject jo_head = new JSONObject(String.valueOf(ja_whole.get(ExportFileIndex.Head)));
+                            Log.d(TAG, "onCreateView: " + ja_whole);
+                            Log.d(TAG, "onCreateView: " + jo_head);
                             // verify file version
                             if (JsonDataHelper.getFileVersion(jo_head).equals(IO_HEAD_VERSION_1_1)) {
                                 JSONArray ja_anim_temp_list = (JSONArray) new JSONObject(String.valueOf(ja_whole.get(ExportFileIndex.TempList))).get(IO_ANIM_TEMP_LIST);// get anim_temp_name_list
@@ -240,8 +258,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
                                     mJsonDataHelper.addAniTempToPref(temp_name);
                                     temp_counter++;
                                 }
-//                                    Log.d(TAG, "onCreateView: " + "导入成功");
-                                Toast.makeText(getContext(), "导入成功", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(), R.string.importing_success_hint, Toast.LENGTH_LONG).show();
 
                                 // 重新读取列表
                                 fetchTempList();
@@ -279,7 +296,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
                                     ArrayList<Hashtable<String, Dot>> anim_dots_list = animTemp.getAnimDotsList();
                                     ArrayList<Hashtable<String, InterDot>> inter_dots_list = animTemp.getInterDotsList();
 
-                                    // first used in VER_1_2, scale dots' pos by ratio
+                                    // 1st updated in VER_1_2, scale dots' pos by ratio
                                     for(Hashtable<String, Dot> hashtable : anim_dots_list){
                                         hashtable.forEach((id, dot) -> dot.scaleByRatio(W_ratio, H_ratio));
                                     }
@@ -297,13 +314,13 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
                                     temp_counter++;
                                 }
 //                                    Log.d(TAG, "onCreateView: " + "导入成功");
-                                Toast.makeText(getContext(), "导入成功", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(), R.string.importing_success_hint, Toast.LENGTH_LONG).show();
 
                                 // 重新读取列表
                                 fetchTempList();
                             }
                             else {
-                                Toast.makeText(getContext(), "早期版本数据，文件不兼容！", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(), R.string.data_file_incompatible_error, Toast.LENGTH_LONG).show();
                             }
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
@@ -385,7 +402,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
 
             mJsonDataHelper.writeToExternalFile(ja_whole.toString(), file_name);
         } else {
-            Toast.makeText(getContext(), "请先制作战术模板", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.no_anim_hint, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -433,6 +450,13 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
         }
     }
 
+    void initLangBtn(){
+        if(mJsonDataHelper.getStringFromUserPreferences(LOCALE_CODE, LocaleType.CN).equals(LocaleType.CN))
+            mLangBtn.setBackgroundResource(R.drawable.cn_lang);
+        else
+            mLangBtn.setBackgroundResource(R.drawable.en_lang);
+    }
+
     /**
      * ExportDialogFragment
      * inner dialog fragment, used for guiding the user to name the to-be-exported file
@@ -449,12 +473,12 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
             mExportNameInput = dialogView.findViewById(R.id.export_name_input);
 
             builder.setView(dialogView)
-                    .setPositiveButton("导出", (dialogInterface, i) -> {
+                    .setPositiveButton(R.string.export_string, (dialogInterface, i) -> {
                         String file_name = mExportNameInput.getText().toString();
 
                         mExportDialogListener.onExportListener(file_name);
                     })
-                    .setNegativeButton("取消", (dialogInterface, i) -> {
+                    .setNegativeButton(R.string.cancel_string, (dialogInterface, i) -> {
                     });
 
             return builder.create();

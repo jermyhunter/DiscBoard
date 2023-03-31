@@ -84,4 +84,31 @@
     <string name="name_duplication_hint_1">导入的重名战术已添加\"</string>
     <string name="name_duplication_hint_2">\" 后缀</string>
     <string name="auto_save_btn_string">自动保存</string>
+    <string name="temps_init_success_hint">战术模板初始化成功</string>
+    <string name="exit_check_hint">再按一次退出程序</string>
+    <string name="name_duplication_warning">文件已存在，请重命名！</string>
+    <string name="export_success_hint">导出成功！</string>
+    <string name="export_folder_created_success_hint">导出文件夹创建成功！</string>
+    <string name="export_folder_creating_failed_error">创建导出文件夹失败，请使用其他功能！</string>
+    <string name="empty_list_warning">请先创建新的战术！</string>
+    <string name="save_failure_warning">保存标记错误，出现bug！</string>
+    <string name="auto_save_success_hint">自动保存成功</string>
+    <string name="tactics_cleared_hint">战术已清空！</string>
+    <string name="temp_updated_success_hint">模板修改成功！</string>
+    <string name="sharing_file_empty_warning">使用\"分享战术\"前，请先\"导出战术\"</string>
+    <string name="importing_success_hint">导入成功</string>
+    <string name="data_file_incompatible_error">早期版本数据，文件不兼容！</string>
+
+
+    <string name="confirm_string">确认</string>
+    <string name="cancel_string">取消</string>
+    <string name="unsaved_hint_00">有内容未保存，</string>
+    <string name="unsaved_hint_01">确认跳转？</string>
+    <string name="unsaved_hint_10">未保存的内容将丢失，</string>
+    <string name="activate_string">启用</string>
+    <string name="delete_success_hint">删除成功！</string>
+    <string name="old_name_string">（原名）</string>
+    <string name="saved_temp_name_string">保存的战术板名称</string>
+    <string name="save_name_hint">输入名称，例如：逼边 竖排防守</string>
+    <string name="first_launch_hint">飞盘战术板Ver1.2\n主要功能已制作完成</string>
 </resources>
