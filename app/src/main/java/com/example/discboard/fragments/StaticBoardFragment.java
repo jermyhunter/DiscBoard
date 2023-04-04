@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -122,9 +123,60 @@ public class StaticBoardFragment extends Fragment {
         initPaletteButtonSet(v);
 
         mDiscBoard = v.findViewById(R.id.static_board);
-        mJsonDataHelper.initBGByUserData(mDiscBoard);
         mStaticButtonsLayout = v.findViewById(R.id.static_buttons_layout);
         initPaintLayout(v);
+        String bgType = mJsonDataHelper.initBGByUserData(mDiscBoard);
+        // if bg_img is not disc, then resize it to 1:2
+        if(!(bgType.equals(DiscFinal.CanvasBGType.DISC_FULL) || bgType.equals(DiscFinal.CanvasBGType.DISC_ENDZONE))){
+            mDiscBoard.post(() -> {
+                // resize board to 1:2
+                int boardWidth = mDiscBoard.getWidth();
+                int boardHeight = mDiscBoard.getHeight();
+                //        Log.d(TAG, "surfaceViewWidth: " + surfaceViewWidth);
+                float boardProportion = (float) boardWidth / (float) boardHeight;
+
+                // Get the SurfaceView layout parameters
+                ViewGroup.LayoutParams lp = mDiscBoard.getLayoutParams();
+                // if board's width is less than twice the height
+                // then the board is too fat, set the height half the width
+                if (2f >= boardProportion) {
+                    lp.width = boardWidth;
+                    lp.height = boardWidth / 2;
+                }
+                // if board's width is more than twice the height
+                // then the board is too narrow, so cut the width off, set the width twice the height
+                else {
+                    lp.width = boardHeight * 2;
+                    lp.height = boardHeight;
+                }
+                // Commit the layout parameters
+                mDiscBoard.setLayoutParams(lp);
+            });
+            mSketchpad.post(() -> {
+                // resize board to 1:2
+                int boardWidth = mDiscBoard.getWidth();
+                int boardHeight = mDiscBoard.getHeight();
+                //        Log.d(TAG, "surfaceViewWidth: " + surfaceViewWidth);
+                float boardProportion = (float) boardWidth / (float) boardHeight;
+
+                // Get the SurfaceView layout parameters
+                ViewGroup.LayoutParams lp = mSketchpad.getLayoutParams();
+                // if board's width is less than twice the height
+                // then the board is too fat, set the height half the width
+                if (2f >= boardProportion) {
+                    lp.width = boardWidth;
+                    lp.height = boardWidth / 2;
+                }
+                // if board's width is more than twice the height
+                // then the board is too narrow, so cut the width off, set the width twice the height
+                else {
+                    lp.width = boardHeight * 2;
+                    lp.height = boardHeight;
+                }
+                // Commit the layout parameters
+                mSketchpad.setLayoutParams(lp);
+            });
+        }
 
         mMenuHint = v.findViewById(R.id.menu_hint);
         initMenuIconAnim();

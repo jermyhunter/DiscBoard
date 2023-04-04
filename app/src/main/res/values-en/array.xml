@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="canvas_bg_array">
-        <item>Full Ground</item>
         <item>End Zone</item>
+        <item>Full Ground</item>
+    </string-array>
+
+    <string-array name="canvas_bg_array_copy">
+        <item>Basket_Half</item>
+        <item>Basket-Full</item>
+        <item>Soccer-Half</item>
+        <item>Soccer-Full</item>
+        <item>End Zone</item>
+        <item>Full Ground</item>
     </string-array>
 </resources>

@@ -19,8 +19,13 @@ import java.util.Objects;
  * */
 public class DiscFinal {
     public static class CanvasBGType{
-        public final static String FULL_GROUND = "全场";
-        public final static String END_ZONE = "得分区";
+        public final static String DISC_FULL = "全场";
+        public final static String DISC_ENDZONE = "得分区";
+        public final static String BASKETBALL_FULL = "篮-全场";
+        public final static String BASKETBALL_HALF = "篮-半场";
+
+        public final static String SOCCER_HALF = "足-半场";
+        public final static String SOCCER_FULL = "足-全场";
     }
     public final static String USER_DATA_CANVAS_BG_TYPE = "canvas_bg_type";
     public static class LocaleType{

@@ -410,7 +410,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         mCanvasTypeS = String.valueOf(adapterView.getItemAtPosition(i));
 //        // canvas_bg write in
-//        mJsonDataHelper.setStringToUserPreferences(USER_DATA_CANVAS_BG_TYPE, CanvasBGType.FULL_GROUND);
+//        mJsonDataHelper.setStringToUserPreferences(USER_DATA_CANVAS_BG_TYPE, CanvasBGType.DISC_FULL);
     }
 
     @Override
@@ -421,6 +421,8 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
     @Override
     public void onPause() {
         super.onPause();
+
+        // save the canvas_bg_type to the preferences
         mJsonDataHelper.setStringToUserPreferences(USER_DATA_CANVAS_BG_TYPE, mCanvasTypeS);
     }
 

@@ -142,7 +142,7 @@
             android:id="@+id/static_board"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/disc_space" />
+            android:background="@drawable/disc_full" />
     </LinearLayout>
 
 </FrameLayout>

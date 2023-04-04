@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="canvas_bg_array">
-        <item>全场</item>
         <item>得分区</item>
+        <item>全场</item>
+    </string-array>
+
+
+    <string-array name="canvas_bg_array_copy">
+        <item>篮-半场</item>
+        <item>篮-全场</item>
+        <item>足-半场</item>
+        <item>足-全场</item>
+        <item>得分区</item>
+        <item>全场</item>
     </string-array>
 </resources>

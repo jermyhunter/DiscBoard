@@ -15,6 +15,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -25,6 +26,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,7 +99,6 @@ public class AnimatedBoardFragment extends Fragment {
 
     JsonDataHelper mJsonDataHelper;
     static AnimatedDiscBoard mAnimBoard;
-
     Animation mAnimSlideInSketch, mAnimSlideOutSketch,
             mAnimSlideInBoard, mAnimSlideOutBoard;
     // sketch pad related
@@ -194,7 +196,59 @@ public class AnimatedBoardFragment extends Fragment {
         mAnimBoard = v.findViewById(R.id.animated_discboard);
         mSliderButtonsLayout = v.findViewById(R.id.slider_buttons_layout);
         initPaintLayout(v);
-        mJsonDataHelper.initBGByUserData(mAnimBoard);
+        String bgType = mJsonDataHelper.initBGByUserData(mAnimBoard);
+        // if bg_img is not disc, then resize it to 1:2
+        if(!(bgType.equals(DiscFinal.CanvasBGType.DISC_FULL) || bgType.equals(DiscFinal.CanvasBGType.DISC_ENDZONE))){
+            mAnimBoard.post(() -> {
+                // resize board to 1:2
+                int boardWidth = mAnimBoard.getWidth();
+                int boardHeight = mAnimBoard.getHeight();
+                //        Log.d(TAG, "surfaceViewWidth: " + surfaceViewWidth);
+                float boardProportion = (float) boardWidth / (float) boardHeight;
+
+                // Get the SurfaceView layout parameters
+                ViewGroup.LayoutParams lp = mAnimBoard.getLayoutParams();
+                // if board's width is less than twice the height
+                // then the board is too fat, set the height half the width
+                if (2f >= boardProportion) {
+                    lp.width = boardWidth;
+                    lp.height = boardWidth / 2;
+                }
+                // if board's width is more than twice the height
+                // then the board is too narrow, so cut the width off, set the width twice the height
+                else {
+                    lp.width = boardHeight * 2;
+                    lp.height = boardHeight;
+                }
+                // Commit the layout parameters
+                mAnimBoard.setLayoutParams(lp);
+            });
+            mSketchpad.post(() -> {
+                // resize board to 1:2
+                int boardWidth = mAnimBoard.getWidth();
+                int boardHeight = mAnimBoard.getHeight();
+                //        Log.d(TAG, "surfaceViewWidth: " + surfaceViewWidth);
+                float boardProportion = (float) boardWidth / (float) boardHeight;
+
+                // Get the SurfaceView layout parameters
+                ViewGroup.LayoutParams lp = mSketchpad.getLayoutParams();
+                // if board's width is less than twice the height
+                // then the board is too fat, set the height half the width
+                if (2f >= boardProportion) {
+                    lp.width = boardWidth;
+                    lp.height = boardWidth / 2;
+                }
+                // if board's width is more than twice the height
+                // then the board is too narrow, so cut the width off, set the width twice the height
+                else {
+                    lp.width = boardHeight * 2;
+                    lp.height = boardHeight;
+                }
+                // Commit the layout parameters
+                mSketchpad.setLayoutParams(lp);
+            });
+        }
+
         storeBoardMeasure();
 
         mSaveOldTempBtn = v.findViewById(R.id.save_old_temp_btn);

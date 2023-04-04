@@ -329,7 +329,7 @@ public class MainActivity extends AppCompatActivity {
             // init animation playing speed
             editor.putInt(USER_DATA_ANIM_SPEED, ANIM_SPEED_INIT);
             // canvas_bg, default-> full_ground
-            editor.putString(USER_DATA_CANVAS_BG_TYPE, CanvasBGType.FULL_GROUND);
+            editor.putString(USER_DATA_CANVAS_BG_TYPE, CanvasBGType.DISC_FULL);
             editor.putBoolean(USER_DATA_RESET_MARK, true);
 
             editor.apply();

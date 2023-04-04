@@ -6,7 +6,6 @@ import static com.example.discboard.DiscFinal.EXPORT_FILE_PREFIX;
 import static com.example.discboard.DiscFinal.EXPORT_FILE_SUFFIX;
 import static com.example.discboard.DiscFinal.EXPORT_FOLDER_SUB_PATH;
 import static com.example.discboard.DiscFinal.IO_HEAD;
-import static com.example.discboard.DiscFinal.IO_HEAD_VERSION_1_1;
 import static com.example.discboard.DiscFinal.LOCALE_CODE;
 import static com.example.discboard.DiscFinal.USER_DATA_CANVAS_BG_TYPE;
 import static com.example.discboard.DiscFinal.USER_DATA_EXPORTED_FILE_PATH;
@@ -18,15 +17,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.LocaleList;
-import android.provider.MediaStore;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
 import com.example.discboard.datatype.AnimTemp;
@@ -40,7 +35,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -578,14 +572,25 @@ public class JsonDataHelper {
         return outArray;
     }
 
-    public void initBGByUserData(View view) {
+    // initiate background from saved preferences
+    public String initBGByUserData(View view) {
         String s_canvas_bg_type = this.getStringFromUserPreferences(USER_DATA_CANVAS_BG_TYPE, "");
-        if(Objects.equals(s_canvas_bg_type, DiscFinal.CanvasBGType.FULL_GROUND))
-            view.setBackgroundResource(R.drawable.disc_space);
-        else if(Objects.equals(s_canvas_bg_type, DiscFinal.CanvasBGType.END_ZONE))
-            view.setBackgroundResource(R.drawable.end_zone);
+        if(Objects.equals(s_canvas_bg_type, DiscFinal.CanvasBGType.DISC_FULL))
+            view.setBackgroundResource(R.drawable.disc_full);
+        else if(Objects.equals(s_canvas_bg_type, DiscFinal.CanvasBGType.DISC_ENDZONE))
+            view.setBackgroundResource(R.drawable.disc_endzone);
+        else if(Objects.equals(s_canvas_bg_type, DiscFinal.CanvasBGType.SOCCER_FULL))
+            view.setBackgroundResource(R.drawable.soccer_full);
+        else if(Objects.equals(s_canvas_bg_type, DiscFinal.CanvasBGType.SOCCER_HALF))
+            view.setBackgroundResource(R.drawable.soccer_half);
+        else if(Objects.equals(s_canvas_bg_type, DiscFinal.CanvasBGType.BASKETBALL_FULL))
+            view.setBackgroundResource(R.drawable.basketball_full);
+        else if(Objects.equals(s_canvas_bg_type, DiscFinal.CanvasBGType.BASKETBALL_HALF))
+            view.setBackgroundResource(R.drawable.basketball_half);
         else
-            view.setBackgroundResource(R.drawable.disc_space);
+            view.setBackgroundResource(R.drawable.disc_full);
+
+        return s_canvas_bg_type;
     }
 
     // used in:

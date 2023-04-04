@@ -205,7 +205,7 @@ public class GuidingFragment extends Fragment {
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int screenWidth = displayMetrics.widthPixels - 5;
+        int screenWidth = displayMetrics.widthPixels - 5;// minus width with a tiny delta_e
 
         // Get the width of the screen
         // surfaceView width must be smaller than the (screenWidth - delta_e)
@@ -213,11 +213,11 @@ public class GuidingFragment extends Fragment {
         int surfaceViewHeight = mSurfaceView.getHeight();
 //        Log.d(TAG, "surfaceViewWidth: " + surfaceViewWidth);
 //        Log.d(TAG, "surfaceViewHeight: " + surfaceViewHeight);
-        float screenProportion = (float) surfaceViewWidth / (float) surfaceViewHeight;
+        float surfaceProportion = (float) surfaceViewWidth / (float) surfaceViewHeight;
 
         // Get the SurfaceView layout parameters
         android.view.ViewGroup.LayoutParams lp = mSurfaceView.getLayoutParams();
-        if (videoProportion > screenProportion) {
+        if (videoProportion > surfaceProportion) {
             lp.width = surfaceViewWidth;
             lp.height = (int) ((float) surfaceViewWidth / videoProportion);
         } else {

@@ -1,2 +1,2 @@
 # DiscBoard
- An android app of frisbee strategy board, based on JAVA.
+A portable digital playbook of frisbee, running on Android OS.
