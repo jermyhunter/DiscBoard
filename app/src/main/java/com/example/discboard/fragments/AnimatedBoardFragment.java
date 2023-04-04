@@ -13,6 +13,8 @@ import static com.example.discboard.DiscFinal.USER_DATA_BOARD_WIDTH;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -31,15 +33,18 @@ import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.discboard.DiscFinal;
 import com.example.discboard.JsonDataHelper;
 import com.example.discboard.adapter.AnimTempItemAdapter;
 import com.example.discboard.R;
 import com.example.discboard.dialogs.UnsavedCheckDialog;
 import com.example.discboard.views.AnimatedDiscBoard;
 import com.example.discboard.dialogs.SelectTempDialog;
+import com.example.discboard.views.Sketchpad;
 import com.google.android.material.slider.Slider;
 
 import java.util.ArrayList;
@@ -50,6 +55,55 @@ import java.util.Objects;
  * */
 public class AnimatedBoardFragment extends Fragment {
     String TAG = "AnimatedBoardFragment";
+    PaletteButtonSet mPaletteButtonSet;
+    static class PaletteButtonSet{
+        ImageButton[] paletteButtons;
+        ImageButton currentPalette;
+        public PaletteButtonSet(ImageButton[] imageButtons){
+            paletteButtons = imageButtons;
+        }
+
+        public void setCurrentPalette(int paintType) {
+            if(this.currentPalette != null)
+                this.currentPalette.setAlpha(0.3f);
+
+            paletteButtons[paintType].setAlpha(1f);
+            this.currentPalette = paletteButtons[paintType];
+        }
+    }
+
+    private void initPaletteButtonSet(View v) {
+        ImageButton[] imageButtons = new ImageButton[5];
+        imageButtons[0] = v.findViewById(R.id.red_palette);
+        imageButtons[1] = v.findViewById(R.id.blue_palette);
+        imageButtons[2] = v.findViewById(R.id.orange_palette);
+        imageButtons[3] = v.findViewById(R.id.white_palette);
+        imageButtons[4] = v.findViewById(R.id.black_palette);
+        for(int i = 0; i < 5; i++){
+            int finalI = i;
+            imageButtons[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mSketchpad.setPaintType(finalI);
+                    mPaletteButtonSet.setCurrentPalette(finalI);
+                }
+            });
+        }
+
+        mPaletteButtonSet = new PaletteButtonSet(imageButtons);
+        mPaletteButtonSet.setCurrentPalette(DiscFinal.PaintType.Red.getValue());
+    }
+
+    JsonDataHelper mJsonDataHelper;
+    static AnimatedDiscBoard mAnimBoard;
+
+    Animation mAnimSlideInSketch, mAnimSlideOutSketch,
+            mAnimSlideInBoard, mAnimSlideOutBoard;
+    // sketch pad related
+    View mSliderButtonsLayout, mPaintButtonsLayout;
+    Sketchpad mSketchpad;
+    ImageButton mPaintBtn, mEraseBtn;
+    Button mPaintSwitch, mReturnBtn;
     // true: if one saved template has been loaded
     // it determines whether auto-save function is to be turned on
     Boolean mLoadedMark;
@@ -64,12 +118,11 @@ public class AnimatedBoardFragment extends Fragment {
     TextView mHintTxt;
     View mHintLayout;
     AnimationSet mAnimFade;
-    JsonDataHelper mJsonDataHelper;
     static ArrayList<String> mAniTempList;
     Slider mFrameSlider;
-    static AnimatedDiscBoard mAnimatedDiscBoard;
     private boolean mDelPressFlag;
 
+    // auto-save thread
     static Handler mHandler;// handling runnable threads
     static Runnable mAutoSaveR;
     public AnimatedBoardFragment() {
@@ -122,8 +175,6 @@ public class AnimatedBoardFragment extends Fragment {
 
         // whether to enable the auto-save function
         mAutoSaveMark = mJsonDataHelper.getBooleanFromUserPreferences(USER_DATA_AUTO_SAVE_MARK, false);
-
-        InitAnimation();
     }
 
     private void showLoadSelector() {
@@ -136,8 +187,14 @@ public class AnimatedBoardFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_anim_board, container, false);
 
-        mAnimatedDiscBoard = v.findViewById(R.id.animated_discboard);
-        mJsonDataHelper.initBGByUserData(mAnimatedDiscBoard);
+        initAnimation();
+        initLayoutSlideAnim();
+        initPaletteButtonSet(v);
+
+        mAnimBoard = v.findViewById(R.id.animated_discboard);
+        mSliderButtonsLayout = v.findViewById(R.id.slider_buttons_layout);
+        initPaintLayout(v);
+        mJsonDataHelper.initBGByUserData(mAnimBoard);
         storeBoardMeasure();
 
         mSaveOldTempBtn = v.findViewById(R.id.save_old_temp_btn);
@@ -147,33 +204,33 @@ public class AnimatedBoardFragment extends Fragment {
         mSelectTempDialog.setOnSelectListener(new SelectTempDialog.OnSelectListener() {
             @Override
             public void onPressMy() {
-                mAnimatedDiscBoard.loadMyPreset();
+                mAnimBoard.loadMyPreset();
             }
 
             @Override
             public void onPress3() {
-                mAnimatedDiscBoard.load3Preset();
+                mAnimBoard.load3Preset();
             }
 
             @Override
             public void onPress5() {
-                mAnimatedDiscBoard.load5Preset();
+                mAnimBoard.load5Preset();
             }
 
             @Override
             public void onPressHo() {
-                mAnimatedDiscBoard.loadHostackPreset();
+                mAnimBoard.loadHostackPreset();
             }
 
             @Override
             public void onPressVert() {
-                mAnimatedDiscBoard.loadVerstackPreset();
+                mAnimBoard.loadVerstackPreset();
             }
 
             @Override
             public void onPress() {
                 // auto-save hint
-                mAnimatedDiscBoard.resetSavedFlag();
+                mAnimBoard.resetSavedFlag();
                 setLoadedMarkAndTempName(false, "");
                 mSelectTempDialog.dismiss();
             }
@@ -183,7 +240,7 @@ public class AnimatedBoardFragment extends Fragment {
         v.findViewById(R.id.select_temp_btn).setOnClickListener(view -> {
 //            mSelectTempDialogFragment.show(getChildFragmentManager(), "选择模板");
             // unsaved hint
-            if(mAnimatedDiscBoard.isSaved()) {
+            if(mAnimBoard.isSaved()) {
                 mSelectTempDialog.show();
             }
             else {
@@ -199,7 +256,7 @@ public class AnimatedBoardFragment extends Fragment {
             }
             else {
                 // unsaved hint
-                if(mAnimatedDiscBoard.isSaved()) {
+                if(mAnimBoard.isSaved()) {
                     showLoadSelector();
                 }
                 else {
@@ -211,7 +268,7 @@ public class AnimatedBoardFragment extends Fragment {
         // 如果读取原有战术，那么添加“保存”选项；如果是新创建的战术，不显示“保存”选项
         mSaveOldTempBtn.setOnClickListener(view -> {
             if(isLoaded()) {
-                mAnimatedDiscBoard.saveAniDots(mTempName);
+                mAnimBoard.saveAniDots(mTempName);
                 Toast.makeText(getContext(), R.string.save_success_hint, Toast.LENGTH_SHORT).show();
             }
             else {
@@ -230,7 +287,7 @@ public class AnimatedBoardFragment extends Fragment {
 
         mInsertFrameBtn = v.findViewById(R.id.insert_frame_btn);
         mInsertFrameBtn.setOnClickListener(view -> {
-            mAnimatedDiscBoard.insertFrame();
+            mAnimBoard.insertFrame();
         });
 
         mDelFrameBtn = v.findViewById(R.id.del_frame_btn);
@@ -241,29 +298,29 @@ public class AnimatedBoardFragment extends Fragment {
                 mDelPressFlag = true;
             }
             view.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.del_anim));
-            mAnimatedDiscBoard.deleteFrame();
+            mAnimBoard.deleteFrame();
 
             return false;
         });
 
         v.findViewById(R.id.play_anim_btn).setOnClickListener(view -> {
-            mAnimatedDiscBoard.startAnimationPlaying();
+            mAnimBoard.startAnimationPlaying();
         });
 
         // last/next frame btn
         mLastFrameBtn = v.findViewById(R.id.last_frame_btn);
         mLastFrameBtn.setOnClickListener(view -> {
-            int frameNo = mAnimatedDiscBoard.getCurrentFrameNo() - 1;
+            int frameNo = mAnimBoard.getCurrentFrameNo() - 1;
             if(frameNo >= 0) {
-                mAnimatedDiscBoard.loadFrame(frameNo);
+                mAnimBoard.loadFrame(frameNo);
             }
         });
 
         mNextFrameBtn = v.findViewById(R.id.next_frame_btn);
         mNextFrameBtn.setOnClickListener(view -> {
-            int frameNo = mAnimatedDiscBoard.getCurrentFrameNo() + 1;
-            if(frameNo < mAnimatedDiscBoard.getFrameSum()) {
-                mAnimatedDiscBoard.loadFrame(frameNo);
+            int frameNo = mAnimBoard.getCurrentFrameNo() + 1;
+            if(frameNo < mAnimBoard.getFrameSum()) {
+                mAnimBoard.loadFrame(frameNo);
             }
         });
 
@@ -272,18 +329,18 @@ public class AnimatedBoardFragment extends Fragment {
         //the Max of seekbar can't be 0, so that hide the seekbar when UI init
         setFrameSliderVisible(false);
 
-        mAnimatedDiscBoard.setAnimDiscBoardListener(new AnimatedDiscBoard.AnimDiscBoardListener() {
+        mAnimBoard.setAnimDiscBoardListener(new AnimatedDiscBoard.AnimDiscBoardListener() {
             @Override
             public void onFrameSumChange() {
-                if(mAnimatedDiscBoard.getFrameSum() == 1){
+                if(mAnimBoard.getFrameSum() == 1){
                     setFrameSliderVisible(false);
                 }
-                else if(mAnimatedDiscBoard.getFrameSum() >= 2) {
+                else if(mAnimBoard.getFrameSum() >= 2) {
                     // NOTICE: the ValueFrom would start from 0.
                     // So for better user exp, in this proj, ValueFrom set to 1.0
                     // and the FrameSum is always Above 1
                     // Besides, the getCurrentFrameNo is also start from 0, so it needs to be +1
-                    mFrameSlider.setValueTo(mAnimatedDiscBoard.getFrameSum());
+                    mFrameSlider.setValueTo(mAnimBoard.getFrameSum());
                     setFrameSliderVisible(true);
                 }
             }
@@ -291,12 +348,12 @@ public class AnimatedBoardFragment extends Fragment {
             // 1.change the slider value
             @Override
             public void onCurrentFrameNoChange() {
-                mFrameSlider.setValue(mAnimatedDiscBoard.getCurrentFrameNo() + 1);
+                mFrameSlider.setValue(mAnimBoard.getCurrentFrameNo() + 1);
             }
 
             @Override
             public void onLoad() {
-                setLoadedMarkAndTempName(true, mAnimatedDiscBoard.getTempName());
+                setLoadedMarkAndTempName(true, mAnimBoard.getTempName());
 //                Log.d(TAG, "mLoadedMark: " + mLoadedMark);
             }
 
@@ -331,7 +388,7 @@ public class AnimatedBoardFragment extends Fragment {
             @Override
             public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
 //                Log.d(TAG, "onValueChange: " + value);
-                mAnimatedDiscBoard.loadFrame((int)value - 1);
+                mAnimBoard.loadFrame((int)value - 1);
             }
         });
         mFrameSlider.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
@@ -357,8 +414,8 @@ public class AnimatedBoardFragment extends Fragment {
             public void run() {
                 if(mAutoSaveMark) {
                     // unsaved hint
-                    if (!mAnimatedDiscBoard.isSaved()) {
-                        mAnimatedDiscBoard.saveAniDots(mTempName);
+                    if (!mAnimBoard.isSaved()) {
+                        mAnimBoard.saveAniDots(mTempName);
                         // auto-save message
                         Toast.makeText(getContext(), mTempName + " " + getString(R.string.auto_save_success_hint), Toast.LENGTH_SHORT).show();
 
@@ -366,7 +423,7 @@ public class AnimatedBoardFragment extends Fragment {
                         mHintTxt.setText(R.string.auto_save_as_success_hint);
                         mHintLayout.startAnimation(mAnimFade);
 
-                        mAnimatedDiscBoard.setSavedFlag();
+                        mAnimBoard.setSavedFlag();
                     }
                     mHandler.postDelayed(this, AUTO_SAVE_DELAY);
                 }
@@ -377,21 +434,181 @@ public class AnimatedBoardFragment extends Fragment {
         return v;
     }
 
+    private void initPaintLayout(View v) {
+        mSketchpad = v.findViewById(R.id.sketchpad);
+        mPaintButtonsLayout = v.findViewById(R.id.paint_buttons_layout);
+        mPaintBtn = v.findViewById(R.id.paint_btn);
+        mEraseBtn = v.findViewById(R.id.erase_btn);
+        mReturnBtn = v.findViewById(R.id.return_btn);
+        mPaintSwitch = v.findViewById(R.id.paint_switch);
+        v.findViewById(R.id.clear_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSketchpad.clearAll();
+            }
+        });
+
+        // from sketchpad to board
+        mReturnBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showBoard();
+            }
+        });
+
+        // grab board snapshot to sketchpad
+        mPaintSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // load sketchpad using board canvas
+                Bitmap b = DiscFinal.loadBitmapFromView(mAnimBoard);
+                BitmapDrawable bd = new BitmapDrawable(getResources(), b);
+                mSketchpad.setBackground(bd);
+//                mSketchpad.clearAll();
+
+                showSketchpad();
+            }
+        });
+
+        mPaintBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSketchpad.startPainting();
+                mPaintBtn.setBackgroundResource(R.drawable.pen_focus);
+                mEraseBtn.setBackgroundResource(R.drawable.eraser_normal);
+            }
+        });
+
+        mEraseBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSketchpad.startErasing();
+                mPaintBtn.setBackgroundResource(R.drawable.pen_normal);
+                mEraseBtn.setBackgroundResource(R.drawable.eraser_focus);
+            }
+        });
+
+        v.findViewById(R.id.revoke_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSketchpad.revokeAction();
+            }
+        });
+
+        v.findViewById(R.id.redo_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSketchpad.redoAction();
+            }
+        });
+    }
+
+    // layout slide animation
+    public void initLayoutSlideAnim(){
+        mAnimSlideInSketch = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_to_right);
+        mAnimSlideOutSketch = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_to_bottom);
+        mAnimSlideInSketch.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                mPaintButtonsLayout.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        mAnimSlideOutSketch.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mPaintButtonsLayout.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        mAnimSlideInBoard = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_to_right);
+        mAnimSlideOutBoard = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_to_bottom);
+        mAnimSlideInBoard.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                mSliderButtonsLayout.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        mAnimSlideOutBoard.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mSliderButtonsLayout.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
+    private void showBoard() {
+        mSliderButtonsLayout.startAnimation(mAnimSlideInBoard);
+        mAnimBoard.setVisibility(View.VISIBLE);
+        mPaintButtonsLayout.startAnimation(mAnimSlideOutSketch);
+        mSketchpad.setVisibility(View.GONE);
+
+        mPaintSwitch.setEnabled(true);
+        mReturnBtn.setEnabled(false);
+    }
+
+    private void showSketchpad() {
+        mSliderButtonsLayout.startAnimation(mAnimSlideOutBoard);
+        mAnimBoard.setVisibility(View.GONE);
+        mPaintButtonsLayout.startAnimation(mAnimSlideInSketch);
+        mSketchpad.setVisibility(View.VISIBLE);
+
+        mPaintSwitch.setEnabled(false);
+        mReturnBtn.setEnabled(true);
+        // init button's background
+        mPaintBtn.setBackgroundResource(R.drawable.pen_focus);
+        mEraseBtn.setBackgroundResource(R.drawable.eraser_normal);
+    }
+
     private void storeBoardMeasure() {
         if(mJsonDataHelper.getFloatFromUserPreferences(USER_DATA_BOARD_WIDTH, 0f) == 0f ||
                 mJsonDataHelper.getFloatFromUserPreferences(USER_DATA_BOARD_HEIGHT, 0f) == 0f){
             // store this phone's board measure on the first load
-            mAnimatedDiscBoard.post(() -> {
-//                Log.d(TAG, "storeBoardSize: width" + mAnimatedDiscBoard.getWidth());
-//                Log.d(TAG, "storeBoardSize: height" + mAnimatedDiscBoard.getHeight());
-                mJsonDataHelper.setFloatToUserPreferences(USER_DATA_BOARD_WIDTH, mAnimatedDiscBoard.getWidth());
-                mJsonDataHelper.setFloatToUserPreferences(USER_DATA_BOARD_HEIGHT, mAnimatedDiscBoard.getHeight());
+            mAnimBoard.post(() -> {
+//                Log.d(TAG, "storeBoardSize: width" + mAnimBoard.getWidth());
+//                Log.d(TAG, "storeBoardSize: height" + mAnimBoard.getHeight());
+                mJsonDataHelper.setFloatToUserPreferences(USER_DATA_BOARD_WIDTH, mAnimBoard.getWidth());
+                mJsonDataHelper.setFloatToUserPreferences(USER_DATA_BOARD_HEIGHT, mAnimBoard.getHeight());
             });
         }
-
     }
 
-    void InitAnimation(){
+    void initAnimation(){
         Animation animationIn = AnimationUtils.loadAnimation(getContext(),
                 R.anim.fade_in);
         Animation animationOut = AnimationUtils.loadAnimation(getContext(),
@@ -452,7 +669,7 @@ public class AnimatedBoardFragment extends Fragment {
         mTempName = tempName;
         mLoadedMark = loadedMark;
         // auto-save hint
-        mAnimatedDiscBoard.setSavedFlag();
+        mAnimBoard.setSavedFlag();
         // adjust save_old_btn state
         setSaveOldBtnState(loadedMark);
     }
@@ -464,11 +681,11 @@ public class AnimatedBoardFragment extends Fragment {
     private void setSaveOldBtnState(boolean b) {
         if(b){
             mSaveOldTempBtn.setVisibility(View.VISIBLE);
-            mSaveOldTempBtn.setEnabled(true);
+//            mSaveOldTempBtn.setEnabled(true);
         }
         else {
-            mSaveOldTempBtn.setVisibility(View.INVISIBLE);
-            mSaveOldTempBtn.setEnabled(false);
+            mSaveOldTempBtn.setVisibility(View.GONE);
+//            mSaveOldTempBtn.setEnabled(false);
         }
     }
 
@@ -525,7 +742,7 @@ public class AnimatedBoardFragment extends Fragment {
                         while (mJsonDataHelper.checkNameDuplication(temp_name)){
                             temp_name = temp_name + TEMP_DUPLICATION_SUFFIX;
                         }
-                        mAnimatedDiscBoard.saveAniDots(temp_name);
+                        mAnimBoard.saveAniDots(temp_name);
                         mSaveDialogListener.onSaveListener(temp_name);
                     });
 
@@ -569,7 +786,7 @@ public class AnimatedBoardFragment extends Fragment {
 
             recyclerView.setItemAnimator(new DefaultItemAnimator());
 //            builder.setView(dialogView)
-//                    .setPositiveButton("确定", (dialogInterface, i) -> mAnimatedDiscBoard.saveAniDotsToPref(.getText().toString()));
+//                    .setPositiveButton("确定", (dialogInterface, i) -> mAnimBoard.saveAniDotsToPref(.getText().toString()));
 
             builder.setView(dialogView);
             return builder.create();
@@ -578,9 +795,9 @@ public class AnimatedBoardFragment extends Fragment {
         public void onItemClick(int position) {
             String name = mAnimTempItemAdapter.getData(position);
 //            Log.d(TAG, "onAniTempClick: " + name);
-            mAnimatedDiscBoard.loadDotsAndUpdateUI(name);
+            mAnimBoard.loadDotsAndUpdateUI(name);
             // auto-save hint
-            mAnimatedDiscBoard.setSavedFlag();
+            mAnimBoard.setSavedFlag();
 
             mListener.onLoad();
             dismiss();

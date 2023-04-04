@@ -59,7 +59,6 @@ import java.util.Objects;
  * */
 public class AnimatedDiscBoard extends View {
     public static boolean mSavedFlag;// used for unsaved data checking
-
     public static boolean isSaved() {
         return mSavedFlag;
     }
@@ -160,9 +159,10 @@ public class AnimatedDiscBoard extends View {
     private InterDot mEnabledInterDot, mTouchedInterDot;
     float[] pos;
     float[] tan;
-    enum DotType{Dot, InterDot}
-    private DotType mTouchedType;
-    private boolean mAnimationAllowed;
+    // track the state of animation
+    private boolean mAnimationMark;
+    // track the state of Painting
+    private boolean mPaintingMark;
     /*
     * the outer index - List - is indexed by frame_No for quick search
     * the inner hashtable save every frame dots as the K-V format of DotID-Dot
@@ -234,7 +234,7 @@ public class AnimatedDiscBoard extends View {
 
         setCurrentFrameNo(0);
         loadDefaultTemp();
-        mAnimationAllowed = false;
+        mAnimationMark = false;
 
         mSavedFlag = true;
 
@@ -765,11 +765,11 @@ public class AnimatedDiscBoard extends View {
     }
 
     private boolean isAnimationPlaying(){
-        return mAnimationAllowed;
+        return mAnimationMark;
     }
 
     public void stopAnimationPlaying(){
-        mAnimationAllowed = false;
+        mAnimationMark = false;
         mAnimDiscBoardListener.onAnimationStop();
     }
 
@@ -818,7 +818,7 @@ public class AnimatedDiscBoard extends View {
 
             preprocessAniData(mAniCurrentFrameNo);
             mStep = 0;
-            mAnimationAllowed = true;
+            mAnimationMark = true;
 
             mAnimDiscBoardListener.onAnimationStart();
             // 保持滑动帧一致

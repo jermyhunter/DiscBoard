@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
+    <color name="paint_red">#FF4500</color>
+    <color name="paint_blue">#0077ff</color>
+    <color name="paint_orange">#ffaf00</color>
+    <color name="paint_black">#000000</color>
+    <color name="paint_grey">#dddddd</color>
+
+    <color name="paint_white">#ffffff</color>
+
     <color name="OffenseColor">#ff4400</color>
     <color name="DefenseColor">#0099ff</color>
     <color name="DiscColor">#ffffff</color>
     <color name="OutlineColor">#AFEEEE</color>
     <color name="InterDotColor">#AFEEEE</color>
+    <color name="PaintColor">#FF4500</color>
+
+    <color name="func_btn_color">#FFA500</color>
 
     <color name="btn_color">#00BFFF</color>
     <color name="btn_txt_highlight_color">#F08080</color>

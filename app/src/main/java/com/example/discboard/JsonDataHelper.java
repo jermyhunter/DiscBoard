@@ -588,17 +588,6 @@ public class JsonDataHelper {
             view.setBackgroundResource(R.drawable.disc_space);
     }
 
-    // ABANDONED
-    // url = file path or whatever suitable URL you want.
-    public static String getMimeType(String url) {
-        String type = null;
-        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
-        if (extension != null) {
-            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-        }
-        return type;
-    }
-
     // used in:
     // Renaming temp_name
     public void copyAnimDots(String oldName, String newName){

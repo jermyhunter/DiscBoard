@@ -62,14 +62,13 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
     Button mImportBtn, mExportBtn, mShareBtn;
     ImageButton mLangBtn;
     Spinner mCanvasBGSpinner;
+    String mCanvasTypeS;
     CheckBox mAutoSaveCB;
     Slider mAnimSpeedCtrlSlider;
     TextView mSliderText;
     ArrayList<String> mAniTempList;
     ActivityResultLauncher<String> mImportData;
     ExportDialogFragment mExportDialogFragment;
-
-
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -393,7 +392,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
 
             // board width & height
             JSONObject jo_board_measure = new JSONObject();
-            ArrayList<Float> board_measure_list = new ArrayList();
+            ArrayList<Float> board_measure_list = new ArrayList<>();
             board_measure_list.add(mJsonDataHelper.getFloatFromUserPreferences(USER_DATA_BOARD_WIDTH, 0f));
             board_measure_list.add(mJsonDataHelper.getFloatFromUserPreferences(USER_DATA_BOARD_HEIGHT, 0f));
             JSONArray ja_board_measure = new JSONArray(board_measure_list);
@@ -409,21 +408,20 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
     // canvas_bg spinner
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        String s = String.valueOf(adapterView.getItemAtPosition(i));
-        if(s.equals(CanvasBGType.FULL_GROUND)) {
-            // canvas_bg write in
-            mJsonDataHelper.setStringToUserPreferences(USER_DATA_CANVAS_BG_TYPE, CanvasBGType.FULL_GROUND);
-//            Log.d(TAG, "onItemSelected: " + s);
-        }
-        else if(s.equals(CanvasBGType.END_ZONE)) {
-            mJsonDataHelper.setStringToUserPreferences(USER_DATA_CANVAS_BG_TYPE, CanvasBGType.END_ZONE);
-//            Log.d(TAG, "onItemSelected: " + s);
-        }
+        mCanvasTypeS = String.valueOf(adapterView.getItemAtPosition(i));
+//        // canvas_bg write in
+//        mJsonDataHelper.setStringToUserPreferences(USER_DATA_CANVAS_BG_TYPE, CanvasBGType.FULL_GROUND);
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mJsonDataHelper.setStringToUserPreferences(USER_DATA_CANVAS_BG_TYPE, mCanvasTypeS);
     }
 
     void initCanvasBGSpinner(){
@@ -440,9 +438,9 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
         // set the default value of the spinner
 
         if(mCanvasBGSpinner != null){
-            String s_canvas_bg_type = mJsonDataHelper.getStringFromUserPreferences(USER_DATA_CANVAS_BG_TYPE, "");
+            mCanvasTypeS = mJsonDataHelper.getStringFromUserPreferences(USER_DATA_CANVAS_BG_TYPE, "");
             ArrayAdapter arrayAdapter = (ArrayAdapter) mCanvasBGSpinner.getAdapter();
-            int pos = arrayAdapter.getPosition(s_canvas_bg_type);
+            int pos = arrayAdapter.getPosition(mCanvasTypeS);
             mCanvasBGSpinner.setSelection(pos);
         }
         else{

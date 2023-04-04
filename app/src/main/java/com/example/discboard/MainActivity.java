@@ -17,14 +17,8 @@ import androidx.navigation.ui.NavigationUI;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.LocaleList;
-import android.provider.MediaStore;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -32,17 +26,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.discboard.views.AnimatedDiscBoard;
 import com.google.android.material.navigation.NavigationView;
-import com.google.gson.Gson;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.util.Hashtable;
-import java.util.Locale;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
@@ -58,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     String TAG = "MainActivity";
 
     UnSavedCheckDialogFragment mUnSavedCheckDialogFragment;
-    AutoSaveCheckDialogFragment mAutoSaveCheckDialogFragment;
+    InitSettingsDialogFragment mInitSettingsDialogFragment;
     MenuItem mSelectedMenuItem, mSelectedMenuItem1;
     int mMenuPos, mMenuPos1;
     int mNaviDestID, mNaviDestID1;
@@ -341,27 +335,28 @@ public class MainActivity extends AppCompatActivity {
             editor.apply();
 
             // initiate auto-save setting
-            mAutoSaveCheckDialogFragment = new AutoSaveCheckDialogFragment();
-            mAutoSaveCheckDialogFragment.setCancelable(false);
-            mAutoSaveCheckDialogFragment.setAutoSaveCheckDialogListener(new AutoSaveCheckDialogFragment.AutoSaveCheckDialogListener() {
+            mInitSettingsDialogFragment = new InitSettingsDialogFragment();
+            mInitSettingsDialogFragment.setJsonDataHelper(mJsonDataHelper);
+            mInitSettingsDialogFragment.setCancelable(false);
+            mInitSettingsDialogFragment.setAutoSaveCheckDialogListener(new InitSettingsDialogFragment.InitSettingsDialogListener() {
                 @Override
                 public void onCancelListener() {
-                    SharedPreferences shared1 = getSharedPreferences(USER_DATA_PREF, MODE_PRIVATE);
-                    SharedPreferences.Editor editor1 = shared1.edit();
-                    editor1.putBoolean(USER_DATA_AUTO_SAVE_MARK, false);
-                    editor1.apply();
+//                    SharedPreferences shared1 = getSharedPreferences(USER_DATA_PREF, MODE_PRIVATE);
+//                    SharedPreferences.Editor editor1 = shared1.edit();
+//                    editor1.putBoolean(USER_DATA_AUTO_SAVE_MARK, false);
+//                    editor1.apply();
                 }
 
                 @Override
                 public void onConfirmListener() {
-                    SharedPreferences shared1 = getSharedPreferences(USER_DATA_PREF, MODE_PRIVATE);
-                    SharedPreferences.Editor editor1 = shared1.edit();
-                    editor1.putBoolean(USER_DATA_AUTO_SAVE_MARK, true);
-                    editor1.apply();
+//                    SharedPreferences shared1 = getSharedPreferences(USER_DATA_PREF, MODE_PRIVATE);
+//                    SharedPreferences.Editor editor1 = shared1.edit();
+//                    editor1.putBoolean(USER_DATA_AUTO_SAVE_MARK, true);
+//                    editor1.apply();
                 }
             });
 
-            mAutoSaveCheckDialogFragment.show(mSupportFragmentManager, "自动保存初始化");
+            mInitSettingsDialogFragment.show(mSupportFragmentManager, "自动保存初始化");
 
             // 初次使用，创建导出文件夹
             initExportFolder();
@@ -390,6 +385,7 @@ public class MainActivity extends AppCompatActivity {
 
             Toast.makeText(this, R.string.temps_init_success_hint, Toast.LENGTH_SHORT).show();
         }
+
     }
 
     /*
@@ -466,7 +462,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static class AutoSaveCheckDialogFragment extends DialogFragment {
+    public static class InitSettingsDialogFragment extends DialogFragment{
+        JsonDataHelper mJsonDataHelper;
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             // Use the Builder class for convenient dialog construction
@@ -476,22 +473,33 @@ public class MainActivity extends AppCompatActivity {
 
             // Inflate and set the layout for the dialog
             // Pass null as the parent view because its going in the dialog layout
-            View dialogView = inflater.inflate(R.layout.dialog_auto_save_init, null);
+            View dialogView = inflater.inflate(R.layout.dialog_init_settings, null);
 
             builder.setView(dialogView)
-                    .setPositiveButton(R.string.activate_string, (dialogInterface, i) -> AutoSaveCheckDialogListener.onConfirmListener())
-                    .setNegativeButton(R.string.cancel_string, (dialogInterface, i) -> AutoSaveCheckDialogListener.onCancelListener());
+                    .setPositiveButton(R.string.activate_string, (dialogInterface, i) -> {
+//                        mInitSettingsDialogListener.onConfirmListener();
+                        mJsonDataHelper.setBooleanToUserPreferences(USER_DATA_AUTO_SAVE_MARK, true);
+                    })
+                    .setNegativeButton(R.string.cancel_string, (dialogInterface, i) -> {
+//                        mInitSettingsDialogListener.onCancelListener();
+                        mJsonDataHelper.setBooleanToUserPreferences(USER_DATA_AUTO_SAVE_MARK, false);
+                    });
 
             return builder.create();
         }
 
-        AutoSaveCheckDialogListener AutoSaveCheckDialogListener;
-
-        public void setAutoSaveCheckDialogListener(AutoSaveCheckDialogListener autoSaveCheckDialogListener) {
-            AutoSaveCheckDialogListener = autoSaveCheckDialogListener;
+        public void setJsonDataHelper(JsonDataHelper jsonDataHelper){
+            mJsonDataHelper = jsonDataHelper;
         }
 
-        public interface AutoSaveCheckDialogListener{
+        InitSettingsDialogListener mInitSettingsDialogListener;
+
+        public void setAutoSaveCheckDialogListener(InitSettingsDialogListener listener) {
+            mInitSettingsDialogListener = listener;
+        }
+
+
+        public interface InitSettingsDialogListener{
             void onCancelListener();
             void onConfirmListener();
         }

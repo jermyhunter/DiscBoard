@@ -1,6 +1,7 @@
 package com.example.discboard;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -9,6 +10,7 @@ import com.example.discboard.datatype.Dot;
 import com.example.discboard.datatype.InterDot;
 
 import java.io.File;
+import java.util.Hashtable;
 import java.util.Objects;
 
 /**
@@ -144,6 +146,29 @@ public class DiscFinal {
         }
         if(y + (CIRCLE_RADIUS/2f + DELTA_E) > canvas.getHeight()) {
             inter_dot_new.setY(canvas.getHeight() - (CIRCLE_RADIUS/2f + DELTA_E));
+        }
+    }
+
+    public static Bitmap loadBitmapFromView(View v) {
+        Bitmap b = Bitmap.createBitmap(v.getWidth(), v.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(b);
+        v.layout(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
+        v.draw(c);
+        return b;
+    }
+
+    public enum PaintType{
+        Red(0),
+        Blue(1),
+        Orange(2),
+        White(3),
+        Black(4);
+        private final int value;
+        PaintType(int value) {
+            this.value = value;
+        }
+        public int getValue() {
+            return value;
         }
     }
 }

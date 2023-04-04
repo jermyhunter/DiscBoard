@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="img_btn_padding">25dp</dimen>
+
     <dimen name="margin_tiny">2dp</dimen>
-    <dimen name="margin_huge">10dp</dimen>
+    <dimen name="margin_mid">8dp</dimen>
+    <dimen name="margin_huge">12dp</dimen>
+    <dimen name="margin_plus">16dp</dimen>
 
     <dimen name="margin_between_gap">4dp</dimen>
     <dimen name="margin_single_gap">4dp</dimen>
@@ -15,4 +19,5 @@
 
     <dimen name="IO_text_size">16sp</dimen>
     <dimen name="spinner_txt_size">20sp</dimen>
+    <dimen name="spinner_min_height">45dp</dimen>
 </resources>

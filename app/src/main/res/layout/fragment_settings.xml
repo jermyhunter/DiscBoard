@@ -156,7 +156,7 @@
                         android:id="@+id/canvas_bg_spinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:minHeight="@dimen/btn_min_height"/>
+                        android:minHeight="@dimen/spinner_min_height"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -231,6 +231,5 @@
         android:layout_gravity="top|end"
         android:layout_marginTop="@dimen/margin_huge"
         android:layout_marginEnd="@dimen/margin_huge"
-        tools:src="@drawable/cn_lang"
         tools:ignore="ContentDescription" />
 </FrameLayout>

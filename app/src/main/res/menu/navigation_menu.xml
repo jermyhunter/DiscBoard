@@ -5,25 +5,31 @@
 
     <item
         android:id="@+id/navi_static_board"
+        android:icon="@drawable/playbook_icon"
         android:title="@string/static_board_string" />
 
     <item
         android:id="@+id/navi_animated_board"
+        android:icon="@drawable/tactic_icon"
         android:title="@string/anim_board_string" />
 
     <item
         android:id="@+id/navi_del_template_pad"
+        android:icon="@drawable/manager_icon"
         android:title="@string/manage_tactics_string" />
 
     <item
         android:id="@+id/navi_settings"
+        android:icon="@drawable/settings_icon"
         android:title="@string/settings_string" />
 
     <item
         android:id="@+id/navi_guiding"
+        android:icon="@drawable/guiding_icon"
         android:title="@string/guiding_string" />
 
     <item
         android:id="@+id/navi_feedback"
+        android:icon="@drawable/feedback_icon"
         android:title="@string/feedback_string" />
 </menu>

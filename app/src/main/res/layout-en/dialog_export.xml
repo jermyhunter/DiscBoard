@@ -53,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4sp"
-                android:text="in your phone's File Manager."
+                android:text="in your phone's Document Manager."
                 android:textSize="17sp" />
         </LinearLayout>
         <LinearLayout

@@ -21,26 +21,32 @@
     <string name="play_anim_string">Play Anim</string>
     <string name="create_new_strategy_string">Create</string>
     <string name="load_strategy_string">Load</string>
-    <string name="insert_frame_string">Insert\nFrame</string>
-    <string name="del_frame_init_string">Delete\nFrame\n(Long\nPress)</string>
-    <string name="del_frame_string">Delete\nFrame</string>
+    <string name="insert_frame_string">Insert</string>
+    <string name="del_frame_init_string">Delete\n(Long\nPress)</string>
+    <string name="del_frame_string">Delete</string>
     <string name="save_string">Save</string>
     <string name="save_as_string">Save as</string>
+    <string name="anim_return_string">Return</string>
     <string name="select_temp_string">Select one template as start frame:</string>
+
+
     <string name="my_temp_string">Mine</string>
     <string name="three_men_string">3v3</string>
     <string name="five_men_string">5v5</string>
     <string name="ver_stack_string">Ver</string>
     <string name="ho_stack_string">Ho</string>
-    <string name="already_saved_strategy_list_string">The list of already saved strategies</string>
-    <string name="strategy_manage_hint">(Click - Rename, Click cross mark - Delete)</string>
-    <string name="clear_list_string">Delete\nAll</string>
     <string name="add_player_string">+Player</string>
     <string name="offense_string">Off</string>
     <string name="defense_string">Def</string>
     <string name="static_save_string">Save</string>
     <string name="reset_string">Reset</string>
+    <string name="static_return_string">Return</string>
+    <string name="anim_paint_string">Draw</string>
 
+    <string name="static_paint_string">Draw</string>
+    <string name="already_saved_strategy_list_string">The list of already saved strategies</string>
+    <string name="strategy_manage_hint">(Click - Rename, Click cross mark - Delete)</string>
+    <string name="clear_list_string">Delete\nAll</string>
 
     <string name="import_string">Import</string>
     <string name="export_string">Export</string>
@@ -85,7 +91,7 @@
     <string name="feedback_reference_hint">The dev of this app partly refers to ultiplays.
         \nIf you\'re PC user, please visit \"https://www.ultiplays.com\" for better usage.</string>
     <string name="static_board_string">Tactic Board</string>
-    <string name="anim_board_string">Tactic Anim</string>
+    <string name="anim_board_string">Tactic Animation</string>
     <string name="manage_tactics_string">Manage Tactics</string>
     <string name="settings_string">Settings</string>
     <string name="guiding_string">Guiding</string>
@@ -117,4 +123,5 @@
     <string name="saved_temp_name_string">The name of to-be-saved tactic</string>
     <string name="save_name_hint">Input name, e.g. Sideline, 3–3–1 force backhand</string>
     <string name="first_launch_hint">Disc Board ver1.2\\nMain Functions are already finished.</string>
+
 </resources>

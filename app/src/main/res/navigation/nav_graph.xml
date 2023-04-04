@@ -9,13 +9,13 @@
         android:id="@+id/animatedBoardFragment"
         android:name="com.example.discboard.fragments.AnimatedBoardFragment"
         android:label="fragment_anim_board"
-        tools:layout="@layout/fragment_anim_board" />
+        tools:layout="@layout/fragment_anim_board_old" />
 
     <fragment
         android:id="@+id/staticBoardFragment"
         android:name="com.example.discboard.fragments.StaticBoardFragment"
         android:label="fragment_static_board"
-        tools:layout="@layout/fragment_static_board" />
+        tools:layout="@layout/fragment_static_board_old" />
 
     <fragment
         android:id="@+id/delTemplatePadFragment"

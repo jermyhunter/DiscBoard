@@ -2,6 +2,8 @@ package com.example.discboard.fragments;
 
 import static com.example.discboard.DiscFinal.*;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,13 +13,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.example.discboard.DiscFinal;
 import com.example.discboard.JsonDataHelper;
 import com.example.discboard.R;
 import com.example.discboard.views.DiscBoard;
+import com.example.discboard.views.Sketchpad;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,6 +32,54 @@ import com.example.discboard.views.DiscBoard;
  */
 public class StaticBoardFragment extends Fragment {
     static String TAG = "StaticBoardFragment";
+
+    PaletteButtonSet mPaletteButtonSet;
+    static class PaletteButtonSet{
+        ImageButton[] paletteButtons;
+        ImageButton currentPalette;
+        public PaletteButtonSet(ImageButton[] imageButtons){
+            paletteButtons = imageButtons;
+        }
+
+        public void setCurrentPalette(int paintType) {
+            if(this.currentPalette != null) {
+                this.currentPalette.setAlpha(0.3f);
+            }
+
+            paletteButtons[paintType].setAlpha(1f);
+            this.currentPalette = paletteButtons[paintType];
+        }
+    }
+
+    private void initPaletteButtonSet(View v) {
+        ImageButton[] imageButtons = new ImageButton[5];
+        imageButtons[0] = v.findViewById(R.id.red_palette);
+        imageButtons[1] = v.findViewById(R.id.blue_palette);
+        imageButtons[2] = v.findViewById(R.id.orange_palette);
+        imageButtons[3] = v.findViewById(R.id.white_palette);
+        imageButtons[4] = v.findViewById(R.id.black_palette);
+        for(int i = 0; i < 5; i++){
+            int finalI = i;
+            imageButtons[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mSketchpad.setPaintType(finalI);
+                    mPaletteButtonSet.setCurrentPalette(finalI);
+                }
+            });
+        }
+
+        mPaletteButtonSet = new PaletteButtonSet(imageButtons);
+        mPaletteButtonSet.setCurrentPalette(PaintType.Red.getValue());
+    }
+
+    Animation mAnimSlideInSketch, mAnimSlideOutSketch,
+            mAnimSlideInBoard, mAnimSlideOutBoard;
+    View mStaticButtonsLayout, mPaintButtonsLayout;
+    Sketchpad mSketchpad;
+    Button mReturnBtn;
+    ImageButton mPaintSwitch;
+    ImageButton mPaintBtn, mEraseBtn;
     static DiscBoard mDiscBoard;
     ToggleButton mSwapBtn;
     Animation mAnimationIn, mAnimationOut;
@@ -64,10 +118,15 @@ public class StaticBoardFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_static_board, container, false);
 
-        mDiscBoard = v.findViewById(R.id.static_discboard);
-        mJsonDataHelper.initBGByUserData(mDiscBoard);
+        initLayoutSlideAnim();
+        initPaletteButtonSet(v);
 
-        mMenuHint = (ImageView)v.findViewById(R.id.menu_hint);
+        mDiscBoard = v.findViewById(R.id.static_board);
+        mJsonDataHelper.initBGByUserData(mDiscBoard);
+        mStaticButtonsLayout = v.findViewById(R.id.static_buttons_layout);
+        initPaintLayout(v);
+
+        mMenuHint = v.findViewById(R.id.menu_hint);
         initMenuIconAnim();
         mMenuHint.startAnimation(mAnimationIn);
 
@@ -167,6 +226,170 @@ public class StaticBoardFragment extends Fragment {
         // Inflate the layout for this fragment
         return v;
     }
+
+    private void initPaintLayout(View v) {
+        mSketchpad = v.findViewById(R.id.sketchpad);
+        mPaintButtonsLayout = v.findViewById(R.id.paint_buttons_layout);
+        mPaintBtn = v.findViewById(R.id.paint_btn);
+        mEraseBtn = v.findViewById(R.id.erase_btn);
+        mPaintSwitch = v.findViewById(R.id.paint_switch);
+        mReturnBtn = v.findViewById(R.id.return_btn);
+        v.findViewById(R.id.clear_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSketchpad.clearAll();
+            }
+        });
+
+        // from sketchpad to board
+        mReturnBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // board_buttons slide in, paint_buttons slide out
+                showBoard();
+            }
+        });
+
+        // grab board snapshot to sketchpad
+        mPaintSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // load sketchpad using board canvas
+                Bitmap b = DiscFinal.loadBitmapFromView(mDiscBoard);
+                BitmapDrawable bd = new BitmapDrawable(getResources(), b);
+                mSketchpad.setBackground(bd);
+//                mSketchpad.clearAll();
+
+                //paint_buttons slide in, board_buttons slide out
+                showSketchpad();
+            }
+        });
+
+        mPaintBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSketchpad.startPainting();
+                mPaintBtn.setBackgroundResource(R.drawable.pen_focus);
+                mEraseBtn.setBackgroundResource(R.drawable.eraser_normal);
+            }
+        });
+
+        mEraseBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSketchpad.startErasing();
+                mPaintBtn.setBackgroundResource(R.drawable.pen_normal);
+                mEraseBtn.setBackgroundResource(R.drawable.eraser_focus);
+            }
+        });
+
+        v.findViewById(R.id.revoke_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSketchpad.revokeAction();
+            }
+        });
+
+        v.findViewById(R.id.redo_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSketchpad.redoAction();
+            }
+        });
+    }
+
+    // layout slide animation
+    public void initLayoutSlideAnim(){
+        mAnimSlideInSketch = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_to_right);
+        mAnimSlideOutSketch = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_to_top);
+        mAnimSlideInSketch.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                mPaintButtonsLayout.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        mAnimSlideOutSketch.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mPaintButtonsLayout.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        mAnimSlideInBoard = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_to_right);
+        mAnimSlideOutBoard = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_to_top);
+        mAnimSlideInBoard.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                mStaticButtonsLayout.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        mAnimSlideOutBoard.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mStaticButtonsLayout.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
+    private void showBoard() {
+        mStaticButtonsLayout.startAnimation(mAnimSlideInBoard);
+        mDiscBoard.setVisibility(View.VISIBLE);
+        mPaintButtonsLayout.startAnimation(mAnimSlideOutSketch);
+        mSketchpad.setVisibility(View.GONE);
+
+        mPaintSwitch.setEnabled(true);
+        mReturnBtn.setEnabled(false);
+    }
+
+    private void showSketchpad() {
+        mStaticButtonsLayout.startAnimation(mAnimSlideOutBoard);
+        mDiscBoard.setVisibility(View.GONE);
+        mPaintButtonsLayout.startAnimation(mAnimSlideInSketch);
+        mSketchpad.setVisibility(View.VISIBLE);
+
+        mPaintSwitch.setEnabled(false);
+        mReturnBtn.setEnabled(true);
+        // init button's background
+        mPaintBtn.setBackgroundResource(R.drawable.pen_focus);
+        mEraseBtn.setBackgroundResource(R.drawable.eraser_normal);
+    }
+
 
     private void initMenuIconAnim() {
         mAnimationIn = AnimationUtils.loadAnimation(getContext(),

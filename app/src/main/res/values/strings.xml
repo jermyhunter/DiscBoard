@@ -27,20 +27,25 @@
     <string name="save_string">保 存</string>
     <string name="save_as_string">另存战术</string>
     <string name="select_temp_string">选择模板</string>
-    <string name="my_temp_string">我的模板</string>
+    <string name="anim_return_string">返回</string>
+    <string name="anim_paint_string">绘 制</string>
+
+    <string name="my_temp_string">我的</string>
     <string name="three_men_string">三人</string>
     <string name="five_men_string">五人</string>
     <string name="ver_stack_string">竖排</string>
     <string name="ho_stack_string">横排</string>
-    <string name="already_saved_strategy_list_string">已保存的战术列表</string>
-    <string name="strategy_manage_hint">（单击模板-重命名，叉号-删除模板）</string>
-    <string name="clear_list_string">清空\n列表</string>
+    <string name="static_return_string">返回</string>
     <string name="add_player_string">+队员</string>
     <string name="offense_string">O进攻</string>
     <string name="defense_string">D防守</string>
-    <string name="static_save_string">保存修改</string>
+    <string name="static_save_string">保存</string>
     <string name="reset_string">重置</string>
+    <string name="static_paint_string">绘制</string>
 
+    <string name="already_saved_strategy_list_string">已保存的战术列表</string>
+    <string name="strategy_manage_hint">（单击模板-重命名，叉号-删除模板）</string>
+    <string name="clear_list_string">清空\n列表</string>
 
     <string name="import_string">导入战术</string>
     <string name="export_string">导出战术</string>
