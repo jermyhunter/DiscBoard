@@ -18,15 +18,6 @@ import java.util.Objects;
  * frequently used data, all static
  * */
 public class DiscFinal {
-    public static class CanvasBGType{
-        public final static String DISC_FULL = "全场";
-        public final static String DISC_ENDZONE = "得分区";
-        public final static String BASKETBALL_FULL = "篮-全场";
-        public final static String BASKETBALL_HALF = "篮-半场";
-
-        public final static String SOCCER_HALF = "足-半场";
-        public final static String SOCCER_FULL = "足-全场";
-    }
     public final static String USER_DATA_CANVAS_BG_TYPE = "canvas_bg_type";
     public static class LocaleType{
         public final static String CN = "zh";

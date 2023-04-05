@@ -119,4 +119,12 @@
     <string name="temp_init_check">是否初始化模板？</string>
     <string name="temp_init_hint">本操作不会删除已保存的战术</string>
     <string name="temp_init_success_hint">模板初始化完成！</string>
+
+
+    <string name="disc_full">得分区</string>
+    <string name="disc_endzone">全场</string>
+    <string name="soccer_full">足-全场</string>
+    <string name="soccer_half">足-半场</string>
+    <string name="basket_full">篮-全场</string>
+    <string name="basket_half">篮-半场</string>
 </resources>

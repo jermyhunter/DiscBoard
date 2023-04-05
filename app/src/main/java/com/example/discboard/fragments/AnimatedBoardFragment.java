@@ -198,7 +198,7 @@ public class AnimatedBoardFragment extends Fragment {
         initPaintLayout(v);
         String bgType = mJsonDataHelper.initBGByUserData(mAnimBoard);
         // if bg_img is not disc, then resize it to 1:2
-        if(!(bgType.equals(DiscFinal.CanvasBGType.DISC_FULL) || bgType.equals(DiscFinal.CanvasBGType.DISC_ENDZONE))){
+        if(!(bgType.equals(getContext().getResources().getString(R.string.disc_full)) || bgType.equals(getContext().getResources().getString(R.string.disc_endzone)))){
             mAnimBoard.post(() -> {
                 // resize board to 1:2
                 int boardWidth = mAnimBoard.getWidth();

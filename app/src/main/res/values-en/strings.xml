@@ -127,4 +127,11 @@
     <string name="temp_init_hint">This action won\'t delete any tactic animation.</string>
     <string name="temp_init_success_hint">Templates initiation completed!</string>
 
+
+    <string name="disc_full">Full Ground</string>
+    <string name="disc_endzone">End Zone</string>
+    <string name="soccer_full">Soccer-Full</string>
+    <string name="soccer_half">Soccer-Half</string>
+    <string name="basket_full">Basket-Full</string>
+    <string name="basket_half">Basket-Half</string>
 </resources>

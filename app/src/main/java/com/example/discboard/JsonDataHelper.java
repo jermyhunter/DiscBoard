@@ -575,17 +575,17 @@ public class JsonDataHelper {
     // initiate background from saved preferences
     public String initBGByUserData(View view) {
         String s_canvas_bg_type = this.getStringFromUserPreferences(USER_DATA_CANVAS_BG_TYPE, "");
-        if(Objects.equals(s_canvas_bg_type, DiscFinal.CanvasBGType.DISC_FULL))
+        if(Objects.equals(s_canvas_bg_type, getContext().getResources().getString(R.string.disc_full)))
             view.setBackgroundResource(R.drawable.disc_full);
-        else if(Objects.equals(s_canvas_bg_type, DiscFinal.CanvasBGType.DISC_ENDZONE))
+        else if(Objects.equals(s_canvas_bg_type, getContext().getResources().getString(R.string.disc_endzone)))
             view.setBackgroundResource(R.drawable.disc_endzone);
-        else if(Objects.equals(s_canvas_bg_type, DiscFinal.CanvasBGType.SOCCER_FULL))
+        else if(Objects.equals(s_canvas_bg_type, getContext().getResources().getString(R.string.soccer_full)))
             view.setBackgroundResource(R.drawable.soccer_full);
-        else if(Objects.equals(s_canvas_bg_type, DiscFinal.CanvasBGType.SOCCER_HALF))
+        else if(Objects.equals(s_canvas_bg_type, getContext().getResources().getString(R.string.soccer_half)))
             view.setBackgroundResource(R.drawable.soccer_half);
-        else if(Objects.equals(s_canvas_bg_type, DiscFinal.CanvasBGType.BASKETBALL_FULL))
+        else if(Objects.equals(s_canvas_bg_type, getContext().getResources().getString(R.string.basket_full)))
             view.setBackgroundResource(R.drawable.basketball_full);
-        else if(Objects.equals(s_canvas_bg_type, DiscFinal.CanvasBGType.BASKETBALL_HALF))
+        else if(Objects.equals(s_canvas_bg_type, getContext().getResources().getString(R.string.basket_half)))
             view.setBackgroundResource(R.drawable.basketball_half);
         else
             view.setBackgroundResource(R.drawable.disc_full);

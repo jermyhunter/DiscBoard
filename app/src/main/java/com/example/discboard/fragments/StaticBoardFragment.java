@@ -2,6 +2,7 @@ package com.example.discboard.fragments;
 
 import static com.example.discboard.DiscFinal.*;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -127,7 +128,7 @@ public class StaticBoardFragment extends Fragment {
         initPaintLayout(v);
         String bgType = mJsonDataHelper.initBGByUserData(mDiscBoard);
         // if bg_img is not disc, then resize it to 1:2
-        if(!(bgType.equals(DiscFinal.CanvasBGType.DISC_FULL) || bgType.equals(DiscFinal.CanvasBGType.DISC_ENDZONE))){
+        if(!(bgType.equals(getResources().getString(R.string.disc_endzone)) || bgType.equals(getResources().getString(R.string.disc_full)))){
             mDiscBoard.post(() -> {
                 // resize board to 1:2
                 int boardWidth = mDiscBoard.getWidth();

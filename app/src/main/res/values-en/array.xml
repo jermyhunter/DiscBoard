@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="canvas_bg_array">
-        <item>End Zone</item>
-        <item>Full Ground</item>
+        <item>@string/disc_endzone</item>
+        <item>@string/disc_full</item>
+        <item>@string/soccer_full</item>
+        <item>@string/soccer_half</item>
+        <item>@string/basket_full</item>
+        <item>@string/basket_half</item>
     </string-array>
 
     <string-array name="canvas_bg_array_copy">

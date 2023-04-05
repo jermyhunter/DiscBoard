@@ -216,7 +216,6 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
             }
         });
         v.findViewById(R.id.init_temp_btn).setOnClickListener(view -> {
-            // TODO: 模板初始化提示
             mInitTempDialogFragment.show(getChildFragmentManager(),"Template Initiation");
         });
         /*
