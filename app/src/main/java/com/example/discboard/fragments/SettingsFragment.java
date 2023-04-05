@@ -69,7 +69,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
     ArrayList<String> mAniTempList;
     ActivityResultLauncher<String> mImportData;
     ExportDialogFragment mExportDialogFragment;
-
+    InitTempDialogFragment mInitTempDialogFragment;
     public SettingsFragment() {
         // Required empty public constructor
     }
@@ -205,10 +205,19 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
             importDataFile();
         });
 
+
+        mInitTempDialogFragment = new InitTempDialogFragment();
+        mInitTempDialogFragment.setInitTempDialogListener(new InitTempDialogFragment.InitTempDialogListener() {
+            @Override
+            public void onConfirm() {
+                mJsonDataHelper.setBooleanToUserPreferences(USER_DATA_RESET_MARK, true);
+                Toast.makeText(getContext(), R.string.temp_init_success_hint, Toast.LENGTH_LONG).show();
+                Objects.requireNonNull(getActivity()).recreate();
+            }
+        });
         v.findViewById(R.id.init_temp_btn).setOnClickListener(view -> {
-            mJsonDataHelper.setBooleanToUserPreferences(USER_DATA_RESET_MARK, true);
-            getActivity().recreate();
-//            Toast.makeText(getContext(), "模板初始化完成，请重新启动程序！", Toast.LENGTH_LONG).show();
+            // TODO: 模板初始化提示
+            mInitTempDialogFragment.show(getChildFragmentManager(),"Template Initiation");
         });
         /*
          * 导入数据 ->
@@ -493,6 +502,38 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
 
         public interface ExportDialogListener {
             void onExportListener(String file_name);
+        }
+    }
+
+    public static class InitTempDialogFragment extends DialogFragment {
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            LayoutInflater inflater = Objects.requireNonNull(getActivity()).getLayoutInflater();// * 从 requireActivity() 改为 getActivity()
+            View dialogView = inflater.inflate(R.layout.dialog_init_temp, null);
+
+            builder.setView(dialogView)
+                    .setPositiveButton(R.string.confirm_string, (dialogInterface, i) -> {
+                        mInitTempDialogListener.onConfirm();
+                        dismiss();
+                    })
+                    .setNegativeButton(R.string.cancel_string, (dialogInterface, i) -> {
+                        dismiss();
+                    });
+
+            return builder.create();
+        }
+
+        // handling the export process
+        InitTempDialogListener mInitTempDialogListener;
+
+        public void setInitTempDialogListener(InitTempDialogListener initTempDialogListener) {
+            mInitTempDialogListener = initTempDialogListener;
+        }
+
+        public interface InitTempDialogListener {
+            void onConfirm();
         }
     }
 }

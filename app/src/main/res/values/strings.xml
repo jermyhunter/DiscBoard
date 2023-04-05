@@ -116,4 +116,7 @@
     <string name="saved_temp_name_string">保存的战术板名称</string>
     <string name="save_name_hint">输入名称，例如：逼边 竖排防守</string>
     <string name="first_launch_hint">飞盘战术板Ver1.2\n主要功能已制作完成</string>
+    <string name="temp_init_check">是否初始化模板？</string>
+    <string name="temp_init_hint">本操作不会删除已保存的战术</string>
+    <string name="temp_init_success_hint">模板初始化完成！</string>
 </resources>

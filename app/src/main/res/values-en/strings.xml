@@ -123,5 +123,8 @@
     <string name="saved_temp_name_string">The name of to-be-saved tactic</string>
     <string name="save_name_hint">Input name, e.g. Sideline, 3–3–1 force backhand</string>
     <string name="first_launch_hint">Disc Board ver1.2\\nMain Functions are already finished.</string>
+    <string name="temp_init_check">Initiate all tactic templates?</string>
+    <string name="temp_init_hint">This action won\'t delete any tactic animation.</string>
+    <string name="temp_init_success_hint">Templates initiation completed!</string>
 
 </resources>
