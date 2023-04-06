@@ -9,6 +9,8 @@
 
     <color name="paint_white">#ffffff</color>
 
+    <color name="border_color">#dddddd</color>
+
     <color name="OffenseColor">#ff4400</color>
     <color name="DefenseColor">#0099ff</color>
     <color name="DiscColor">#ffffff</color>

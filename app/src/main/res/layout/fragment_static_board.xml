@@ -277,7 +277,8 @@
             android:background="?android:attr/listDivider" />
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/border_color">
             <com.example.discboard.views.DiscBoard
                 android:id="@+id/static_board"
                 android:layout_width="match_parent"
