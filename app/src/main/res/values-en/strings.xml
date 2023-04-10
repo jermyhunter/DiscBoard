@@ -86,10 +86,13 @@
         \nQQ 479395433, or email jermyhunter123@gmail.com</string>
     <string name="feedback_12">(There will be no new functions in the schedule.)</string>
     <string name="feedback_copy_contact">Copy QQ</string>
+    <string name="feedback_visit_btn_string">↓Visit Dev\'s Homepage↓</string>
+    <string name="feedback_visit_homepage">Visit Page</string>
     <string name="feedback_support_dev">↓Support Dev↓</string>
-    <string name="feedback_copy_link">Copy Link</string>
     <string name="feedback_reference_hint">The dev of this app partly refers to ultiplays.
         \nIf you\'re PC user, please visit \"https://www.ultiplays.com\" for better usage.</string>
+
+
     <string name="static_board_string">Tactic Board</string>
     <string name="anim_board_string">Tactic Animation</string>
     <string name="manage_tactics_string">Manage Tactics</string>

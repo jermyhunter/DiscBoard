@@ -77,9 +77,12 @@
     <string name="feedback_11">严重bug请联系qq479395433</string>
     <string name="feedback_12">（暂时不计划开发新功能）</string>
     <string name="feedback_copy_contact">复制联系方式</string>
+    <string name="feedback_visit_btn_string">↓开发者主页↓</string>
+    <string name="feedback_visit_homepage">访问主页</string>
     <string name="feedback_support_dev">↓支持开发者↓</string>
-    <string name="feedback_copy_link">复制链接</string>
     <string name="feedback_reference_hint">本应用部分内容参考自 ultiplays\n网页版请使用 https://www.ultiplays.com</string>
+
+
     <string name="static_board_string">战术板</string>
     <string name="anim_board_string">战术动画</string>
     <string name="manage_tactics_string">管理战术动画</string>
@@ -121,8 +124,8 @@
     <string name="temp_init_success_hint">模板初始化完成！</string>
 
 
-    <string name="disc_full">得分区</string>
-    <string name="disc_endzone">全场</string>
+    <string name="disc_full">全场</string>
+    <string name="disc_endzone">得分区</string>
     <string name="soccer_full">足-全场</string>
     <string name="soccer_half">足-半场</string>
     <string name="basket_full">篮-全场</string>
