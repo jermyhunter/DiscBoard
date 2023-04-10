@@ -69,38 +69,32 @@ public class FeedbackFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_feedback, container, false);
 
         // 复制联系方式到剪切板
-        v.findViewById(R.id.copy_contact_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("", CONTACT_INFO);
-                clipboard.setPrimaryClip(clip);
-            }
+        v.findViewById(R.id.copy_contact_btn).setOnClickListener(view -> {
+            ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("", CONTACT_INFO);
+            clipboard.setPrimaryClip(clip);
         });
 
         // 复制链接到剪切板
-        v.findViewById(R.id.visit_homepage_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // clipboard
+        v.findViewById(R.id.visit_homepage_btn).setOnClickListener(view -> {
+            // clipboard
 //                ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
 //                ClipData clip = ClipData.newPlainText("", CONTACT_URL);
 //                clipboard.setPrimaryClip(clip);
 
-                try {
-                    Intent i = new Intent();
-                    i.putExtra(Intent.EXTRA_TEXT, CONTACT_URL);
-                    i.setAction(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(CONTACT_URL));
-                    startActivity(i);
-                } catch (Exception e) {
-                    Log.e("In Exception", "Comes here");
-                    Intent i = new Intent();
-                    i.putExtra(Intent.EXTRA_TEXT, CONTACT_URL);
-                    i.setAction(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(CONTACT_URL));
-                    startActivity(i);
-                }
+            try {
+                Intent i = new Intent();
+                i.putExtra(Intent.EXTRA_TEXT, CONTACT_URL);
+                i.setAction(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(CONTACT_URL));
+                startActivity(i);
+            } catch (Exception e) {
+                Log.e("In Exception", "Comes here");
+                Intent i = new Intent();
+                i.putExtra(Intent.EXTRA_TEXT, CONTACT_URL);
+                i.setAction(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(CONTACT_URL));
+                startActivity(i);
             }
         });
 
@@ -118,6 +112,7 @@ public class FeedbackFragment extends Fragment {
             mQRCodeImg.setVisibility(View.VISIBLE);
         });
 
+        // unused animation
         Animation fadeInAnim = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
         fadeInAnim.setStartOffset(2 * 1000);
         fadeInAnim.setDuration(2 * 1000);
