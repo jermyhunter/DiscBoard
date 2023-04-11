@@ -109,12 +109,12 @@ public class FeedbackFragment extends Fragment {
             lp.width = (int) (boardWidth * ratio);
             lp.height = (int) (boardHeight * ratio);
             mQRCodeImg.setLayoutParams(lp);
-            mQRCodeImg.setVisibility(View.VISIBLE);
         });
 
-        // unused animation
+        View QRCodeLayout = v.findViewById(R.id.qr_code_layout);
+        // fade_in animation
         Animation fadeInAnim = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
-        fadeInAnim.setStartOffset(2 * 1000);
+        fadeInAnim.setStartOffset((int)(2.5 * 1000));
         fadeInAnim.setDuration(2 * 1000);
         fadeInAnim.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -124,7 +124,7 @@ public class FeedbackFragment extends Fragment {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                mQRCodeImg.setVisibility(View.VISIBLE);
+                QRCodeLayout.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -132,7 +132,8 @@ public class FeedbackFragment extends Fragment {
 
             }
         });
-//        mQRCodeImg.startAnimation(fadeInAnim);
+        QRCodeLayout.startAnimation(fadeInAnim);
+
 
         String version_name = BuildConfig.VERSION_NAME;
         TextView verInfoTxt = v.findViewById(R.id.ver_info_txt);

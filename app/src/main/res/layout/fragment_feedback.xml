@@ -70,8 +70,10 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/qr_code_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="invisible"
             android:gravity="center"
             android:orientation="vertical">
             <TextView
@@ -84,8 +86,7 @@
                 android:id="@+id/qr_code_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/qr_code"
-                android:visibility="invisible"/>
+                android:src="@drawable/qr_code" />
         </LinearLayout>
     </LinearLayout>
     <TextView
