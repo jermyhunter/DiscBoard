@@ -542,13 +542,13 @@ public class JsonDataHelper {
             success = exported_folder.mkdirs();
         }
         else {
-            //TODO:发布前需要修改
-//            Toast.makeText(mContext,"导出路径已存在：" + exported_folder, Toast.LENGTH_LONG).show();
+            // 发布前需要修改
+//            Toast.makeText(mContext,mContext.getString(R.string.export_folder_existed) + exported_folder, Toast.LENGTH_LONG).show();
             return exported_folder;
         }
 
         if(success){
-            //TODO:发布前需要修改
+            // 发布前需要修改
             Toast.makeText(mContext,mContext.getString(R.string.export_folder_created_success_hint) + exported_folder, Toast.LENGTH_LONG).show();
             return exported_folder;
         }

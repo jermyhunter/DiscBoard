@@ -31,17 +31,9 @@ public class RenameTempDialog extends AlertDialog {
         mNameInput = v.findViewById(R.id.new_name_input);
         mNameInput.setHint(mTempName + getContext().getString(R.string.old_name_string));
 
-        setButton(DialogInterface.BUTTON_POSITIVE, getContext().getString(R.string.confirm_string), new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                listener.onDialogPositiveClick(String.valueOf(mNameInput.getText()));
-            }
-        });
+        setButton(DialogInterface.BUTTON_POSITIVE, getContext().getString(R.string.confirm_string), (dialog, which) -> listener.onDialogPositiveClick(String.valueOf(mNameInput.getText())));
 
-        setButton(DialogInterface.BUTTON_NEGATIVE, getContext().getString(R.string.cancel_string), new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
+        setButton(DialogInterface.BUTTON_NEGATIVE, getContext().getString(R.string.cancel_string), (dialog, which) -> {
         });
 
         super.onCreate(savedInstanceState);

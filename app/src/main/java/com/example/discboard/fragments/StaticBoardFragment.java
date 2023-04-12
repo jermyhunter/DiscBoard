@@ -27,11 +27,6 @@ import com.example.discboard.R;
 import com.example.discboard.views.DiscBoard;
 import com.example.discboard.views.Sketchpad;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link StaticBoardFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class StaticBoardFragment extends Fragment {
     static String TAG = "StaticBoardFragment";
 
@@ -62,12 +57,9 @@ public class StaticBoardFragment extends Fragment {
         imageButtons[4] = v.findViewById(R.id.black_palette);
         for(int i = 0; i < 5; i++){
             int finalI = i;
-            imageButtons[i].setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mSketchpad.setPaintType(finalI);
-                    mPaletteButtonSet.setCurrentPalette(finalI);
-                }
+            imageButtons[i].setOnClickListener(view -> {
+                mSketchpad.setPaintType(finalI);
+                mPaletteButtonSet.setCurrentPalette(finalI);
             });
         }
 
@@ -92,19 +84,6 @@ public class StaticBoardFragment extends Fragment {
     String mTempName;
     public StaticBoardFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment StaticBoardFragment.
-     */
-    public static StaticBoardFragment newInstance(String param1, String param2) {
-        StaticBoardFragment fragment = new StaticBoardFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -183,13 +162,7 @@ public class StaticBoardFragment extends Fragment {
         initMenuIconAnim();
         mMenuHint.startAnimation(mAnimationIn);
 
-        // external storage space readable test
-//        if(isExternalStorageReadable())
-//            Toast.makeText(getApplicationContext(),"可读",Toast.LENGTH_LONG).show();
-//        if(isExternalStorageWritable())
-//            Toast.makeText(getApplicationContext(),"可写",Toast.LENGTH_LONG).show();
-
-//        // 设置背景图片
+        // 设置背景图片
 //        mDiscBoard.setBackground(getResources().getDrawable(R.drawable.disc_space));
 
         mSwapBtn = v.findViewById(R.id.swap_btn);
@@ -295,45 +268,32 @@ public class StaticBoardFragment extends Fragment {
         });
 
         // from sketchpad to board
-        mReturnBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // board_buttons slide in, paint_buttons slide out
-                showBoard();
-            }
+        mReturnBtn.setOnClickListener(view -> {
+            // board_buttons slide in, paint_buttons slide out
+            showBoard();
         });
 
         // grab board snapshot to sketchpad
-        mPaintSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // load sketchpad using board canvas
-                Bitmap b = DiscFinal.loadBitmapFromView(mDiscBoard);
-                BitmapDrawable bd = new BitmapDrawable(getResources(), b);
-                mSketchpad.setBackground(bd);
-//                mSketchpad.clearAll();
+        mPaintSwitch.setOnClickListener(view -> {
+            // load sketchpad using board canvas
+            Bitmap b = DiscFinal.loadBitmapFromView(mDiscBoard);
+            BitmapDrawable bd = new BitmapDrawable(getResources(), b);
+            mSketchpad.setBackground(bd);
 
-                //paint_buttons slide in, board_buttons slide out
-                showSketchpad();
-            }
+            //paint_buttons slide in, board_buttons slide out
+            showSketchpad();
         });
 
-        mPaintBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mSketchpad.startPainting();
-                mPaintBtn.setBackgroundResource(R.drawable.pen_focus);
-                mEraseBtn.setBackgroundResource(R.drawable.eraser_normal);
-            }
+        mPaintBtn.setOnClickListener(view -> {
+            mSketchpad.startPainting();
+            mPaintBtn.setBackgroundResource(R.drawable.pen_focus);
+            mEraseBtn.setBackgroundResource(R.drawable.eraser_normal);
         });
 
-        mEraseBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mSketchpad.startErasing();
-                mPaintBtn.setBackgroundResource(R.drawable.pen_normal);
-                mEraseBtn.setBackgroundResource(R.drawable.eraser_focus);
-            }
+        mEraseBtn.setOnClickListener(view -> {
+            mSketchpad.startErasing();
+            mPaintBtn.setBackgroundResource(R.drawable.pen_normal);
+            mEraseBtn.setBackgroundResource(R.drawable.eraser_focus);
         });
 
         v.findViewById(R.id.revoke_btn).setOnClickListener(new View.OnClickListener() {
@@ -367,7 +327,6 @@ public class StaticBoardFragment extends Fragment {
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-
             }
         });
         mAnimSlideOutSketch.setAnimationListener(new Animation.AnimationListener() {
@@ -382,7 +341,6 @@ public class StaticBoardFragment extends Fragment {
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-
             }
         });
 
@@ -400,7 +358,6 @@ public class StaticBoardFragment extends Fragment {
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-
             }
         });
         mAnimSlideOutBoard.setAnimationListener(new Animation.AnimationListener() {
@@ -415,7 +372,6 @@ public class StaticBoardFragment extends Fragment {
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-
             }
         });
     }
@@ -460,7 +416,6 @@ public class StaticBoardFragment extends Fragment {
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-
             }
         });
 
@@ -469,7 +424,6 @@ public class StaticBoardFragment extends Fragment {
         mAnimationOut.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-
             }
 
             @Override
@@ -479,7 +433,6 @@ public class StaticBoardFragment extends Fragment {
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-
             }
         });
         mAnimationIn.setStartOffset(ANIM_DELAY);
@@ -488,6 +441,4 @@ public class StaticBoardFragment extends Fragment {
     public void setTempName(String tempName) {
         mTempName = tempName;
     }
-
-
 }

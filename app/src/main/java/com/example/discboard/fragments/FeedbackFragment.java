@@ -32,30 +32,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link FeedbackFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class FeedbackFragment extends Fragment {
     public FeedbackFragment() {
         // Required empty public constructor
     }
 
     ImageView mQRCodeImg;
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-
-     * @return A new instance of fragment FeedbackFragment.
-     */
-    public static FeedbackFragment newInstance(String param1, String param2) {
-        FeedbackFragment fragment = new FeedbackFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,7 +86,6 @@ public class FeedbackFragment extends Fragment {
             int boardWidth = mQRCodeImg.getWidth();
             int boardHeight = mQRCodeImg.getHeight();
             ViewGroup.LayoutParams lp = mQRCodeImg.getLayoutParams();
-//            float ratio = (float)(boardWidth - 20) / boardWidth;
             float ratio = 4 / 5f;
             lp.width = (int) (boardWidth * ratio);
             lp.height = (int) (boardHeight * ratio);

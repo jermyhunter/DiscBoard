@@ -115,6 +115,9 @@
     <string name="sharing_file_empty_warning">Please \"export\" first before sharing</string>
     <string name="importing_success_hint">Importing successful!</string>
     <string name="data_file_incompatible_error">Too earlier file data, incompatible error!</string>
+    <string name="export_folder_existed">"Export folder existed: "</string>
+
+
     <string name="confirm_string">Confrim</string>
     <string name="cancel_string">Cancel</string>
     <string name="unsaved_hint_00">"Unsaved content will be lost. "</string>

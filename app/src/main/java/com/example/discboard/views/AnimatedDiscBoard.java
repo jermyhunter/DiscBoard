@@ -848,7 +848,7 @@ public class AnimatedDiscBoard extends View {
                 for (Map.Entry<String, Dot> entry : cur_dots_list.entrySet()) {
                     String id = entry.getKey();
                     Dot cur_dot = entry.getValue();
-// plan A
+                    //  plan A
 //                    DeltaXY deltaXY = mDeltaXYHashtable.get(id);
 //                    assert deltaXY != null;
 //                    float pos_x = deltaXY.getPre_X() + deltaXY.getDelta_X();
@@ -874,7 +874,6 @@ public class AnimatedDiscBoard extends View {
                     if (pos[1] == 0f) {
                         pos[1] = cur_dot.getY();
                     }
-//                    Log.d(TAG, "onDraw: " + pos[0] + pos[1]);
 
                     if (Dot.isDefense(id)) {
 //                        canvas.drawCircle(pos_x, pos_y, CIRCLE_RADIUS, mDefPaint);

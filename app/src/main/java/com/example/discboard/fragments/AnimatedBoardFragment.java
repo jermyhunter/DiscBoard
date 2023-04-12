@@ -131,19 +131,6 @@ public class AnimatedBoardFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment AnimaBoardFragment.
-     */
-    public static AnimatedBoardFragment newInstance(String param1, String param2) {
-        AnimatedBoardFragment fragment = new AnimatedBoardFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     SelectTempDialog mSelectTempDialog;
     SaveDialogFragment mSaveDialogFragment;
 //    LoadTempDialog mLoadTempDialog;
@@ -471,7 +458,7 @@ public class AnimatedBoardFragment extends Fragment {
                     if (!mAnimBoard.isSaved()) {
                         mAnimBoard.saveAniDots(mTempName);
                         // auto-save message
-                        Toast.makeText(getContext(), mTempName + " " + getString(R.string.auto_save_success_hint), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getContext(), mTempName + " " + getString(R.string.auto_save_success_hint), Toast.LENGTH_SHORT).show();
 
                         // auto-save success hint with animation
                         mHintTxt.setText(R.string.auto_save_as_success_hint);

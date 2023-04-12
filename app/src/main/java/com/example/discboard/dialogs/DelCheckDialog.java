@@ -32,19 +32,13 @@ public class DelCheckDialog extends AlertDialog {
         mTempNameTxt = v.findViewById(R.id.temp_name_txt);
         mTempNameTxt.setText(mTempName);
 
-        setButton(DialogInterface.BUTTON_POSITIVE, getContext().getString(R.string.confirm_string), new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                listener.onDialogPositiveClick(String.valueOf(mTempNameTxt.getText()));
-                Toast.makeText(getContext(), mTempName
-                        + " " + getContext().getString(R.string.delete_success_hint), Toast.LENGTH_SHORT).show();
-            }
+        setButton(DialogInterface.BUTTON_POSITIVE, getContext().getString(R.string.confirm_string), (dialog, which) -> {
+            listener.onDialogPositiveClick(String.valueOf(mTempNameTxt.getText()));
+            Toast.makeText(getContext(), mTempName
+                    + " " + getContext().getString(R.string.delete_success_hint), Toast.LENGTH_SHORT).show();
         });
 
-        setButton(DialogInterface.BUTTON_NEGATIVE, getContext().getString(R.string.cancel_string), new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
+        setButton(DialogInterface.BUTTON_NEGATIVE, getContext().getString(R.string.cancel_string), (dialog, which) -> {
         });
 
         super.onCreate(savedInstanceState);

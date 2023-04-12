@@ -74,19 +74,6 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment SettingsFragment.
-     */
-    public static SettingsFragment newInstance(String param1, String param2) {
-        SettingsFragment fragment = new SettingsFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -153,15 +140,6 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
                 mJsonDataHelper.setIntegerToUserPreferences(USER_DATA_ANIM_SPEED, (int) slider.getValue());
             }
         });
-
-        // 检查存放路径中的导出文件是否还在 - 用于控制“分享”按钮的启用
-//        if (!mJsonDataHelper.sharedFileExists()) {
-//            disableShareFunction();
-//            mShareBtn.setVisibility(View.INVISIBLE);
-//        } else {
-//            enableShareFunction();
-//            mShareBtn.setVisibility(View.VISIBLE);
-//        }
 
         mShareBtn.setOnClickListener(view -> {
             if (mJsonDataHelper.sharedFileExists()) {

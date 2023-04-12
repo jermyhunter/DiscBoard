@@ -39,9 +39,9 @@ public class LoadTempDialog extends Dialog implements AnimTempItemAdapter.OnAniT
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
+    // get temp_name of the position
     @Override
     public void onItemClick(int position) {
         mAnimTempItemAdapter.getData(position);
-//        Log.d(TAG, "onAniTempClick: " + name);
     }
 }

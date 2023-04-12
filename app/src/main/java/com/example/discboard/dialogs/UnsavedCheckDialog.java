@@ -27,17 +27,9 @@ public class UnsavedCheckDialog extends AlertDialog {
     protected void onCreate(Bundle savedInstanceState) {
         View content = LayoutInflater.from(getContext()).inflate(R.layout.dialog_save_check, null);
         setView(content);
-        setButton(DialogInterface.BUTTON_POSITIVE, getContext().getString(R.string.confirm_string), new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mUnsavedCheckDialogListener.onCheckListener();
-            }
-        });
+        setButton(DialogInterface.BUTTON_POSITIVE, getContext().getString(R.string.confirm_string), (dialog, which) -> mUnsavedCheckDialogListener.onCheckListener());
 
-        setButton(DialogInterface.BUTTON_NEGATIVE, getContext().getString(R.string.cancel_string), new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
+        setButton(DialogInterface.BUTTON_NEGATIVE, getContext().getString(R.string.cancel_string), (dialog, which) -> {
         });
 
         super.onCreate(savedInstanceState);

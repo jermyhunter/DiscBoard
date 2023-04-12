@@ -106,6 +106,7 @@
     <string name="sharing_file_empty_warning">使用\"分享战术\"前，请先\"导出战术\"</string>
     <string name="importing_success_hint">导入成功</string>
     <string name="data_file_incompatible_error">早期版本数据，文件不兼容！</string>
+    <string name="export_folder_existed">导出路径已存在：</string>
 
 
     <string name="confirm_string">确认</string>

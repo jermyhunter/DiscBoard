@@ -260,20 +260,6 @@ public class Sketchpad extends View {
     }
 
     private void eraseMove(float x, float y) {
-//        float dx = Math.abs(x - mX);
-//        float dy = Math.abs(y - mY);
-//        if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
-//        mPathListTB.forEach((id, path) -> {
-//            if(mLineBoundsTB.get(id).contains((int) x, (int) y)) {
-////                    mLineBoundsTB.remove(i);
-////                    mPathListTB.remove(i);
-//                mPathDelMarkTB.put(id, true);
-//                // this touch_event has deleted at least one line
-//                if(!mPathDelMark)
-//                    mPathDelMark = true;
-//            }
-//        });
-
         mPathPaintListTB.forEach((id, pathPaint) -> {
             if(mLineBoundsTB.get(id).contains((int) x, (int) y)) {
 //                    mLineBoundsTB.remove(i);
@@ -367,14 +353,11 @@ public class Sketchpad extends View {
 
     public void clearDrawing()
     {
-//        setDrawingCacheEnabled(false);
         // don't forget that one and the match below,
         // or you just keep getting a duplicate when you save.
         mPathPaintListTB.clear();
 //        mPathListTB.clear();
         invalidate();
-
-//        setDrawingCacheEnabled(true);
     }
 
     public void startPainting() {
@@ -404,7 +387,7 @@ public class Sketchpad extends View {
         invalidate();
     }
 
-    /**      once mPathDelMarkHistory reaches the LIMIT, check all mark of every history step
+    /**  once mPathDelMarkHistory reaches the LIMIT, check all mark of every history step
      *   delete those all TRUE lines
      *
      *   when invoked, mHistoryPos == mPathDelMarkHistory.size() - 1
@@ -436,11 +419,8 @@ public class Sketchpad extends View {
                     mPathPaintListTB.remove(id);
                     mPathDelMarkTB.remove(id);
                     mUsedPathID.remove(id);
-//                    Log.d(TAG, "delete");
                 }
             });
-//            Log.d(TAG, "applyDelMark: " + mUsedPathID);
-//            Log.d(TAG, "applyDelMark: " + mPathDelMarkHistory);
         }
     }
 

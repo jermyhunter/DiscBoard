@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/delTemplatePadFragment"
-        android:name="com.example.discboard.fragments.DelTemplatePad"
+        android:name="com.example.discboard.fragments.DelTemplatePadFragment"
         android:label="fragment_del_template_pad"
         tools:layout="@layout/fragment_del_template_pad"/>
 

@@ -34,44 +34,29 @@ public class SelectTempDialog extends Dialog {
             mMyPresetBtn.setEnabled(false);
         }
 
-        mMyPresetBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mOnSelectListener.onPressMy();
-                mOnSelectListener.onPress();
-            }
+        mMyPresetBtn.setOnClickListener(view -> {
+            mOnSelectListener.onPressMy();
+            mOnSelectListener.onPress();
         });
 
-        findViewById(R.id.three_preset_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mOnSelectListener.onPress3();
-                mOnSelectListener.onPress();
-            }
+        findViewById(R.id.three_preset_btn).setOnClickListener(view -> {
+            mOnSelectListener.onPress3();
+            mOnSelectListener.onPress();
         });
 
-        findViewById(R.id.five_preset_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mOnSelectListener.onPress5();
-                mOnSelectListener.onPress();
-            }
+        findViewById(R.id.five_preset_btn).setOnClickListener(view -> {
+            mOnSelectListener.onPress5();
+            mOnSelectListener.onPress();
         });
 
-        findViewById(R.id.verstack_preset_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mOnSelectListener.onPressVert();
-                mOnSelectListener.onPress();
-            }
+        findViewById(R.id.verstack_preset_btn).setOnClickListener(view -> {
+            mOnSelectListener.onPressVert();
+            mOnSelectListener.onPress();
         });
 
-        findViewById(R.id.hostack_preset_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mOnSelectListener.onPressHo();
-                mOnSelectListener.onPress();
-            }
+        findViewById(R.id.hostack_preset_btn).setOnClickListener(view -> {
+            mOnSelectListener.onPressHo();
+            mOnSelectListener.onPress();
         });
     }
 

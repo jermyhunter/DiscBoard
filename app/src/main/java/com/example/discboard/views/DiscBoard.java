@@ -44,15 +44,6 @@ public class DiscBoard extends View {
     Gson gson;
     Dot SingleDiscDot;
 
-    // storage Mode mark for every different template canvas
-    private enum TemplateMark{
-        DEFAULT,
-        THREE,
-        FIVE,
-        SEVEN
-    }
-    private TemplateMark templateMark = TemplateMark.DEFAULT;
-
     public interface DiscBoardListener{
     }
     DiscBoardListener mDiscBoardListener;

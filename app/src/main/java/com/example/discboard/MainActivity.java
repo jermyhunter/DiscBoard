@@ -303,7 +303,7 @@ public class MainActivity extends AppCompatActivity {
 
         // 初次使用
         if(mJsonDataHelper.getBooleanFromInitPreferences(USER_DATA_FIRST_RUN_MARK, true)){
-            // TODO:在所有内容制作完成后删除
+            // 应用初始化提示
             Toast.makeText(this, R.string.first_launch_hint, Toast.LENGTH_SHORT).show();
 
             // ------------------ save temps to INIT pref -----------------------
@@ -341,18 +341,18 @@ public class MainActivity extends AppCompatActivity {
             mInitSettingsDialogFragment.setAutoSaveCheckDialogListener(new InitSettingsDialogFragment.InitSettingsDialogListener() {
                 @Override
                 public void onCancelListener() {
-//                    SharedPreferences shared1 = getSharedPreferences(USER_DATA_PREF, MODE_PRIVATE);
-//                    SharedPreferences.Editor editor1 = shared1.edit();
-//                    editor1.putBoolean(USER_DATA_AUTO_SAVE_MARK, false);
-//                    editor1.apply();
+                    SharedPreferences shared1 = getSharedPreferences(USER_DATA_PREF, MODE_PRIVATE);
+                    SharedPreferences.Editor editor1 = shared1.edit();
+                    editor1.putBoolean(USER_DATA_AUTO_SAVE_MARK, false);
+                    editor1.apply();
                 }
 
                 @Override
                 public void onConfirmListener() {
-//                    SharedPreferences shared1 = getSharedPreferences(USER_DATA_PREF, MODE_PRIVATE);
-//                    SharedPreferences.Editor editor1 = shared1.edit();
-//                    editor1.putBoolean(USER_DATA_AUTO_SAVE_MARK, true);
-//                    editor1.apply();
+                    SharedPreferences shared1 = getSharedPreferences(USER_DATA_PREF, MODE_PRIVATE);
+                    SharedPreferences.Editor editor1 = shared1.edit();
+                    editor1.putBoolean(USER_DATA_AUTO_SAVE_MARK, true);
+                    editor1.apply();
                 }
             });
 
