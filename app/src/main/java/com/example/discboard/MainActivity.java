@@ -304,7 +304,7 @@ public class MainActivity extends AppCompatActivity {
         // 初次使用
         if(mJsonDataHelper.getBooleanFromInitPreferences(USER_DATA_FIRST_RUN_MARK, true)){
             // 应用初始化提示
-            Toast.makeText(this, R.string.first_launch_hint, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, R.string.first_launch_hint, Toast.LENGTH_SHORT).show();
 
             // ------------------ save temps to INIT pref -----------------------
             SharedPreferences shared = getSharedPreferences(USER_INIT_PREF, MODE_PRIVATE);

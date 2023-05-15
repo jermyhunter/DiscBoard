@@ -17,6 +17,7 @@
     <color name="OutlineColor">#AFEEEE</color>
     <color name="InterDotColor">#AFEEEE</color>
     <color name="PaintColor">#FF4500</color>
+    <color name="ConeColor">#ffaf00</color>
 
     <color name="func_btn_color">#FFA500</color>
 

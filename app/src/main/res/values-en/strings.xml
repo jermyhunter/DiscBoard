@@ -39,7 +39,7 @@
     <string name="offense_string">Off</string>
     <string name="defense_string">Def</string>
     <string name="static_save_string">Save</string>
-    <string name="reset_string">Reset</string>
+    <string name="clear_string">Clear</string>
     <string name="static_return_string">Return</string>
     <string name="anim_paint_string">Draw</string>
 
@@ -70,25 +70,25 @@
     <string name="guiding_intro_01">This App is built for urgent tactical communi in mobile scenarios.</string>
     <string name="guiding_intro_02">(e.g. on bus or train, while the real playbook is not on your side.)</string>
     <string name="guiding_intro_1">Method One</string>
-    <string name="guiding_intro_10">The sharer use \"screen sharing\" in communication software(like QQ).\n
-        Display the animation with vocal explanation.</string>
+    <string name="guiding_intro_10">The sharer use \"screen sharing\" in communication software(like QQ).
+        \nDisplay the animation with sketchpad and vocal explanation.</string>
     <string name="guiding_intro_2">Method Two</string>
-    <string name="guiding_intro_20">The sharer \"export\" tactics first, then use \"share\"\n
-        to transport the exported file to the your teammates.</string>
-    <string name="guiding_intro_21">(Considering the enhancement of android OS\'s security level,\n
-        \"export\" could malfunction on relatively new android OS.)</string>
+    <string name="guiding_intro_20">The sharer \"export\" tactics first, then use \"share\"
+        \nto transport the exported file to the your teammates.</string>
+    <string name="guiding_intro_21">(Considering the enhancement of android OS\'s security level,
+        \n\"export\" could malfunction on relatively new android OS.)</string>
 
 
     <string name="feedback_free_for_use_hint">This App is free to use.
         \nAny charged resources should be avoided.</string>
-    <string name="feedback_10">\"Export\" could malfunction on relatively new android OS.</string>
-    <string name="feedback_11">If severe bugs have be encountered, please contact:
-        \nQQ 479395433, or email jermyhunter123@gmail.com</string>
-    <string name="feedback_12">(There will be no new functions in the schedule.)</string>
-    <string name="feedback_copy_contact">Copy QQ</string>
-    <string name="feedback_visit_btn_string">↓Visit Dev\'s Homepage↓</string>
-    <string name="feedback_visit_homepage">Visit Page</string>
-    <string name="feedback_support_dev">↓Support Dev↓</string>
+    <string name="feedback_10">\"Export\" could malfunction
+        \non relatively new android OS.</string>
+    <string name="feedback_11">If severe bugs have be encountered, please comment
+        \nin dev\'s homepage or leave me a message.</string>
+    <string name="feedback_12">(There wont be new functions in the schedule.)</string>
+    <string name="feedback_visit_btn_string">Visit Homepage👇</string>
+    <string name="feedback_visit_homepage">Visit Bilibili</string>
+    <string name="feedback_support_dev">Sponsor Dev👉</string>
     <string name="feedback_reference_hint">The dev of this app partly refers to ultiplays.
         \nIf you\'re PC user, please visit \"https://www.ultiplays.com\" for better usage.</string>
 
@@ -140,4 +140,5 @@
     <string name="soccer_half">Soccer-Half</string>
     <string name="basket_full">Basket-Full</string>
     <string name="basket_half">Basket-Half</string>
+    <string name="feedback_visit_afdian">Visit Afdian</string>
 </resources>

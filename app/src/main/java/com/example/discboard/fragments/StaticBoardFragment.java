@@ -202,7 +202,7 @@ public class StaticBoardFragment extends Fragment {
             }
         });
 
-        v.findViewById(R.id.reset_btn).setOnClickListener(new View.OnClickListener() {
+        v.findViewById(R.id.clear_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mDiscBoard.resetStaticBoard();
@@ -260,12 +260,7 @@ public class StaticBoardFragment extends Fragment {
         mEraseBtn = v.findViewById(R.id.erase_btn);
         mPaintSwitch = v.findViewById(R.id.paint_switch);
         mReturnBtn = v.findViewById(R.id.return_btn);
-        v.findViewById(R.id.clear_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mSketchpad.clearAll();
-            }
-        });
+        v.findViewById(R.id.canvas_clear_btn).setOnClickListener(view -> mSketchpad.clearAll());
 
         // from sketchpad to board
         mReturnBtn.setOnClickListener(view -> {

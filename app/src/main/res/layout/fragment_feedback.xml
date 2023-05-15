@@ -22,6 +22,7 @@
         android:gravity="center"
         android:orientation="horizontal">
         <LinearLayout
+            android:layout_weight="0"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -45,17 +46,12 @@
                         android:textSize="17sp"
                         android:text="@string/feedback_11" />
                     <TextView
+                        android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
                         android:text="@string/feedback_12" />
                 </LinearLayout>
-            <Button
-                android:id="@+id/copy_contact_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="17sp"
-                android:text="@string/feedback_copy_contact" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -67,26 +63,33 @@
                 android:layout_height="wrap_content"
                 android:textSize="17sp"
                 android:text="@string/feedback_visit_homepage" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:text="@string/feedback_support_dev" />
+            <Button
+                android:id="@+id/visit_afdian_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:text="@string/feedback_visit_afdian" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/qr_code_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="invisible"
             android:gravity="center"
+            android:layout_weight="1"
             android:orientation="vertical">
-            <TextView
+            <ImageView
+                android:visibility="invisible"
+                android:id="@+id/sponsor_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:textSize="20sp"
-                android:text="@string/feedback_support_dev" />
-            <ImageView
-                android:id="@+id/qr_code_img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/qr_code" />
+                android:src="@drawable/sponsor_img" />
         </LinearLayout>
     </LinearLayout>
     <TextView

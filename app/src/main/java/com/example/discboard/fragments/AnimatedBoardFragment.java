@@ -318,7 +318,7 @@ public class AnimatedBoardFragment extends Fragment {
         });
 
         v.findViewById(R.id.save_new_temp_btn).setOnClickListener(view -> {
-            mSaveDialogFragment = new SaveDialogFragment();
+            mSaveDialogFragment = new SaveDialogFragment(mTempName);
             mSaveDialogFragment.setSaveDialogListener(tempName -> {
                 setLoadedMarkAndTempName(true, tempName);
                 Toast.makeText(getContext(), R.string.save_as_success_hint, Toast.LENGTH_SHORT).show();
@@ -761,6 +761,11 @@ public class AnimatedBoardFragment extends Fragment {
     public static class SaveDialogFragment extends DialogFragment {
         EditText mSaveNameInput;
         JsonDataHelper mJsonDataHelper;
+        String mTempName;// save the temp_name for quick edit
+        public SaveDialogFragment(String tempName){
+            this.mTempName = tempName;
+        }
+        @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             mJsonDataHelper = new JsonDataHelper(getContext());
@@ -774,6 +779,7 @@ public class AnimatedBoardFragment extends Fragment {
             View dialogView = inflater.inflate(R.layout.dialog_save_anim_temp, null);
 
             mSaveNameInput = dialogView.findViewById(R.id.anim_name_input);
+            mSaveNameInput.setText(mTempName);
 
             builder.setView(dialogView)
                     .setPositiveButton("确定", (dialogInterface, i) -> {

@@ -90,13 +90,13 @@
                         android:text="@string/static_save_string" />
 
                     <Button
-                        android:id="@+id/reset_btn"
+                        android:id="@+id/clear_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_between_gap"
                         android:backgroundTint="@color/btn_bg_deep_color"
                         android:minWidth="@dimen/btn_min_width"
-                        android:text="@string/reset_string" />
+                        android:text="@string/clear_string" />
 
                     <Button
                         android:id="@+id/default_temp_btn"
@@ -251,7 +251,7 @@
                         android:layout_marginEnd="@dimen/margin_huge"
                         android:background="@drawable/redo"/>
                     <ImageButton
-                        android:id="@+id/clear_btn"
+                        android:id="@+id/canvas_clear_btn"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:padding="@dimen/img_btn_padding"

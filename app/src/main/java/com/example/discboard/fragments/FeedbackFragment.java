@@ -37,7 +37,7 @@ public class FeedbackFragment extends Fragment {
         // Required empty public constructor
     }
 
-    ImageView mQRCodeImg;
+    ImageView mSponsorImg;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,14 +50,7 @@ public class FeedbackFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_feedback, container, false);
 
-        // 复制联系方式到剪切板
-        v.findViewById(R.id.copy_contact_btn).setOnClickListener(view -> {
-            ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-            ClipData clip = ClipData.newPlainText("", CONTACT_INFO);
-            clipboard.setPrimaryClip(clip);
-        });
-
-        // 复制链接到剪切板
+        // 访问B站
         v.findViewById(R.id.visit_homepage_btn).setOnClickListener(view -> {
             // clipboard
 //                ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
@@ -80,40 +73,60 @@ public class FeedbackFragment extends Fragment {
             }
         });
 
-        mQRCodeImg = v.findViewById(R.id.qr_code_img);
-        mQRCodeImg.post(() -> {
+        // 访问爱发电赞助页
+        v.findViewById(R.id.visit_afdian_btn).setOnClickListener(view -> {
+            try {
+                Intent i = new Intent();
+                i.putExtra(Intent.EXTRA_TEXT, "https://afdian.net/a/yugar");
+                i.setAction(Intent.ACTION_VIEW);
+                i.setData(Uri.parse("https://afdian.net/a/yugar"));
+                startActivity(i);
+            } catch (Exception e) {
+                Log.e("In Exception", "Comes here");
+                Intent i = new Intent();
+                i.putExtra(Intent.EXTRA_TEXT, "https://afdian.net/a/yugar");
+                i.setAction(Intent.ACTION_VIEW);
+                i.setData(Uri.parse("https://afdian.net/a/yugar"));
+                startActivity(i);
+            }
+        });
+
+        // 赞助二维码
+        mSponsorImg = v.findViewById(R.id.sponsor_img);
+        mSponsorImg.post(() -> {
             //resize
-            int boardWidth = mQRCodeImg.getWidth();
-            int boardHeight = mQRCodeImg.getHeight();
-            ViewGroup.LayoutParams lp = mQRCodeImg.getLayoutParams();
-            float ratio = 4 / 5f;
+            int boardWidth = mSponsorImg.getWidth();
+            int boardHeight = mSponsorImg.getHeight();
+            ViewGroup.LayoutParams lp = mSponsorImg.getLayoutParams();
+            float ratio = 5 / 6f;
             lp.width = (int) (boardWidth * ratio);
             lp.height = (int) (boardHeight * ratio);
-            mQRCodeImg.setLayoutParams(lp);
+            mSponsorImg.setLayoutParams(lp);
+            mSponsorImg.setVisibility(View.VISIBLE);
         });
 
-        View QRCodeLayout = v.findViewById(R.id.qr_code_layout);
-        // fade_in animation
-        Animation fadeInAnim = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
-        fadeInAnim.setStartOffset((int)(2.5 * 1000));
-        fadeInAnim.setDuration(2 * 1000);
-        fadeInAnim.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                QRCodeLayout.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        QRCodeLayout.startAnimation(fadeInAnim);
+//        View QRCodeLayout = v.findViewById(R.id.qr_code_layout);
+//        // fade_in animation
+//        Animation fadeInAnim = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
+//        fadeInAnim.setStartOffset((int)(2.5 * 1000));
+//        fadeInAnim.setDuration(2 * 1000);
+//        fadeInAnim.setAnimationListener(new Animation.AnimationListener() {
+//            @Override
+//            public void onAnimationStart(Animation animation) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animation animation) {
+//                QRCodeLayout.setVisibility(View.VISIBLE);
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animation animation) {
+//
+//            }
+//        });
+//        QRCodeLayout.startAnimation(fadeInAnim);
 
 
         String version_name = BuildConfig.VERSION_NAME;

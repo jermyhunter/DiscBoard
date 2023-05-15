@@ -19,6 +19,7 @@ import com.example.discboard.dialogs.DelCheckDialog;
 import com.example.discboard.dialogs.RenameTempDialog;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * AniTempItemDelAdapter
@@ -88,15 +89,19 @@ public class AnimTempItemDelAdapter extends RecyclerView.Adapter<AnimTempItemDel
         String tempNameOld = getData(position);
         mAniTempList.remove(position);
         mAniTempList.add(position, tempNameNew);
-        notifyItemChanged(position);
 
         // copy old temp data to new place
         // and add new name to the temp_list
         mJsonDataHelper.addAniTempToPref(tempNameNew);
         mJsonDataHelper.copyAnimDots(tempNameOld, tempNameNew);
+
         // delete old temp data
-        mJsonDataHelper.delAniNameFromPref(tempNameOld);
-        mJsonDataHelper.delAniDotsFromPref(tempNameOld);
+        if(!Objects.equals(tempNameOld, tempNameNew)) {// if the names are not the same
+            mJsonDataHelper.delAniNameFromPref(tempNameOld);
+            mJsonDataHelper.delAniDotsFromPref(tempNameOld);
+        }
+
+        notifyItemChanged(position);
     }
 
     public boolean removeAllData() {
