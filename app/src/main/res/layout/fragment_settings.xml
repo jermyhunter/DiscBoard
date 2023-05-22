@@ -91,7 +91,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="horizontal">
                 <CheckBox
                     android:id="@+id/auto_save_cb"
                     android:layout_width="wrap_content"
@@ -103,6 +103,12 @@
                     android:background="@drawable/highlighted_bg"
                     android:textSize="@dimen/IO_text_size"
                     android:text="@string/active_auto_save_string" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="5dp"
+                    android:textSize="14sp"
+                    android:text="@string/settings_auto_save_hint" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"

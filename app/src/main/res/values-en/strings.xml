@@ -17,7 +17,7 @@
     <string name="auto_save_cancel_hint">You can cancel or activate auto-save in \"settings\" afterwards</string>
     <string name="del_all_temp_hint">Delete all temps?</string>
     <string name="act_irreversible_hint">(Caution: this act is irreversible.)</string>
-    <string name="del_temp_hint">Are you sure that you want to delete this anim?</string>
+    <string name="del_anim_hint">Are you sure that you want to delete this anim?</string>
     <string name="play_anim_string">Play Anim</string>
     <string name="create_new_strategy_string">Create</string>
     <string name="load_strategy_string">Load</string>
@@ -141,4 +141,6 @@
     <string name="basket_full">Basket-Full</string>
     <string name="basket_half">Basket-Half</string>
     <string name="feedback_visit_afdian">Visit Afdian</string>
+    <string name="settings_auto_save_hint">Activated only after
+        \nusing \"SAVE AS\"</string>
 </resources>

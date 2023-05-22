@@ -417,7 +417,13 @@ public class MainActivity extends AppCompatActivity {
         if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
             // 两次退出命令的间隔超过2s，则退出程序
             if((System.currentTimeMillis()-exitTime) > 2000){
-                Toast.makeText(getApplicationContext(), R.string.exit_check_hint, Toast.LENGTH_SHORT).show();
+                // unsaved content double check
+                if(mMenuPos == FragmentIndex.AnimatedBoardIndex && !AnimatedDiscBoard.isSaved()){
+                    mUnSavedCheckDialogFragment.show(mSupportFragmentManager, "数据丢弃确认");
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), R.string.exit_check_hint, Toast.LENGTH_SHORT).show();
+                }
                 exitTime = System.currentTimeMillis();
             } else {
                 finish();

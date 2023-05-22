@@ -9,7 +9,7 @@
         android:id="@+id/animatedBoardFragment"
         android:name="com.example.discboard.fragments.AnimatedBoardFragment"
         android:label="fragment_anim_board"
-        tools:layout="@layout/fragment_anim_board_old" />
+        tools:layout="@layout/fragment_anim_board" />
 
     <fragment
         android:id="@+id/staticBoardFragment"

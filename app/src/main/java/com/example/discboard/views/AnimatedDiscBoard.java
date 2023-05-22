@@ -145,7 +145,7 @@ public class AnimatedDiscBoard extends View {
     int mAniCurrentFrameNo;// used for animation processing
     int mAniFrameNoLimit;
 
-    private static final String TAG = "AniBoard Class";
+    private static final String TAG = "AnimBoard";
     Paint mOffLinePaint, mDefLinePaint, mDiscLinePaint;
     Paint mDefCircletPaint, mOffCircletPaint, mDiscCircletPaint,
             mHollowCirclePaint, mInterCirclePaint;
@@ -451,43 +451,58 @@ public class AnimatedDiscBoard extends View {
      */
     public void deleteFrame(){
         int cur_frame_No = mCurrentFrameNo;
-        // if the FrameSum >= 2
+//        Log.d(TAG, "deleteFrame: " + mAnimDotsList);
+//        Log.d(TAG, "deleteFrame: " + mInterDotsList);
+
+        // "delete frame" only works if the FrameSum >= 2
         if (getFrameSum() >= 2) {
+            // for normal frames(non-interdots)
+
+
+            // if the current frame is the first frame,
+            // then delete the first anim & inter frame
+            // do nothing to cur_frame_No
+            if(cur_frame_No == 0){
+                mAnimDotsList.remove(0);
+                mInterDotsList.remove(0);
+            }
             // if the current frame is the last frame
             // set current frame to the previous one, then delete the last frame
-            if (cur_frame_No == getFrameSum() - 1) {
-                setCurrentFrameNo(cur_frame_No - 1);
-                mAnimDotsList.remove(getFrameSum() - 1);
-            }
-            // else, current frame is not the last frame, then delete current frame
-            else {
-                // if there is previous frame and next frame
-                // adjust next_frame_inter_dot
-                int next_inter_frame_No = (cur_frame_No - 1) + 1;
-                int pre_frame_No = cur_frame_No - 1;
-                int next_frame_No = cur_frame_No + 1;
-                if(pre_frame_No >= 0 && next_frame_No < getFrameSum()){
-                    Hashtable<String, InterDot> next_inter_dots_list = mInterDotsList.get(next_inter_frame_No);
-                    Hashtable<String, Dot> pre_dots_list = mAnimDotsList.get(pre_frame_No);
-                    Hashtable<String, Dot> next_dots_list = mAnimDotsList.get(next_frame_No);
-                    next_dots_list.forEach((id, next_dot) -> {
-                        InterDot next_inter_dot = next_inter_dots_list.get(next_dot.getRelativeInterDotID());
-                        if(!next_inter_dot.isTouched()) {
-//                            Log.d(TAG, "deleteFrame: " + "inter_dot前后串联成功");
-                            Dot pre_dot = pre_dots_list.get(next_dot.getDotID());
-                            next_inter_dot.setX((pre_dot.getX() + next_dot.getX()) / 2);
-                            next_inter_dot.setY((pre_dot.getY() + next_dot.getY()) / 2);
-                        }
-                    });
+            else {// cur_frame_No > 0
+                if (cur_frame_No == getFrameSum() - 1) {
+                    setCurrentFrameNo(cur_frame_No - 1);
+                    mAnimDotsList.remove(getFrameSum() - 1);
                 }
-                mAnimDotsList.remove(cur_frame_No);
-            }
+                // else,
+                // else, current frame is not the last frame, then delete current frame
+                else {
+                    // if there is previous frame and next frame
+                    // adjust next_frame_inter_dot
+                    int next_inter_frame_No = (cur_frame_No - 1) + 1;
+                    int pre_frame_No = cur_frame_No - 1;
+                    int next_frame_No = cur_frame_No + 1;
+                    if (pre_frame_No >= 0 && next_frame_No < getFrameSum()) {
+                        Hashtable<String, InterDot> next_inter_dots_list = mInterDotsList.get(next_inter_frame_No);
+                        Hashtable<String, Dot> pre_dots_list = mAnimDotsList.get(pre_frame_No);
+                        Hashtable<String, Dot> next_dots_list = mAnimDotsList.get(next_frame_No);
+                        next_dots_list.forEach((id, next_dot) -> {
+                            InterDot next_inter_dot = next_inter_dots_list.get(next_dot.getRelativeInterDotID());
+                            if (!next_inter_dot.isTouched()) {
+                                //                            Log.d(TAG, "deleteFrame: " + "inter_dot前后串联成功");
+                                Dot pre_dot = pre_dots_list.get(next_dot.getDotID());
+                                next_inter_dot.setX((pre_dot.getX() + next_dot.getX()) / 2);
+                                next_inter_dot.setY((pre_dot.getY() + next_dot.getY()) / 2);
+                            }
+                        });
+                    }
+                    mAnimDotsList.remove(cur_frame_No);
+                }
 
-            // delete current inter_dot frame
-            int inter_frame_No = cur_frame_No - 1;// correlated inter_frame_no
-            if(inter_frame_No >= 0 && inter_frame_No < getInterFrameSum()){
+                int inter_frame_No = cur_frame_No - 1;// correlated inter_frame_no
                 mInterDotsList.remove(inter_frame_No);
             }
+//            Log.d(TAG, "deleteFrame: " + mAnimDotsList);
+//            Log.d(TAG, "deleteFrame: " + mInterDotsList);
 
             mAnimDiscBoardListener.onDeleteFrame();
 

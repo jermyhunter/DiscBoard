@@ -169,6 +169,9 @@ public class JsonDataHelper {
     public void saveAnimDotsToPrefNew(String tempName, ArrayList<Hashtable<String, Dot>> animDotsList, ArrayList<Hashtable<String, InterDot>> interDotsList){
         SharedPreferences shared = getContext().getSharedPreferences(tempName, MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
+        // if delete function has been used, then there will be redundant data on the tail
+        // using clear() to clear the useless end
+        editor.clear();
 
         int currentFrameNo = 0;
         int length = interDotsList.size();

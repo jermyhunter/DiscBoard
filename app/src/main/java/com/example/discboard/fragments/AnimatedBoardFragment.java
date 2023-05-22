@@ -117,8 +117,8 @@ public class AnimatedBoardFragment extends Fragment {
     String mTempName;
     Button mSaveOldTempBtn, mLoadTempBtn, mDelFrameBtn, mInsertFrameBtn,
         mLastFrameBtn, mNextFrameBtn;
-    TextView mHintTxt;
-    View mHintLayout;
+//    TextView mHintTxt;
+//    View mHintLayout;
     AnimationSet mAnimFade;
     static ArrayList<String> mAniTempList;
     Slider mFrameSlider;
@@ -176,7 +176,7 @@ public class AnimatedBoardFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_anim_board, container, false);
 
-        initAnimation();
+//        initAnimation();
         initLayoutSlideAnim();
         initPaletteButtonSet(v);
 
@@ -419,8 +419,9 @@ public class AnimatedBoardFragment extends Fragment {
             @Override
             public void onDeleteFrame() {
                 // delete success hint with animation
-                mHintTxt.setText(R.string.del_frame_success_hint);
-                mHintLayout.startAnimation(mAnimFade);
+//                mHintTxt.setText(R.string.del_frame_success_hint);
+//                mHintLayout.startAnimation(mAnimFade);
+                Toast.makeText(getContext(), R.string.del_frame_success_hint, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -446,8 +447,8 @@ public class AnimatedBoardFragment extends Fragment {
             }
         });
 
-        mHintTxt = v.findViewById(R.id.hint_txt);
-        mHintLayout = v.findViewById(R.id.hint_bg);
+//        mHintTxt = v.findViewById(R.id.hint_txt);
+//        mHintLayout = v.findViewById(R.id.hint_bg);
 
         mLoadedMark = false;
         setLoadedMarkAndTempName(false, "");
@@ -461,8 +462,9 @@ public class AnimatedBoardFragment extends Fragment {
 //                        Toast.makeText(getContext(), mTempName + " " + getString(R.string.auto_save_success_hint), Toast.LENGTH_SHORT).show();
 
                         // auto-save success hint with animation
-                        mHintTxt.setText(R.string.auto_save_as_success_hint);
-                        mHintLayout.startAnimation(mAnimFade);
+//                        mHintTxt.setText(R.string.auto_save_as_success_hint);
+//                        mHintLayout.startAnimation(mAnimFade);
+                        Toast.makeText(getContext(), R.string.auto_save_as_success_hint, Toast.LENGTH_SHORT).show();
 
                         mAnimBoard.setSavedFlag();
                     }
@@ -649,46 +651,46 @@ public class AnimatedBoardFragment extends Fragment {
         }
     }
 
-    void initAnimation(){
-        Animation animationIn = AnimationUtils.loadAnimation(getContext(),
-                R.anim.fade_in);
-        Animation animationOut = AnimationUtils.loadAnimation(getContext(),
-                R.anim.fade_out);
-
-        animationIn.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                mHintLayout.setVisibility(View.VISIBLE);
-            }
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                mHintLayout.startAnimation(animationOut);
-            }
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
-
-        // the start offset of animation
-//        animationIn.setStartOffset(2 * 1000);
-
-        animationOut.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                mHintLayout.setVisibility(View.INVISIBLE);
-            }
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
-
-        mAnimFade = new AnimationSet(false); //change to false
-        mAnimFade.addAnimation(animationIn);
-        mAnimFade.addAnimation(animationOut);
-    }
+//    void initAnimation(){
+//        Animation animationIn = AnimationUtils.loadAnimation(getContext(),
+//                R.anim.fade_in);
+//        Animation animationOut = AnimationUtils.loadAnimation(getContext(),
+//                R.anim.fade_out);
+//
+//        animationIn.setAnimationListener(new Animation.AnimationListener() {
+//            @Override
+//            public void onAnimationStart(Animation animation) {
+//                mHintLayout.setVisibility(View.VISIBLE);
+//            }
+//            @Override
+//            public void onAnimationEnd(Animation animation) {
+//                mHintLayout.startAnimation(animationOut);
+//            }
+//            @Override
+//            public void onAnimationRepeat(Animation animation) {
+//            }
+//        });
+//
+//        // the start offset of animation
+////        animationIn.setStartOffset(2 * 1000);
+//
+//        animationOut.setAnimationListener(new Animation.AnimationListener() {
+//            @Override
+//            public void onAnimationStart(Animation animation) {
+//            }
+//            @Override
+//            public void onAnimationEnd(Animation animation) {
+//                mHintLayout.setVisibility(View.INVISIBLE);
+//            }
+//            @Override
+//            public void onAnimationRepeat(Animation animation) {
+//            }
+//        });
+//
+//        mAnimFade = new AnimationSet(false); //change to false
+//        mAnimFade.addAnimation(animationIn);
+//        mAnimFade.addAnimation(animationOut);
+//    }
 
     void setLoadedMarkAndTempName(Boolean loadedMark, String tempName) {
         // if previous animation is from loaded, then stop auto-save
@@ -758,6 +760,7 @@ public class AnimatedBoardFragment extends Fragment {
 //        mHandler.removeCallbacks(mAutoSaveR, null);
     }
 
+    // used for SAVE AS double check dialog
     public static class SaveDialogFragment extends DialogFragment {
         EditText mSaveNameInput;
         JsonDataHelper mJsonDataHelper;

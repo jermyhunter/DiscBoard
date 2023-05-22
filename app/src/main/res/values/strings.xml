@@ -17,7 +17,7 @@
     <string name="auto_save_cancel_hint">之后可以在“设置”中“取消”或“启用”</string>
     <string name="del_all_temp_hint">确认删除所有模板?</string>
     <string name="act_irreversible_hint">（操作不可逆，请谨慎选择！）</string>
-    <string name="del_temp_hint">确认删除模板？</string>
+    <string name="del_anim_hint">确认删除战术？</string>
     <string name="play_anim_string">播 放</string>
     <string name="create_new_strategy_string">新建战术</string>
     <string name="load_strategy_string">读取战术</string>
@@ -44,7 +44,7 @@
     <string name="static_paint_string">绘制</string>
 
     <string name="already_saved_strategy_list_string">已保存的战术列表</string>
-    <string name="strategy_manage_hint">（单击模板-重命名，叉号-删除模板）</string>
+    <string name="strategy_manage_hint">（单击-重命名，叉号-删除战术）</string>
     <string name="clear_list_string">清空\n列表</string>
 
     <string name="import_string">导入战术</string>
@@ -135,4 +135,5 @@
     <string name="basket_full">篮-全场</string>
     <string name="basket_half">篮-半场</string>
     <string name="feedback_visit_afdian">访问赞助页</string>
+    <string name="settings_auto_save_hint">在“另存战术”后\n才会使用</string>
 </resources>
