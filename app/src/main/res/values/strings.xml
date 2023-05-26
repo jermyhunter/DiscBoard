@@ -136,4 +136,6 @@
     <string name="basket_half">篮-半场</string>
     <string name="feedback_visit_afdian">访问赞助页</string>
     <string name="settings_auto_save_hint">在“另存战术”后\n才会使用</string>
+    <string name="exit_string">退出</string>
+    <string name="confirm_exit_string">确认退出？</string>
 </resources>

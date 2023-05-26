@@ -32,4 +32,8 @@
         android:id="@+id/navi_feedback"
         android:icon="@drawable/feedback_icon"
         android:title="@string/feedback_string" />
+
+    <item
+        android:id="@+id/navi_exit"
+        android:title="@string/exit_string" />
 </menu>

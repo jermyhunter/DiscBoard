@@ -143,4 +143,6 @@
     <string name="feedback_visit_afdian">Visit Afdian</string>
     <string name="settings_auto_save_hint">Activated only after
         \nusing \"SAVE AS\"</string>
+    <string name="exit_string">Exit</string>
+    <string name="confirm_exit_string">Confirm Exit?</string>
 </resources>

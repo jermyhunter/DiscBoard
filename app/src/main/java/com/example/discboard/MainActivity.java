@@ -64,7 +64,8 @@ public class MainActivity extends AppCompatActivity {
         DelTemplatePadIndex = 2,
         SettingsIndex = 3,
         GuidingIndex = 4,
-        FeedbackIndex = 5;
+        FeedbackIndex = 5,
+        ExitIndex = 6;
     }
 
     @Override
@@ -163,13 +164,17 @@ public class MainActivity extends AppCompatActivity {
     private void setDrawerLogic() {
         mUnSavedCheckDialogFragment = new UnSavedCheckDialogFragment();
         mUnSavedCheckDialogFragment.setSaveDialogListener(() -> {
-            mNavigationView.getMenu().getItem(mMenuPos).setChecked(false);
-            mNavigationView.getMenu().getItem(mMenuPos1).setChecked(true);
-            mMenuPos = mMenuPos1;
-            mNaviDestID = mNaviDestID1;
-            mSelectedMenuItem = mSelectedMenuItem1;
-            mNavController.popBackStack();
-            mNavController.navigate(mNaviDestID);
+            if(mMenuPos1 != FragmentIndex.ExitIndex) {
+                mNavigationView.getMenu().getItem(mMenuPos).setChecked(false);
+                mNavigationView.getMenu().getItem(mMenuPos1).setChecked(true);
+
+                mMenuPos = mMenuPos1;
+                mNaviDestID = mNaviDestID1;
+                mSelectedMenuItem = mSelectedMenuItem1;
+
+                mNavController.popBackStack();
+                mNavController.navigate(mNaviDestID);
+            }
         });
 
         mMenuItemID2Pos = new Hashtable<Integer, Integer>();
@@ -179,6 +184,7 @@ public class MainActivity extends AppCompatActivity {
         mMenuItemID2Pos.put(R.id.navi_settings, FragmentIndex.SettingsIndex);
         mMenuItemID2Pos.put(R.id.navi_guiding, FragmentIndex.GuidingIndex);
         mMenuItemID2Pos.put(R.id.navi_feedback, FragmentIndex.FeedbackIndex);
+        mMenuItemID2Pos.put(R.id.navi_exit, FragmentIndex.ExitIndex);
 
         mMenuItemID2FragmentID= new Hashtable<Integer, Integer>();
         mMenuItemID2FragmentID.put(R.id.navi_static_board, R.id.staticBoardFragment);
@@ -196,26 +202,40 @@ public class MainActivity extends AppCompatActivity {
         mNaviDestID = mSelectedMenuItem.getItemId();
         mSelectedMenuItem.setChecked(true);
 
+        // when users are visiting animation page, any page-switching action triggers the following
+        // if the users are not saving the current data, pop up an abandon double-check dialog
         mNavigationView.setNavigationItemSelectedListener(menu_item -> {
             // 记录目的地，如果当前对象为 animBoard，那么 提示 doubleCheck
             // reset last menu_item state
             mSelectedMenuItem1 = menu_item;
             int menu_item_id = mSelectedMenuItem1.getItemId();
-            mNaviDestID1 = mMenuItemID2FragmentID.get(menu_item_id);
             mMenuPos1 = mMenuItemID2Pos.get(menu_item_id);
-            // if the before-switching pos is static or anim, then show the data check dialog
-            if(mMenuPos1 != mMenuPos){// if the start and dest are not the same location
-                if(mMenuPos == FragmentIndex.AnimatedBoardIndex && !AnimatedDiscBoard.isSaved()) {
+
+            // exit button check
+            if(mMenuPos1 == FragmentIndex.ExitIndex)
+            {
+                new ExitDialogFragment().show(mSupportFragmentManager, "退出应用确认");
+                if (mMenuPos == FragmentIndex.AnimatedBoardIndex && !AnimatedDiscBoard.isSaved()) {
                     mUnSavedCheckDialogFragment.show(mSupportFragmentManager, "数据丢弃确认");
                 }
-                else {
-                    mNavigationView.getMenu().getItem(mMenuPos).setChecked(false);
-                    mNavigationView.getMenu().getItem(mMenuPos1).setChecked(true);
-                    mNaviDestID = mNaviDestID1;
-                    mMenuPos = mMenuPos1;
-                    mSelectedMenuItem = mSelectedMenuItem1;
-                    mNavController.popBackStack();
-                    mNavController.navigate(mNaviDestID);
+            }
+            else {
+                // if the before-switching pos is static or anim, then show the data check dialog
+                if (mMenuPos1 != mMenuPos) {// if the start and dest are not the same location
+                    mNaviDestID1 = mMenuItemID2FragmentID.get(menu_item_id);
+                    if (mMenuPos == FragmentIndex.AnimatedBoardIndex && !AnimatedDiscBoard.isSaved()) {
+                        mUnSavedCheckDialogFragment.show(mSupportFragmentManager, "数据丢弃确认");
+                    } else {
+                        mNavigationView.getMenu().getItem(mMenuPos).setChecked(false);
+                        mNavigationView.getMenu().getItem(mMenuPos1).setChecked(true);
+                        // record last action's index
+                        mNaviDestID = mNaviDestID1;
+                        mMenuPos = mMenuPos1;
+                        mSelectedMenuItem = mSelectedMenuItem1;
+
+                        mNavController.popBackStack();// clear the fragment stack
+                        mNavController.navigate(mNaviDestID);
+                    }
                 }
             }
             // if the start and dest are the same location, then do nothing
@@ -465,6 +485,30 @@ public class MainActivity extends AppCompatActivity {
 
         public interface DoubleCheckDialogListener{
             void onCheckListener();
+        }
+    }
+
+    public static class ExitDialogFragment extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the Builder class for convenient dialog construction
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            // Get the layout inflater
+            LayoutInflater inflater = getActivity().getLayoutInflater();// * 从 requireActivity() 改为 getActivity()
+
+            // Inflate and set the layout for the dialog
+            // Pass null as the parent view because its going in the dialog layout
+            View dialogView = inflater.inflate(R.layout.dialog_exit_check, null);
+
+            builder.setView(dialogView)
+                    .setPositiveButton(R.string.confirm_string, (dialogInterface, i) ->
+                    {
+                        System.exit(0);
+                    })
+                    .setNegativeButton(R.string.cancel_string, (dialogInterface, i) -> {
+                    });
+
+            return builder.create();
         }
     }
 
