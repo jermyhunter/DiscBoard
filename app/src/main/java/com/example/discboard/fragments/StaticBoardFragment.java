@@ -395,9 +395,12 @@ public class StaticBoardFragment extends Fragment {
     }
 
 
+    // Menu Icon slide animation
     private void initMenuIconAnim() {
+//        mAnimationIn = AnimationUtils.loadAnimation(getContext(),
+//                R.anim.icon_fade_in);
         mAnimationIn = AnimationUtils.loadAnimation(getContext(),
-                R.anim.icon_fade_in);
+                R.anim.icon_slide_right);
 
         mAnimationIn.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -414,8 +417,11 @@ public class StaticBoardFragment extends Fragment {
             }
         });
 
+//        mAnimationOut = AnimationUtils.loadAnimation(getContext(),
+//                R.anim.icon_fade_out);
         mAnimationOut = AnimationUtils.loadAnimation(getContext(),
-                R.anim.icon_fade_out);
+                R.anim.icon_slide_down);
+
         mAnimationOut.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
