@@ -7,20 +7,26 @@ A portable digital playbook of frisbee, running on Android OS.
 ## 主要功能 Main Function
 
 ### 静态部分 Static Playbook
-静态模板编辑 Templates Editing
-自由绘画 Free Painting
+1. 静态模板编辑 Templates Editing
+
+2. 自由绘画 Free Painting
 
 ### Animation Playing 动态部分
-演示动画制作 Animation Editing
-折返路径 Inter-pot Animation
-播放速度调整 Animation Speed
-其他... Others
+1. 演示动画制作 Animation Editing
+
+2. 折返路径 Inter-pot Animation
+
+3. 播放速度调整 Animation Speed
+
+4. 其他... Others
 
 ## 演示视频地址
 b站（大陆）
+
 https://www.bilibili.com/video/BV1Qs4y1z7p7/
 
 油管（非大陆）
+
 https://www.youtube.com/watch?v=Xy1y07r1jww
 
 ---
