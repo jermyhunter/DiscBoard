@@ -35,3 +35,7 @@ https://www.youtube.com/watch?v=Xy1y07r1jww
 爱发电主页
 
 https://afdian.net/a/yugar
+
+---
+
+允许未经作者批准的二次修改以及商业使用，必要时只需注明代码来源。
